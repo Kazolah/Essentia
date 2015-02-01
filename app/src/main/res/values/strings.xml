@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Essentia</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Main Page -->
+    <string name="main_sign_in">SIGN IN</string>
+    <string name="main_register">I AM NEW</string>
+
+
+</resources>
