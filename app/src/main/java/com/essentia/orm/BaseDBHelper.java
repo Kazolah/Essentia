@@ -26,10 +26,6 @@ public class BaseDBHelper extends ORM{
         // TODO Auto-generated constructor stub
         this.columns = new ArrayList<Fields>();
         this.columns.add(new Fields("id", "Id", Types.integer()));
-        this.columns
-                .add(new Fields("oea_name", "OpenERP User", Types.varchar(100),
-                        false,
-                        "OpenERP Account manager name used for login and filter multiple accounts."));
     }
 
     /**

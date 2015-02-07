@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_fragment_workout">Metrics</string>
+    <string name="title_fragment_hr">Heart Rate</string>
+    <string name="description">Description</string>
+    <string name="measurement">0:00</string>
+    <string name="unit">Unit</string>
+    <string name="bpm">bpm</string>
+    <string name="default_bpm">- -</string>
+    <string name="average_hr">Avg.</string>
+    <string name="max_hr">Max.</string>
+    <string name="title_fragment_hr_chart">Chart</string>
+    <string name="title_fragment_hr_percentage">Percentage</string>
+</resources>

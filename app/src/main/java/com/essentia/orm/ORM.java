@@ -1,13 +1,18 @@
 package com.essentia.orm;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by kyawzinlatt94 on 1/30/15.
+ * Created by kyawzinlatt94
  */
 public class ORM extends SQLiteDatabaseHelper{
 
@@ -36,6 +41,7 @@ public class ORM extends SQLiteDatabaseHelper{
     public ORM(Context context) {
         super(context);
         this.context = context;
+        this.statements = new HashMap<String, String>();
     }
 
     /**
@@ -90,10 +96,6 @@ public class ORM extends SQLiteDatabaseHelper{
         for (Fields field : this.fields) {
 
             Object type = field.getType();
-            if (field.getType() instanceof Many2Many) {
-                handleMany2ManyCol(moduleDBHelper, field);
-                continue;
-            }
             if (field.getType() instanceof Many2One) {
                 if (((Many2One) field.getType()).isM2OObject()) {
                     BaseDBHelper m2oDb = ((Many2One) field.getType())
@@ -102,7 +104,6 @@ public class ORM extends SQLiteDatabaseHelper{
 
                 }
                 type = Types.integer();
-
             }
 
             try {
@@ -125,55 +126,48 @@ public class ORM extends SQLiteDatabaseHelper{
     }
 
     /**
-     * Handles many2many column.
-     *
-     * If many2many column contain only model name than it will create only m2m
-     * related table. If many2many column contain BaseDBHelper object than it
-     * will first create master table than create related table.
-     *
-     * @param db
-     *            the db
-     * @param field
-     *            the field
+     * Create Record in database
+     * @param dbHelper - database
+     * @param data_values - values to be inserted
      */
-    public void handleMany2ManyCol(BaseDBHelper db, Fields field) {
-        List<Fields> cols = new ArrayList<Fields>();
+    public void create(BaseDBHelper dbHelper, ContentValues data_values){
+        ContentValues values = new ContentValues();
 
-        // Handle many2many object
-        if (field.getType() instanceof Many2Many) {
-            Many2Many m2mobj = (Many2Many) field.getType();
-
-            if (m2mobj.isM2MObject()) {
-                BaseDBHelper newDb = null;
-                newDb = (BaseDBHelper) m2mobj.getM2mObject();
-
-                SQLStatement statement = newDb.createStatement(newDb);
-                newDb.createTable(statement);
-
-                Fields dField = new Fields(field.getName(), field.getTitle(),
-                        Types.many2Many(newDb.getModelName()));
-
-                newDb.handleMany2ManyCol(db, dField);
-            } else {
-                // handle many2many model
-                String model = m2mobj.getModel_name();
-                String rel_table = modelToTable(db.getModelName()) + "_"
-                        + modelToTable(model) + "_rel";
-                String tab1 = modelToTable(db.getModelName());
-                String tab2 = modelToTable(model);
-                String tab1_col = tab1 + "_id";
-                String tab2_col = tab2 + "_id";
-                String common_col = "oea_name";
-                cols.add(new Fields(tab1_col, tab1_col, Types.integer()));
-                cols.add(new Fields(tab2_col, tab2_col, Types.integer()));
-                cols.add(new Fields(common_col, "Android Name", Types.text()));
-                SQLStatement many2ManyTable = createStatement(rel_table, cols);
-                this.createTable(many2ManyTable);
-            }
-
+        for (Fields field : dbHelper.getColumns()) {
+            values.put(field.getName(),
+                    data_values.getAsString(field.getName()));
         }
+
+        // Handling Many2One Record
+        HashMap<String, Object> many2onecols = dbHelper.getMany2OneColumns();
+        for (String key : many2onecols.keySet()) {
+            try {
+                if (!values.getAsString(key).equals("false")) {
+                    JSONArray m2oArray = new JSONArray(values.getAsString(key));
+                    values.put(key, many2oneRecord(m2oArray));
+                }
+            } catch (Exception e) {
+                Log.d("ORM Create","Many2One Record");
+            }
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(modelToTable(dbHelper.getModelName()), null, values);
+        db.close();
     }
 
+    /**
+     * Many2One Record Id
+     * @param array
+     * @return
+     */
+    public String many2oneRecord(JSONArray array) {
+        String id = "";
+        try {
+            id = array.getString(0).toString();
+        } catch (Exception e) {
+        }
+        return id;
+    }
     /**
      * Creates the many2 one table.
      *
@@ -183,7 +177,6 @@ public class ORM extends SQLiteDatabaseHelper{
     private void createMany2OneTable(BaseDBHelper db) {
         SQLStatement statement = db.createStatement(db);
         db.createTable(statement);
-
     }
 
     /**

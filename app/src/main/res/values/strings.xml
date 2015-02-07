@@ -4,9 +4,20 @@
     <string name="app_name">Essentia</string>
     <string name="action_settings">Settings</string>
 
-    <!-- Main Page -->
+    <!-- Welcome Page -->
     <string name="main_sign_in">SIGN IN</string>
     <string name="main_register">I AM NEW</string>
 
+    <!-- Main Page (Workout Page) -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_main">WorkoutActivity</string>
+    <string name="title_activity_history">HistoryActivity</string>
+    <string name="title_activity_workout">WorkoutActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
 </resources>
