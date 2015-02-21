@@ -36,6 +36,7 @@ public class CustomAdapter extends ArrayAdapter<NavigationListItems>{
         this.context = context;
         this.data = data;
     }
+    //For each row, inflate data
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;

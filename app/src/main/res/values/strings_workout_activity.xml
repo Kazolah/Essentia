@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_activity_workout">Workout</string>
     <string name="title_fragment_workout">Metrics</string>
     <string name="title_fragment_hr">Heart Rate</string>
     <string name="description">Description</string>
+    <string name="goal">Target Goal</string>
     <string name="measurement">0:00</string>
     <string name="unit">Unit</string>
     <string name="bpm">bpm</string>
@@ -11,4 +13,47 @@
     <string name="max_hr">Max.</string>
     <string name="title_fragment_hr_chart">Chart</string>
     <string name="title_fragment_hr_percentage">Percentage</string>
+
+    <!-- For Summary -->
+    <string name="activity">Activity</string>
+    <string name="calorie">Energy</string>
+    <string name="duration">Duration</string>
+    <string name="distance">Distance</string>
+    <string name="speed">Speed</string>
+    <string name="pace">Pace</string>
+    <string name="avg_speed">Avg Speed</string>
+    <string name="avg_pace">Avg Pace</string>
+    <string name="max_speed">Max Speed</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="heart_rate_zone">Heart Rate Zone</string>
+    <string name="time">Time</string>
+
+    <!-- Activities List -->
+    <string name="cycling">Cycling</string>
+    <string name="running">Running</string>
+    <string name="running_treadmill">Running, treadmill</string>
+    <string name="walking">Walking</string>
+    <string name="walking_treadmill">Walking, treadmill</string>
+    <string name="other_activities">Other</string>
+    <string name="other_activities_indoor">Other, indoor</string>
+
+    <!-- Workout Types -->
+    <string name="basic_workout">Basic Workout</string>
+    <string name="target_goal">Target Goal</string>
+
+    <string name="calorie_off">Calorie: Off</string>
+    <string name="calorie_on">Calorie: On</string>
+    <string name="heart_rate_off">Heart Rate: Off</string>
+    <string name="heart_rate_on">Heart Rate: On</string>
+    <string name="distance_on">Distance: On</string>
+    <string name="distance_off">Distance: Off</string>
+    <string name="duration_on">Duration: On</string>
+    <string name="duration_off">Duration: Off</string>
+    <string name="pace_on">Pace: On</string>
+    <string name="pace_off">Pace: Off</string>
+    <string name="speed_on">Speed: On</string>
+    <string name="speed_off">Speed: Off</string>
+
+
+
 </resources>

@@ -17,10 +17,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/fw5m_iv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/workout_icon"/>
             <TextView
+                android:id="@+id/fw5m_desc1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
@@ -34,12 +36,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
             <TextView
+                android:id="@+id/fw5m_val1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/measurement"
                 android:textColor="@android:color/black"
                 android:textSize="70dp" />
             <TextView
+                android:id="@+id/fw5m_unit1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -52,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="15dp"
         android:background="#959595" />
 
     <!-- 2nd Row -->
@@ -70,10 +74,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/fw5m_iv2"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/workout_icon"/>
                 <TextView
+                    android:id="@+id/fw5m_desc2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Avg. Pace"
@@ -87,12 +93,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
                 <TextView
+                    android:id="@+id/fw5m_val2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
                     android:textSize="35dp"/>
                 <TextView
+                    android:id="@+id/fw5m_unit2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -110,10 +118,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/fw5m_iv3"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/workout_icon"/>
                 <TextView
+                    android:id="@+id/fw5m_desc3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
@@ -127,12 +137,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
                 <TextView
+                    android:id="@+id/fw5m_val3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
                     android:textSize="35dp" />
                 <TextView
+                    android:id="@+id/fw5m_unit3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -144,8 +156,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:background="#959595" />
 
     <!-- 3rd Row -->
@@ -163,10 +175,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/fw5m_iv4"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/workout_icon"/>
                 <TextView
+                    android:id="@+id/fw5m_desc4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
@@ -180,12 +194,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
                 <TextView
+                    android:id="@+id/fw5m_val4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
                     android:textSize="35dp"/>
                 <TextView
+                    android:id="@+id/fw5m_unit4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -203,10 +219,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/fw5m_iv5"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/workout_icon"/>
                 <TextView
+                    android:id="@+id/fw5m_desc5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
@@ -220,12 +238,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
                 <TextView
+                    android:id="@+id/fw5m_val5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
                     android:textSize="35dp" />
                 <TextView
+                    android:id="@+id/fw5m_unit5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

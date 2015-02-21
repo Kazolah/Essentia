@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <Preference
+        android:key="cue_configure_hr"
+        android:title="@string/pref_hrm_con"
+        android:summary="@string/pref_hrm_con">
+        <intent
+            android:targetPackage="com.essentia"
+            android:targetClass="com.essentia.setting.HRMonitorSettingActivity"/>
+    </Preference>
+    <Preference
+        android:key="cue_configure_hrzones"
+        android:title="@string/heart_rate_zones">
+        <intent
+            android:targetPackage="com.essentia"
+            android:targetClass="com.essentia.setting.HRZoneSettingActivity"/>
+    </Preference>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:persistent="true"
+        android:key="@string/pref_bt_experimental"
+        android:title="@string/experimental_hrm_devices" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:persistent="true"
+        android:key="@string/pref_bt_mock"
+        android:title="@string/mock_hrm_devices" />
+</PreferenceScreen>

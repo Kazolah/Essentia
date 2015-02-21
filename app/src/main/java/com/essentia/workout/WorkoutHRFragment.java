@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.Locale;
@@ -19,7 +20,6 @@ import java.util.Locale;
  */
 public class WorkoutHRFragment extends Fragment {
     SectionsPagerAdapter mSectionsPagerAdapter;
-
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
@@ -54,7 +54,9 @@ public class WorkoutHRFragment extends Fragment {
         WorkoutHRFragment fragment = new WorkoutHRFragment();
         return fragment;
     }
+    public void updateView(Workout workout){
 
+    }
     /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.

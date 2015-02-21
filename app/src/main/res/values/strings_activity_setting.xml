@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_setting">Setting</string>
+    <string name="title_heart_rate_monitor">Heart Rate Monitor</string>
+    <string name="title_heart_rate_zone">Heart Rate Zones</string>
+    <string name="title_workout_preferences">Workout Preferences</string>
+    <string name="title_audio_preferences">Audio Preferences</string>
+    <string name="title_notification_settings">Notification Settings</string>
+    <string name="title_about">About</string>
+
+    <string name="description_profile">Update your user profile</string>
+    <string name="description_heart_rate_monitor">Connect and manage heart rate monitor</string>
+    <string name="description_workout_preferences">Update workout activity settings</string>
+    <string name="description_audio_preferences">Update audio feedback settings</string>
+    <string name="description_notification_settings">Update Notification Settings</string>
+    <string name="description_about">More information about Essentia</string>
+
+    <string name="btn_hrm_connect">CONNECT</string>
+    <string name="btn_hrm_disconnect">DISCONNECT</string>
+    <string name="btn_hrm_connecting">CONNECTING</string>
+    <string name="btn_hrm_scan">SCAN</string>
+    <string name="cancel">Cancel</string>
+    <string name="scanning">Scanning</string>
+    <string name="description_no_device">No Device</string>
+    <string name="description_device">Device : </string>
+    <string name="description_battery_level">Battery Level : </string>
+    <string name="description_status">Status : </string>
+    <string name="description_status_connected">Connected | Receiving Data</string>
+    <string name="description_status_unavailable"> Unavailable</string>
+    <string name="heart_rate_zones">Heart Rate Zones</string>
+    <string name="experimental_hrm_devices">Experimental Heart Rate Monitor Devices</string>
+    <string name="mock_hrm_devices">Allow Mock Heart Rate Monitor</string>
+    <!-- Error Message -->
+    <string name="err_msg_hrm_not_supported">Heart Rate Monitor is not supported.</string>
+
+    <!-- Prompt Message -->
+    <string name="prompt_try_again_later">Try Again Later.</string>
+    <string name="prompt_ok">OK.</string>
+    <string name="select_bt_device">Select Type of Bluetooth Device</string>
+    <string name="configure_heart_rate_zones">Configure Heart Rate Zones</string>
+    <string name="clear_hr_settings">Clear HRM Settings</string>
+    <string name="prompt_sure">Are You Sure?</string>
+</resources>

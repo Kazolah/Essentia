@@ -1,16 +1,16 @@
 package com.essentia.left_drawer;
 
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,10 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class NavigationDrawerFragment extends Fragment{
     private int mCurrentSelectedPosition = 1;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-
+    private CustomAdapter adapter;
 
     private ArrayList<HashMap<String, Object>> list;
     public NavigationDrawerFragment() {
@@ -81,7 +80,16 @@ public class NavigationDrawerFragment extends Fragment{
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
+        NavigationListItems listItems[] = new NavigationListItems[]{
+                new NavigationListItems(R.drawable.female, "Username"),
+                new NavigationListItems(R.drawable.workout_icon, "Workout"),
+                new NavigationListItems(R.drawable.history_icon, "History"),
+                new NavigationListItems(R.drawable.statistics_icon, "Statistics"),
+                new NavigationListItems(R.drawable.plans_icon, "Plans")
 
+        };
+        adapter = new CustomAdapter(
+                getActionBar().getThemedContext(), R.layout.custom_drawer_row_layout,listItems);
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
     }
@@ -104,16 +112,6 @@ public class NavigationDrawerFragment extends Fragment{
                 selectItem(position);
             }
         });
-        NavigationListItems listItems[] = new NavigationListItems[]{
-                new NavigationListItems(R.drawable.female, "Username"),
-                new NavigationListItems(R.drawable.workout_icon, "Workout"),
-                new NavigationListItems(R.drawable.workout_icon, "History"),
-                new NavigationListItems(R.drawable.workout_icon, "Statistics"),
-                new NavigationListItems(R.drawable.workout_icon, "Plans")
-
-        };
-        CustomAdapter adapter = new CustomAdapter(
-                getActionBar().getThemedContext(), R.layout.custom_drawer_row_layout,listItems);
         mDrawerListView.setAdapter(adapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;

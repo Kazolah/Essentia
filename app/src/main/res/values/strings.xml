@@ -3,6 +3,7 @@
 
     <string name="app_name">Essentia</string>
     <string name="action_settings">Settings</string>
+    <string name="action_done">Done</string>
 
     <!-- Welcome Page -->
     <string name="main_sign_in">SIGN IN</string>
@@ -14,10 +15,12 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_main">WorkoutActivity</string>
     <string name="title_activity_history">HistoryActivity</string>
-    <string name="title_activity_workout">WorkoutActivity</string>
+    <string name="title_activity">Activity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="title_activity_setting">SettingActivity</string>
+
 
 </resources>

@@ -2,4 +2,6 @@
 <resources>
     <color name="orange_normal">@android:color/holo_orange_light</color>
     <color name="orange_pressed">@android:color/holo_orange_dark</color>
+    <color name="holo_green_light">@android:color/holo_green_light</color>
+    <color name="holo_blue_light">@android:color/holo_blue_dark</color>
 </resources>

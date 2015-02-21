@@ -18,10 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/fw3m_iv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/workout_icon"/>
             <TextView
+                android:id="@+id/fw3m_desc1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
@@ -35,12 +37,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
             <TextView
+                android:id="@+id/fw3m_val1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/measurement"
                 android:textColor="@android:color/black"
                 android:textSize="70dp" />
             <TextView
+                android:id="@+id/fw3m_unit1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -65,10 +69,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/fw3m_iv2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/workout_icon"/>
             <TextView
+                android:id="@+id/fw3m_desc2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
@@ -82,12 +88,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
             <TextView
+                android:id="@+id/fw3m_val2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/measurement"
                 android:textColor="@android:color/black"
                 android:textSize="70dp" />
             <TextView
+                android:id="@+id/fw3m_unit2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -111,10 +119,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/fw3m_iv3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/workout_icon"/>
             <TextView
+                android:id="@+id/fw3m_desc3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
@@ -128,12 +138,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
             <TextView
+                android:id="@+id/fw3m_val3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/measurement"
                 android:textColor="@android:color/black"
                 android:textSize="70dp" />
             <TextView
+                android:id="@+id/fw3m_unit3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
