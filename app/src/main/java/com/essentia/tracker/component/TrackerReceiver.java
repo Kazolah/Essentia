@@ -1,4 +1,4 @@
-package com.essentia.tracker;
+package com.essentia.tracker.component;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.essentia.support.Constants;
+import com.essentia.tracker.Tracker;
 import com.essentia.workout.workout_pojos.Workout;
 
 /**
@@ -95,7 +96,7 @@ public class TrackerReceiver extends DefaultTrackerComponent {
                 workout.onPause(workout);
             return;
         } else if (Constants.Intents.NEW_LAP.contentEquals(action)) {
-            workout.onNewLapOrNextStep();
+//            workout.onNewLapOrNextStep();
             return;
         } else if (Constants.Intents.PAUSE_WORKOUT.contentEquals(action)) {
             if (workout.isPaused())

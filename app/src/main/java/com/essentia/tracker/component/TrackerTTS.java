@@ -1,4 +1,4 @@
-package com.essentia.tracker;
+package com.essentia.tracker.component;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,7 +45,7 @@ public class TrackerTTS extends DefaultTrackerComponent {
 
     @Override
     public void onBind(HashMap<String, Object> bindValues) {
-        Context ctx = (Context) bindValues.get(TrackerComponent.KEY_CONTEXT);
+        Context ctx = (Context) bindValues.get(KEY_CONTEXT);
         Boolean mute = (Boolean) bindValues.get(Workout.KEY_MUTE);
         bindValues.put(Workout.KEY_TTS, new RUTextToSpeech(tts, mute, ctx));
     }

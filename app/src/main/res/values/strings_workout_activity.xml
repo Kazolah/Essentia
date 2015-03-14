@@ -2,6 +2,9 @@
 <resources>
     <string name="title_activity_workout">Workout</string>
     <string name="title_fragment_workout">Metrics</string>
+    <string name="title_fragment_info">Workout Info</string>
+    <string name="title_fragment_summary_hr">Heart Rate Summary</string>
+    <string name="title_fragment_map">Map</string>
     <string name="title_fragment_hr">Heart Rate</string>
     <string name="description">Description</string>
     <string name="goal">Target Goal</string>
@@ -10,13 +13,16 @@
     <string name="bpm">bpm</string>
     <string name="default_bpm">- -</string>
     <string name="average_hr">Avg.</string>
+    <string name="avg_hr">Avg HR</string>
+    <string name="max_hr_HR">Max HR</string>
     <string name="max_hr">Max.</string>
     <string name="title_fragment_hr_chart">Chart</string>
     <string name="title_fragment_hr_percentage">Percentage</string>
 
     <!-- For Summary -->
     <string name="activity">Activity</string>
-    <string name="calorie">Energy</string>
+    <string name="energy">Energy</string>
+    <string name="calorie">Calorie</string>
     <string name="duration">Duration</string>
     <string name="distance">Distance</string>
     <string name="speed">Speed</string>
@@ -55,5 +61,16 @@
     <string name="speed_off">Speed: Off</string>
 
 
+    <string name="metrics_distance_km">km</string>
+    <string name="metrics_distance_mi">mi</string>
+    <string name="metrics_distance_m">m</string>
+    <string name="metrics_elapsed_h">h</string>
+    <string name="metrics_elapsed_m">m</string>
+    <string name="metrics_elapsed_min">min</string>
+    <string name="metrics_elapsed_s">s</string>
+    <string name="metrics_heartrate">Hr</string>
+    <string name="heartrate_zone">heart rate zone</string>
 
+    <string name="essentia_started">Essentia Activity Started</string>
+    <string name="activity_ongoing">Activity Ongoing</string>
 </resources>

@@ -60,4 +60,14 @@ public class Duration extends Metrics implements Serializable{
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String getUnit() {
+        return " ";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Duration";
+    }
 }

@@ -24,6 +24,7 @@ import com.essentia.hrm.HRDeviceReference;
 import com.essentia.hrm.HRManager;
 import com.essentia.hrm.HRProvider;
 import com.essentia.hrm.HRProvider.HRClient;
+import com.essentia.tracker.component.TrackerHRM;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -229,9 +230,10 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
      */
     private void close(){
         if (hrProvider != null) {
+            TrackerHRM.setHrProvider(hrProvider);
             //log(hrProvider.getProviderName() + ".close()");
-            hrProvider.close();
-            hrProvider = null;
+//            hrProvider.close();
+//            hrProvider = null;
         }
     }
 
@@ -291,7 +293,6 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
             return;
         }
         if (hrProvider.isConnecting() || hrProvider.isConnected()) {
-//            log(hrProvider.getProviderName() + ".disconnect()");
             hrProvider.disconnect();
             updateView();
             return;
@@ -303,7 +304,6 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
         if (name == null || name.length() == 0) {
             name = btAddress;
         }
-//        log(hrProvider.getProviderName() + ".connect(" + name + ")");
         hrProvider.connect(HRDeviceReference.create(btProviderName, btDeviceName, btAddress));
         updateView();
     }

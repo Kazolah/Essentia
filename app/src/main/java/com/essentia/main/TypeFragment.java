@@ -16,7 +16,7 @@ import com.example.kyawzinlatt94.essentia.R;
  * Created by kyawzinlatt94 on 2/3/15.
  */
 public class TypeFragment extends Fragment{
-    private ActivityFragmentCustomAdapter adapter;
+    private ListCustomAdapter adapter;
     private ListView mListView;
     private MainActivity mainActivity;
     private NavigationListItems selectedType;
@@ -31,7 +31,7 @@ public class TypeFragment extends Fragment{
                 new NavigationListItems(R.drawable.target_chasing, getString(R.string.target_goal)),
         };
         mListItems = listItems;
-        adapter = new ActivityFragmentCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);
+        adapter = new ListCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);
     }
 
     public static TypeFragment newInstance() {

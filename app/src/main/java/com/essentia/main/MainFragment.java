@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.essentia.left_drawer.NavigationListItems;
@@ -17,6 +18,7 @@ import com.essentia.metrics.HeartRate;
 import com.essentia.metrics.Metrics;
 import com.essentia.metrics.Pace;
 import com.essentia.metrics.Speed;
+import com.essentia.tracker.GpsStatus;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class MainFragment extends Fragment{
     private String[] metricsList;
     private NavigationListItems selectedActivity;
     private NavigationListItems selectedType;
+    private Button btnStart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,9 @@ public class MainFragment extends Fragment{
             }
         });
         setupListView.setAdapter(adapter);
+        btnStart = (Button) rootView.findViewById(R.id.btnMainStart);
+        btnStart.setOnClickListener(((MainActivity)mainActivity).getBtnStartClickListener());
+        ((MainActivity)mainActivity).onGpsTrackerBound();
         return rootView;
     }
     private void selectItem(int position){
@@ -153,8 +159,41 @@ public class MainFragment extends Fragment{
         }
         return selectedMetrics;
     }
+    public ArrayList<Metrics> getMetricsList(){
+        ArrayList<Metrics> metricsList = new ArrayList<Metrics>();
+        metricsList.addAll(metrics.values());
+        return metricsList;
+    }
+
     public HashMap<String, Metrics> getMetrics(){
         return metrics;
     }
 
+    public void updateView(GpsStatus mGpsStatus){
+//        if(mGpsStatus.isEnabled() == false){
+//            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
+//            btnStart.setEnabled(true);
+//            btnStart.setText("Enable GPS");
+//        }else if(mGpsStatus.isLogging() == false){
+//            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
+//            btnStart.setEnabled(true);
+//            btnStart.setText("Start GPS");
+//        }else if(mGpsStatus.isFixed() == false){
+//            btnStart.setEnabled(false);
+//            btnStart.setBackgroundColor(getResources().getColor(R.color.holo_gray_light));
+//            btnStart.setText("Waiting for GPS");
+//            ((MainActivity)mainActivity).displayGPSSearchingState();
+//        }else{
+            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
+            btnStart.setEnabled(true);
+            btnStart.setText("START");
+            ((MainActivity)mainActivity).displayGPSBoundState();
+//        }
+    }
+    public Button getStartButton(){
+        return btnStart;
+    }
+    public void setBtnStartListener(View.OnClickListener l){
+        btnStart.setOnClickListener(l);
+    }
 }

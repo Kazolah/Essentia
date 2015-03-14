@@ -1,4 +1,4 @@
-package com.essentia.tracker;
+package com.essentia.tracker.component;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,13 +15,16 @@ import com.example.kyawzinlatt94.essentia.R;
 /**
  * Created by kyawzinlatt94 on 2/15/15.
  */
-public class TrackerHRM extends DefaultTrackerComponent{
+public class TrackerHRM extends DefaultTrackerComponent {
 
     private final Handler handler = new Handler();
-    private HRProvider hrProvider;
+    private static HRProvider hrProvider;
 
     public static final String NAME = "HRM";
 
+    public static void setHrProvider(HRProvider hrp){
+        hrProvider = hrp;
+    }
     @Override
     public String getName() {
         return NAME;
@@ -40,8 +43,10 @@ public class TrackerHRM extends DefaultTrackerComponent{
             /* no HRM is configured, return directly */
             return ResultCode.RESULT_NOT_SUPPORTED;
         }
-
-        hrProvider = HRManager.getHRProvider(context, btProviderName);
+        //Amended
+        if(hrProvider==null) {
+            hrProvider = HRManager.getHRProvider(context, btProviderName);
+        }
         if (hrProvider != null) {
             hrProvider.open(handler, new HRProvider.HRClient() {
                 @Override
@@ -115,5 +120,8 @@ public class TrackerHRM extends DefaultTrackerComponent{
 
     public HRProvider getHrProvider() {
         return hrProvider;
+    }
+    public void retrySettingHrProvider(Context context, String btProvider){
+        hrProvider = HRManager.getHRProvider(context, btProvider);
     }
 }

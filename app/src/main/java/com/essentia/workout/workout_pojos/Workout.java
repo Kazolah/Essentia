@@ -1,22 +1,17 @@
 package com.essentia.workout.workout_pojos;
 
 import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 
 import com.essentia.support.Scope;
 import com.essentia.tracker.Tracker;
-import com.essentia.tracker.TrackerHRM;
 import com.essentia.util.HRZones;
-import com.essentia.workout.WorkoutStepListener;
 import com.essentia.workout.feedback.RUTextToSpeech;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by kyawzinlatt94 on 2/18/15.
@@ -24,21 +19,15 @@ import java.util.List;
 
 /**
  * This class is the top level object for a workout, it is being called by
- * RunActivity, and by the Workout components
+ * WorkoutActivity, and by the Workout components
  */
 
 @TargetApi(Build.VERSION_CODES.FROYO)
 public class Workout implements WorkoutComponent, WorkoutInfo {
 
-    long lap = 0;
-    int currentStepNo = -1;
-    Step currentStep = null;
     boolean paused = false;
-    final ArrayList<Step> steps = new ArrayList<Step>();
-    final ArrayList<WorkoutStepListener> stepListeners = new ArrayList<WorkoutStepListener>();
-//    int sport = DB.ACTIVITY.SPORT_RUNNING;
+//    int sport = DB.ACTIVITY_ID.SPORT_RUNNING;
     private boolean mute;
-
     class PendingFeedback {
         int depth = 0;
         final HashSet<Feedback> set = new HashSet<Feedback>(); // For uniquing
@@ -64,7 +53,7 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
             --depth;
             if (depth == 0) {
                 set.clear();
-                Workout.this.textToSpeech.emit();
+//                Workout.this.textToSpeech.emit();
             }
             return depth == 0;
         }
@@ -84,6 +73,7 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
     public static final String KEY_MUTE = "mute";
 
     public Workout() {
+        hrZones = new HRZones();
     }
 
     public void setTracker(Tracker tracker) {
@@ -91,27 +81,27 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
     }
 
     public void onInit(Workout w) {
-        assert (w == this);
-        for (Step a : steps) {
-            a.onInit(this);
-        }
+//        for (Step a : steps) {
+//            a.onInit(this);
+//        }
     }
 
     public void onBind(Workout w, HashMap<String, Object> bindValues) {
-        if (bindValues.containsKey(Workout.KEY_HRZONES))
-            hrZones = (HRZones) bindValues.get(Workout.KEY_HRZONES);
+//        if (bindValues.containsKey(Workout.KEY_HRZONES))
+//            hrZones = (HRZones) bindValues.get(Workout.KEY_HRZONES);
         if (bindValues.containsKey(Workout.KEY_TTS))
             textToSpeech = (RUTextToSpeech) bindValues.get(Workout.KEY_TTS);
-        for (Step a : steps) {
-            a.onBind(w, bindValues);
-        }
+//        for (Step a : steps) {
+//            a.onBind(w, bindValues);
+//        }
     }
 
     public void onEnd(Workout w) {
         assert (w == this);
-        for (Step a : steps) {
-            a.onEnd(this);
-        }
+
+//        for (Step a : steps) {
+//            a.onEnd(this);
+//        }
     }
 
     @Override
@@ -119,132 +109,39 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
     }
 
     public void onStart(Scope s, Workout w) {
-        assert (w == this);
 
         initFeedback();
-
-        for (Step st : steps) {
-            st.onRepeat(0, 1);
-        }
-
-        currentStepNo = 0;
-        if (steps.size() > 0) {
-            setCurrentStep(steps.get(currentStepNo));
-        }
-
-        if (currentStep != null) {
-            currentStep.onStart(Scope.WORKOUT, this);
-            currentStep.onStart(Scope.STEP, this);
-            currentStep.onStart(Scope.LAP, this);
-        }
-
         emitFeedback();
-    }
-
-    private void setCurrentStep(Step step) {
-        Step oldStep = currentStep;
-        currentStep = step;
-
-        Step newStep = (step == null) ? null : step.getCurrentStep();
-        for (WorkoutStepListener l : stepListeners) {
-            l.onStepChanged(oldStep, newStep);
-        }
     }
 
     public void onTick() {
         initFeedback();
-
-        while (currentStep != null) {
-            boolean finished = currentStep.onTick(this);
-            if (finished == false)
-                break;
-
-            onNextStep();
-        }
         emitFeedback();
     }
 
-    public void onNextStep() {
-        currentStep.onComplete(Scope.LAP, this);
-        currentStep.onComplete(Scope.STEP, this);
-
-        if (currentStep.onNextStep(this))
-            currentStepNo++;
-
-        if (currentStepNo < steps.size()) {
-            setCurrentStep(steps.get(currentStepNo));
-            currentStep.onStart(Scope.STEP, this);
-            currentStep.onStart(Scope.LAP, this);
-        } else {
-            currentStep.onComplete(Scope.WORKOUT, this);
-            setCurrentStep(null);
-            tracker.stop();
-        }
-    }
 
     public void onPause(Workout w) {
-
         initFeedback();
-        if (currentStep != null) {
-            currentStep.onPause(this);
-        }
+        tracker.pause();
         emitFeedback();
         paused = true;
     }
 
-    public void onNewLap() {
-        initFeedback();
-        if (currentStep != null) {
-            currentStep.onComplete(Scope.LAP, this);
-            currentStep.onStart(Scope.LAP, this);
-        }
-        emitFeedback();
-    }
-
-    public void onNewLapOrNextStep() {
-        if (!isLastStep()) {
-            onNextStep();
-        } else {
-            onNewLap();
-        }
-    }
-
     public void onStop(Workout w) {
-
         initFeedback();
-        if (currentStep != null) {
-            currentStep.onStop(this);
-        }
+        tracker.completeActivity();
         emitFeedback();
     }
 
     public void onResume(Workout w) {
         initFeedback();
-        if (currentStep != null) {
-            currentStep.onResume(this);
-        }
+        tracker.resume();
         emitFeedback();
         paused = false;
     }
 
     public void onComplete(Scope s, Workout w) {
-        if (currentStep != null) {
-            currentStep.onComplete(Scope.LAP, this);
-            currentStep.onComplete(Scope.STEP, this);
-            currentStep.onComplete(Scope.WORKOUT, this);
-        }
-        setCurrentStep(null);
-        currentStepNo = -1;
     }
-
-    public void onSave() {
-        tracker.completeActivity(true);
-    }
-
-    public void onDiscard() {
-        tracker.completeActivity(false);
-    }
-
     @Override
     public boolean isPaused() {
         return paused;
@@ -274,12 +171,6 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         switch (scope) {
             case WORKOUT:
                 return tracker.getDistance();
-            case STEP:
-            case LAP:
-                if (currentStep != null)
-                    return currentStep.getDistance(this, scope);
-                assert (false);
-                break;
             case CURRENT:
                 break;
         }
@@ -291,12 +182,6 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         switch (scope) {
             case WORKOUT:
                 return tracker.getTime();
-            case STEP:
-            case LAP:
-                if (currentStep != null)
-                    return currentStep.getTime(this, scope);
-                assert (false);
-                break;
             case CURRENT:
                 return System.currentTimeMillis() / 1000; // now
         }
@@ -312,12 +197,6 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
                 if (t == 0)
                     return (double) 0;
                 return d / t;
-            case STEP:
-            case LAP:
-                if (currentStep != null)
-                    return currentStep.getSpeed(this, scope);
-                assert (false);
-                break;
             case CURRENT:
                 Double s = tracker.getCurrentSpeed();
                 if (s != null)
@@ -337,18 +216,9 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
 
     @Override
     public double getDuration(Scope scope, Dimension dimension) {
-        if (scope == Scope.STEP && currentStep != null) {
-            return currentStep.getDuration(dimension);
-        }
         return 0;
     }
 
-    public String getDuration(){
-        if(tracker!=null){
-            return tracker.getDuration();
-        }
-        return "";
-    }
     @Override
     public double getRemaining(Scope scope, Dimension dimension) {
         double curr = this.get(scope, dimension);
@@ -364,11 +234,6 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         switch (scope) {
             case WORKOUT:
                 return tracker.getHeartbeats();
-            case STEP:
-            case LAP:
-                if (currentStep != null)
-                    return currentStep.getHeartbeats(this, scope);
-                return 0;
             case CURRENT:
                 return 0;
         }
@@ -402,7 +267,8 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
 
     @Override
     public double getHeartRateZone(Scope scope) {
-        return hrZones.getZone(getHeartRate(scope));
+//        return hrZones.getZone(getHeartRate(scope));
+        return 0.00;
     }
 
     @Override
@@ -413,18 +279,7 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
 
     @Override
     public boolean isEnabled(Dimension dim, Scope scope) {
-        if (dim == Dimension.HR) {
-            return tracker.isComponentConnected(TrackerHRM.NAME);
-        } else if (dim == Dimension.HRZ) {
-            if (hrZones == null ||
-                    !hrZones.isConfigured() ||
-                    !tracker.isComponentConnected(TrackerHRM.NAME))
-                return false;
-        } else if ((dim == Dimension.SPEED || dim == Dimension.PACE) &&
-                scope == Scope.CURRENT) {
-            return tracker.getCurrentSpeed() != null;
-        }
-        return true;
+        return false;
     }
 
     private void initFeedback() {
@@ -439,29 +294,7 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         pendingFeedback.end();
     }
 
-    void newLap(ContentValues tmp) {
-//        tmp.put(DB.LAP.LAP, lap);
-        tracker.newLap(tmp);
-    }
 
-    void saveLap(ContentValues tmp, boolean next) {
-        tracker.saveLap(tmp);
-        if (next) {
-            lap++;
-        }
-    }
-
-    public int getStepCount() {
-        return steps.size();
-    }
-
-    public boolean isLastStep() {
-        if (currentStepNo + 1 < steps.size())
-            return false;
-        if (currentStepNo < steps.size())
-            return steps.get(currentStepNo).isLastStep();
-        return true;
-    }
 
     /**
      * @return flattened list of all steps in workout
@@ -478,97 +311,12 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         public final Step step;
     }
 
-    public void addStep(Step s) {
-        steps.add(s);
-    }
-
-    public List<Step> getSteps() {
-        return steps;
-    }
-
-    public List<StepListEntry> getStepList() {
-        ArrayList<StepListEntry> list = new ArrayList<StepListEntry>();
-        for (Step s : steps) {
-            s.getSteps(null, 0, list);
-        }
-        return list;
-    }
-
-    public Step getCurrentStep() {
-        if (currentStepNo >= 0 && currentStepNo < steps.size())
-            return steps.get(currentStepNo).getCurrentStep();
-        return null;
-    }
-
-    public void registerWorkoutStepListener(WorkoutStepListener listener) {
-        stepListeners.add(listener);
-    }
-
-    public void unregisterWorkoutStepListener(WorkoutStepListener listener) {
-        stepListeners.remove(listener);
-    }
-
-    private static class FakeWorkout extends Workout {
-
-        FakeWorkout() {
-            super();
-        }
-
-        @Override
-        public boolean isEnabled(Dimension dim, Scope scope) {
-            return true;
-        }
-
-        public double getDistance(Scope scope) {
-            switch (scope) {
-                case WORKOUT:
-                    return (3000 + 7000 * Math.random());
-                case STEP:
-                    return (300 + 700 * Math.random());
-                case LAP:
-                    return (300 + 700 * Math.random());
-                case CURRENT:
-                    return 0;
-            }
-            return 0;
-        }
-
-        public double getTime(Scope scope) {
-            switch (scope) {
-                case WORKOUT:
-                    return (10 * 60 + 50 * 60 * Math.random());
-                case STEP:
-                    return (1 * 60 + 5 * 60 * Math.random());
-                case LAP:
-                    return (1 * 60 + 5 * 60 * Math.random());
-                case CURRENT:
-                    return System.currentTimeMillis() / 1000;
-            }
-            return 0;
-        }
-
-        public double getSpeed(Scope scope) {
-            double d = getDistance(scope);
-            double t = getTime(scope);
-            if (t == 0)
-                return 0;
-            return d / t;
-        }
-
-        public double getHeartRate(Scope scope) {
-            return 150 + 25 * Math.random();
-        }
-    }
 
     @Override
     public Location getLastKnownLocation() {
         return tracker.getLastKnownLocation();
     }
 
-    public static Workout fakeWorkoutForTestingAudioCue() {
-        FakeWorkout w = new FakeWorkout();
-        return w;
-    }
 
     public void setMute(boolean mute) {
         this.mute = mute;
@@ -577,4 +325,64 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
     public boolean getMute() {
         return mute;
     }
+
+    public HRZones getHRZones(){
+        return this.hrZones;
+    }
+
+    public String getMetrics(String metricsRef){
+        String result = "";
+        switch (metricsRef){
+            case "Heart Rate":
+                return getCurrentHRValue();
+            case "HRMax":
+                if(tracker!=null){
+                    return tracker.getMaxHR();
+                }
+                return "--";
+            case "Distance":
+                return String.valueOf(tracker.getDistance());
+            case "Calorie":
+                if(tracker!=null){
+                    return tracker.getCalorieBurned();
+                }
+                return "--";
+            case "HRAvg":
+                if(tracker!=null){
+                    return tracker.getAvgHR();
+                }
+                return "--";
+
+            case "Duration":
+                if(tracker!=null){
+                    return tracker.getDuration();
+                }
+                return "--";
+            case "Speed":
+                if(tracker!=null){
+                    double speed = tracker.getCurrentSpeed();
+                    return String.valueOf(speed);
+                }
+                return "--";
+            case "Pace":
+                if(tracker!=null){
+                    return String.valueOf(tracker.getCurrentPace());
+                }
+                return "--";
+        }
+        return result;
+    }
+
+    public String getCurrentHRValue(){
+        String hrValue = String.valueOf(getCurrentHRValueInt());
+        hrValue = (hrValue.equals("-1"))?"--":hrValue;
+        return hrValue;
+    }
+
+    public int getCurrentHRValueInt(){
+        Integer hrInt = tracker.getCurrentHRValue();
+        hrInt = (hrInt==null)?-1:hrInt;
+        return hrInt;
+    }
+
 }

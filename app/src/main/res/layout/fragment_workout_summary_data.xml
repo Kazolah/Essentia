@@ -4,13 +4,26 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:padding="10dp">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="JAN 30, 2015 9:19 PM"
-        android:id="@+id/txt_workout_summary_date"
-        android:textSize="25dp"
-        android:textColor="#e1f47239" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JAN 30, 2015"
+            android:id="@+id/fwsd_tvDate"
+            android:textSize="25dp"
+            android:textColor="#e1f47239" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="9:19 PM"
+            android:id="@+id/fwsd_tvTime"
+            android:textSize="25dp"
+            android:textColor="#e1f47239" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,14 +51,15 @@
             android:text="RUNNING"
             android:textColor="@android:color/black"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:textSize="35dp" />
+            android:textSize="35dp"
+            android:id="@+id/fwsd_tvActivity" />
     </LinearLayout>
 
     <!-- 2nd row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/layout_element_4_3_left"
@@ -59,11 +73,11 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/workout_icon"/>
+                    android:src="@drawable/ic_duration"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/duration"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textColor="@android:color/black"
@@ -78,13 +92,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
-                    android:textSize="35dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/unit"
-                    android:textSize="25dp" />
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvDuration" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -99,11 +108,11 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/workout_icon"/>
+                    android:src="@drawable/ic_calorie"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/calorie"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textColor="@android:color/black"
@@ -118,12 +127,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
-                    android:textSize="35dp" />
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvCalorie" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="@string/unit"
+                    android:text="kcal"
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
@@ -132,10 +142,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
         <LinearLayout
-            android:id="@+id/layout_element_4_3_left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -146,11 +155,11 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/workout_icon"/>
+                    android:src="@drawable/ic_pace"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/avg_pace"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textColor="@android:color/black"
@@ -165,17 +174,99 @@
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
-                    android:textSize="35dp"/>
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvAvgPace" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_speed"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/avg_speed"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="20dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/measurement"
+                    android:textColor="@android:color/black"
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvAvgSpeed" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="@string/unit"
+                    android:text="km/h"
+                    android:textSize="25dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 4th row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_heart_rate"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/avg_hr"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="20dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/measurement"
+                    android:textColor="@android:color/black"
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvAvgHR" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/bpm"
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/layout_element_4_3_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -186,11 +277,11 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/workout_icon"/>
+                    android:src="@drawable/ic_heart_rate"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/max_hr_HR"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textColor="@android:color/black"
@@ -205,12 +296,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
-                    android:textSize="35dp" />
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvMaxHR" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="@string/unit"
+                    android:text="@string/bpm"
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>

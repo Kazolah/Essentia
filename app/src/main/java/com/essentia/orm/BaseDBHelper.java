@@ -1,9 +1,8 @@
 package com.essentia.orm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.content.Context;
+
+import java.util.ArrayList;
 
 /**
  * Created by kyawzinlatt94 on 1/30/15.
@@ -35,51 +34,6 @@ public class BaseDBHelper extends ORM{
      */
     public ArrayList<Fields> getColumns() {
         return this.columns;
-    }
-
-    /**
-     * Gets the server columns.
-     *
-     * @return the server columns
-     */
-    public ArrayList<Fields> getServerColumns() {
-        ArrayList<Fields> serverCols = new ArrayList<Fields>();
-        for (Fields fields : this.columns) {
-            if (fields.isCanSync()) {
-                serverCols.add(fields);
-            }
-        }
-        return serverCols;
-    }
-
-    /**
-     * Gets the many2 many columns.
-     *
-     * @return the many2 many columns
-     */
-    public HashMap<String, Object> getMany2ManyColumns() {
-        HashMap<String, Object> list = new HashMap<String, Object>();
-        for (Fields field : this.columns) {
-            if (field.getType() instanceof Many2Many) {
-                list.put(field.getName(), field.getType());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Gets the many2 one columns.
-     *
-     * @return the many2 one columns
-     */
-    public HashMap<String, Object> getMany2OneColumns() {
-        HashMap<String, Object> list = new HashMap<String, Object>();
-        for (Fields field : this.columns) {
-            if (field.getType() instanceof Many2One) {
-                list.put(field.getName(), field.getType());
-            }
-        }
-        return list;
     }
 
     /**

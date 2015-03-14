@@ -64,7 +64,7 @@ public class Pace extends Metrics{
 
     @Override
     public String getUnit() {
-        return "min/km";
+        return "";
     }
 
     @Override

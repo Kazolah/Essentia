@@ -4,4 +4,9 @@
     <color name="orange_pressed">@android:color/holo_orange_dark</color>
     <color name="holo_green_light">@android:color/holo_green_light</color>
     <color name="holo_blue_light">@android:color/holo_blue_dark</color>
+    <color name="orange_button">#e1f47239</color>
+    <color name="holo_gray_light">#db646464</color>
+    <color name="white">@android:color/white</color>
+    <color name="gray">@android:color/darker_gray</color>
+    <color name="red">@android:color/holo_red_light</color>
 </resources>

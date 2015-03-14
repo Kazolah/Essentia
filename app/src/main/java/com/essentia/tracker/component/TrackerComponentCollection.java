@@ -1,4 +1,4 @@
-package com.essentia.tracker;
+package com.essentia.tracker.component;
 
 import android.content.Context;
 import android.os.Handler;

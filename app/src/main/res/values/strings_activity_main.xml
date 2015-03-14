@@ -4,4 +4,5 @@
     <string name="list_prompt_activity">Activity</string>
     <string name="list_prompt_type">Type</string>
     <string name="list_prompt_metrics">Metrics</string>
+
 </resources>

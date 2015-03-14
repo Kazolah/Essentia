@@ -10,7 +10,7 @@
     android:background="@android:color/white">
 
     <LinearLayout
-        android:id="@+id/layout_element_1"
+        android:id="@+id/fw3m_ll1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -60,7 +60,7 @@
         android:layout_marginBottom="15dp"
         android:background="#959595" />
     <LinearLayout
-        android:id="@+id/layout_element_2"
+        android:id="@+id/fw3m_ll2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -111,7 +111,7 @@
         android:layout_marginBottom="15dp"
         android:background="#959595" />
     <LinearLayout
-        android:id="@+id/layout_element_3"
+        android:id="@+id/fw3m_ll3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

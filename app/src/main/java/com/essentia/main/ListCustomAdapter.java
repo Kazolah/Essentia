@@ -16,7 +16,7 @@ import com.example.kyawzinlatt94.essentia.R;
 /**
  * Created by kyawzinlatt94 on 2/12/15.
  */
-public class ActivityFragmentCustomAdapter extends ArrayAdapter<NavigationListItems> {
+public class ListCustomAdapter extends ArrayAdapter<NavigationListItems> {
 
     private static LayoutInflater inflater;
     private Context context;
@@ -24,7 +24,7 @@ public class ActivityFragmentCustomAdapter extends ArrayAdapter<NavigationListIt
     private Fragment fragment;
     private NavigationListItems data[] = null;
 
-    public ActivityFragmentCustomAdapter(Context context, int layoutResourceId, NavigationListItems[] data){
+    public ListCustomAdapter(Context context, int layoutResourceId, NavigationListItems[] data){
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;

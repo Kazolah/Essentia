@@ -3,6 +3,7 @@
     <string name="title_setting">Setting</string>
     <string name="title_heart_rate_monitor">Heart Rate Monitor</string>
     <string name="title_heart_rate_zone">Heart Rate Zones</string>
+    <string name="title_workout_summary">Workout Summary</string>
     <string name="title_workout_preferences">Workout Preferences</string>
     <string name="title_audio_preferences">Audio Preferences</string>
     <string name="title_notification_settings">Notification Settings</string>

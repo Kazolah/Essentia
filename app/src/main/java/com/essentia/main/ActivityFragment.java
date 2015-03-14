@@ -17,7 +17,7 @@ import com.example.kyawzinlatt94.essentia.R;
  */
 public class ActivityFragment extends Fragment{
 
-    private ActivityFragmentCustomAdapter adapter;
+    private ListCustomAdapter adapter;
     private ListView mListView;
     private String activity;
     private MainActivity mainActivity;
@@ -36,7 +36,7 @@ public class ActivityFragment extends Fragment{
                 new NavigationListItems(R.drawable.other_indoor, getString(R.string.other_activities_indoor)),
         };
         mListItems = listItems;
-        adapter = new ActivityFragmentCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);
+        adapter = new ListCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);
     }
 
     public static ActivityFragment newInstance() {

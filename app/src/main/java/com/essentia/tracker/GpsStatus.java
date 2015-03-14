@@ -32,7 +32,7 @@ public class GpsStatus implements LocationListener,
     /**
      * If we get fixed satellites >= mFixSatellites mFixed => true
      */
-    final int mFixSatellites = 2;
+    final int mFixSatellites = 1;
 
     /**
      * If we get location updates with time difference <= mFixTime mFixed =>

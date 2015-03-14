@@ -1,127 +1,235 @@
 package com.essentia.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.preference.PreferenceManager;
 import android.util.Pair;
-
-import com.example.kyawzinlatt94.essentia.R;
-
-import java.util.Vector;
 
 /**
  * Created by kyawzinlatt94 on 2/20/15.
  */
 public class HRZones {
 
-    int zones[] = null;
-    final String key;
-    final SharedPreferences prefs;
+    private static final int DEFAULT_MAX_HR = 250;
+    private int hrMax = DEFAULT_MAX_HR;
+    public static final int ZONE1 = 1;
+    public static final int ZONE2 = 2;
+    public static final int ZONE3 = 3;
+    public static final int ZONE4 = 4;
+    public static final int ZONE5 = 5;
 
-    public HRZones(Context ctx) {
-        this(ctx.getResources(), PreferenceManager
-                .getDefaultSharedPreferences(ctx));
+
+    private String zone1DurationDetails = "";
+    private String zone2DurationDetails = "";
+    private String zone3DurationDetails = "";
+    private String zone4DurationDetails = "";
+    private String zone5DurationDetails = "";
+    private int zone1Duration = 0;
+    private int zone2Duration = 0;
+    private int zone3Duration = 0;
+    private int zone4Duration = 0;
+    private int zone5Duration = 0;
+    private int zone1Percent = 0;
+    private int zone2Percent = 0;
+    private int zone3Percent = 0;
+    private int zone4Percent = 0;
+    private int zone5Percent = 0;
+    public HRZones(){
+
     }
 
-    public HRZones(Resources res, SharedPreferences p) {
-        key = res.getString(R.string.pref_hrz_values);
-        prefs = p;
-        reload();
-    }
-
-    public void reload() {
-        String str = prefs.getString(key, null);
-        if (str != null) {
-            zones = SafeParse.parseIntList(str);
-        } else {
-            zones = null;
+    public int getCurrentHRZone(int hrValue){
+        int HRZone = 1;
+        int hrPercentage = getCurrentHRPercentage(hrValue);
+        if(hrPercentage<=100 && hrPercentage>=90){
+            HRZone = 5;
+        }else if(hrPercentage<90 && hrPercentage>=80){
+            HRZone = 4;
+        }else if(hrPercentage<80 && hrPercentage>=70){
+            HRZone = 3;
+        }else if(hrPercentage<70 && hrPercentage>=60){
+            HRZone = 2;
+        }else {
+            HRZone = 1;
         }
-        if (zones != null) {
-            System.err.print("loaded: (" + str + ")");
-            for (int zone : zones) {
-                System.err.print(" " + zone);
-            }
-            System.err.println("");
+        return HRZone;
+    }
+    public Pair<Integer, Integer> getCurrentHRValueBound(int hrValue, int hrZone){
+        Pair<Integer,Integer> hrBound;
+        int lowerHRLimit;
+        int higherHRLimit;
+        switch(hrZone){
+            case 1:
+                higherHRLimit = (int)(hrMax * 0.59);
+                hrBound = new Pair<Integer, Integer>(0,higherHRLimit);
+                break;
+            case 2:
+                lowerHRLimit = (int)(hrMax* 0.6);
+                higherHRLimit = (int)(hrMax * 0.69);
+                hrBound = new Pair<Integer, Integer>(lowerHRLimit,higherHRLimit);
+                break;
+            case 3:
+                lowerHRLimit = (int)(hrMax* 0.7);
+                higherHRLimit = (int)(hrMax * 0.79);
+                hrBound = new Pair<Integer, Integer>(lowerHRLimit,higherHRLimit);
+                break;
+            case 4:
+                lowerHRLimit = (int)(hrMax* 0.8);
+                higherHRLimit = (int)(hrMax * 0.89);
+                hrBound = new Pair<Integer, Integer>(lowerHRLimit,higherHRLimit);
+                break;
+            case 5:
+                lowerHRLimit = (int)(hrMax* 0.9);
+                higherHRLimit = hrMax;
+                hrBound = new Pair<Integer, Integer>(lowerHRLimit,higherHRLimit);
+                break;
+            default:
+                higherHRLimit = (int)(hrMax * 0.45);
+                hrBound = new Pair<Integer, Integer>(0,higherHRLimit);
+                break;
+        }
+        return hrBound;
+    }
+    public  Pair<Integer, Integer> getCurrentHRPercentBound(int hrZone){
+        Pair<Integer,Integer> hrBound;
+        int lowerPercentLimit;
+        int higherPercentLimit;
+        switch(hrZone){
+            case 0:
+                lowerPercentLimit = 0;
+                higherPercentLimit = 50;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            case 1:
+                lowerPercentLimit = 50;
+                higherPercentLimit = 60;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            case 2:
+                lowerPercentLimit = 60;
+                higherPercentLimit = 70;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            case 3:
+                lowerPercentLimit = 70;
+                higherPercentLimit = 80;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            case 4:
+                lowerPercentLimit = 80;
+                higherPercentLimit = 90;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            case 5:
+                lowerPercentLimit = 90;
+                higherPercentLimit = 100;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+            default:
+                lowerPercentLimit = 0;
+                higherPercentLimit = 50;
+                hrBound = new Pair<Integer, Integer>(lowerPercentLimit,higherPercentLimit);
+                break;
+        }
+        return hrBound;
+    }
+    public int getCurrentHRPercentage(int hrValue){
+        double ratio = (double)hrValue / hrMax;
+        int hrPercentage =  (int)(ratio * 100);
+        return hrPercentage;
+    }
+    public String getZone1DurationDetails(){
+        return zone1DurationDetails;
+    }
+    public String getZone2DurationDetails(){
+        return zone2DurationDetails;
+    }
+    public String getZone3DurationDetails(){
+        return zone3DurationDetails;
+    }
+    public String getZone4DurationDetails(){
+        return zone4DurationDetails;
+    }
+    public String getZone5DurationDetails(){
+        return zone5DurationDetails;
+    }
+
+    public void setZone1DurationDetails(String data){
+        zone1DurationDetails = "Zone 1:\n" + data;
+    }
+    public void setZone2DurationDetails(String data){
+        zone2DurationDetails = "Zone 2:\n" + data;
+    }
+    public void setZone3DurationDetails(String data){
+        zone3DurationDetails = "Zone 3:\n" + data;
+    }
+    public void setZone4DurationDetails(String data){
+        zone4DurationDetails = "Zone 4:\n" + data;
+    }
+    public void setZone5DurationDetails(String data){
+        zone5DurationDetails = "Zone 5:\n" + data;
+    }
+
+    public void addZonesDuration(long milliSec, int currentHRZone){
+        int ms = (int) milliSec;
+        switch (currentHRZone){
+            case HRZones.ZONE1:
+                zone1Duration += ms;
+                setZone1DurationDetails(parseDuration(zone1Duration));
+                break;
+            case HRZones.ZONE2:
+                zone2Duration += ms;
+                setZone2DurationDetails(parseDuration(zone2Duration));
+                break;
+            case HRZones.ZONE3:
+                zone3Duration += ms;
+                setZone3DurationDetails(parseDuration(zone3Duration));
+                break;
+            case HRZones.ZONE4:
+                zone4Duration += ms;
+                setZone4DurationDetails(parseDuration(zone4Duration));
+                break;
+            case HRZones.ZONE5:
+                zone5Duration += ms;
+                setZone5DurationDetails(parseDuration(zone5Duration));
+                break;
         }
     }
-
-    public boolean isConfigured() {
-        return zones != null;
-    }
-
-    public int getCount() {
-        if (zones != null)
-            return zones.length - 1;
-        return 0;
-    }
-
-    public double getZone(double value) {
-        if (zones != null) {
-            int z = 0;
-            for (z = 0; z < zones.length; z++) {
-                if (zones[z] >= value)
-                    break;
-            }
-
-            if (z == zones.length) {
-                return z - 1;
-            }
-            double lo = (z == 0) ? 0 : zones[z - 1];
-            double hi = zones[z];
-            double add = (value - lo) / (hi - lo);
-            System.err.println("value: " + value + ", z: " + z + ", lo: " + lo + ", hi: " + hi
-                    + ", add: " + add);
-            return z + add;
+    private String parseDuration(int timeMs){
+        String duration = "";
+        int secs = (int) (timeMs / 1000);
+        int mins = secs / 60;
+        int hours = mins / 60;
+        secs = secs % 60;
+        mins = mins % 60;
+        if(hours!=0) {
+            duration = String.format("%02d", hours) + ":";
         }
-        return 0;
+        duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
+        return duration;
     }
-
-    public int getZoneInt(double value) {
-        if (zones == null) {
+    public double getZonePercentage(int zone, long totalTimeMs){
+        double percent = 0;
+        switch(zone){
+            case 1:
+                percent = calculatePercentage(zone1Duration, totalTimeMs);
+                break;
+            case 2:
+                percent = calculatePercentage(zone2Duration, totalTimeMs);
+                break;
+            case 3:
+                percent = calculatePercentage(zone3Duration, totalTimeMs);
+                break;
+            case 4:
+                percent = calculatePercentage(zone4Duration, totalTimeMs);
+                break;
+            case 5:
+                percent = calculatePercentage(zone5Duration, totalTimeMs);
+                break;
+        }
+        return percent;
+    }
+    private double calculatePercentage(int zoneDuration, long totalTimeMs){
+        if(totalTimeMs==0)
             return 0;
-        }
-
-        int z = 0;
-        for (z = 0; z < zones.length; z++) {
-            if (zones[z] >= value)
-                return z;
-        }
-        return z - 1;
-    }
-
-    public Pair<Integer, Integer> getHRValues(int zone) {
-        if (zones != null && zone < zones.length) {
-            if (zone == 0) {
-                return new Pair<Integer, Integer>(0, zones[0]);
-            } else {
-                return new Pair<Integer, Integer>(zones[zone - 1], zones[zone]);
-            }
-        }
-        return null;
-    }
-
-    public void save(Vector<Integer> vals) {
-        zones = new int[vals.size()];
-        for (int i = 0; i < zones.length; i++)
-            zones[i] = vals.get(i);
-
-        prefs.edit().putString(key, SafeParse.storeIntList(zones)).commit();
-    }
-
-    public void clear() {
-        zones = null;
-        prefs.edit().remove(key).commit();
-    }
-
-    /**
-     * Find best matching HRZone give a min/max pair
-     *
-     * @param minValue
-     * @param maxValue
-     * @return
-     */
-    public int match(double minValue, double maxValue) {
-        return (int)(getZone((minValue + maxValue) / 2) + 0.5);
+        else
+            return ((double)zoneDuration/(double)totalTimeMs) * 100;
     }
 }

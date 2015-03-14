@@ -5,15 +5,15 @@ package com.essentia.support;
  */
 public class UserObject {
 
-    private String userId;
-    private String name;
-    private String password;
-    private String gender;
-    private String weight;
-    private String height;
-    private String dateOfBirth;
-    private String maxHR;
-    private String avgHR;
+    public static String userId;
+    public static String name;
+    public static String password;
+    public static String gender;
+    public static String weight;
+    public static String height;
+    public static String dateOfBirth;
+    public static String maxHR;
+    public static String avgHR;
 
     public String getUserId() {
         return userId;

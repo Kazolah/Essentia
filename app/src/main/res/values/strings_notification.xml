@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="searching_for_gps">Searching For GPS</string>
+    <string name="gps_satellites">GPS satellites</string>
+    <string name="activity_ready">Activity Ready</string>
+    <string name="ready_to_start_running">Ready to Start Running</string>
+</resources>

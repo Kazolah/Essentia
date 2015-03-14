@@ -1,12 +1,9 @@
 package com.essentia.main;
 
-import android.content.ComponentName;
-import android.content.Context;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,16 +14,20 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.essentia.account.UserProfileActivity;
+import com.essentia.dbHelpers.DBBuilder;
 import com.essentia.history.HistoryActivity;
 import com.essentia.left_drawer.NavigationDrawerFragment;
 import com.essentia.left_drawer.NavigationListItems;
 import com.essentia.metrics.Metrics;
+import com.essentia.notification.GpsBoundState;
+import com.essentia.notification.GpsSearchingState;
+import com.essentia.notification.NotificationManagerDisplayStrategy;
+import com.essentia.notification.NotificationStateManager;
 import com.essentia.plans.PlansActivity;
 import com.essentia.setting.SettingActivity;
 import com.essentia.statistics.StatisticsActivity;
 import com.essentia.tracker.GpsInformation;
 import com.essentia.tracker.GpsStatus;
-import com.essentia.tracker.Tracker;
 import com.essentia.workout.WorkoutActivity;
 import com.essentia.workout.workout_pojos.TickListener;
 import com.example.kyawzinlatt94.essentia.R;
@@ -46,9 +47,10 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private Context context = this;
     private GpsStatus mGpsStatus;
-    private Tracker mTracker;
+    private GpsSearchingState gpsSearchingState;
+    private GpsBoundState gpsBoundState;
+    private NotificationStateManager notificationStateManager;
     boolean skipStopGps = false;
 //    private GpsSearchingState pgsSearchingState;
 
@@ -69,6 +71,21 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /**
+         * Later move under welcome activity
+         */
+        DBBuilder dbBuilder = new DBBuilder(this);
+        dbBuilder.buildDBs();
+
+        mainFragment = new MainFragment();
+        mGpsStatus = new GpsStatus(this);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationStateManager = new NotificationStateManager(new NotificationManagerDisplayStrategy(notificationManager));
+        gpsSearchingState = new GpsSearchingState(this, this);
+        gpsBoundState = new GpsBoundState(this);
+
         setContentView(R.layout.activity_main);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -80,7 +97,30 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.main_drawer_layout));
     }
-
+    @Override
+    public void onStart(){
+        super.onStart();
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        onGpsTrackerBound();
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+    @Override
+    public void onDestroy(){
+        stopGps();
+        notificationStateManager.cancelNotification();
+        mGpsStatus = null;
+        super.onDestroy();
+    }
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -91,7 +131,6 @@ public class MainActivity extends ActionBarActivity
                 startActivity(new Intent(this, UserProfileActivity.class));
                 break;
             case MAIN:
-                mainFragment = new MainFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, mainFragment)
                         .commit();
@@ -184,7 +223,7 @@ public class MainActivity extends ActionBarActivity
     public void startWorkoutSession(View v){
         Intent i = new Intent(this, WorkoutActivity.class);
         Bundle bundles = new Bundle();
-        bundles.putSerializable("Metrics",mainFragment.getMetrics());
+        bundles.putSerializable("Metrics",mainFragment.getMetricsList());
         bundles.putSerializable("Activity",mainFragment.getSelectedActivity().title);
         bundles.putSerializable("Type",mainFragment.getSelectedType().title);
         i.putExtras(bundles);
@@ -225,14 +264,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public String getGpsAccuracy() {
-        if (mTracker != null) {
-            Location l = mTracker.getLastKnownLocation();
-
-            if (l != null && l.getAccuracy() > 0) {
-                return String.format(", %s m", l.getAccuracy());
-            }
-        }
-
         return "";
     }
 
@@ -246,62 +277,68 @@ public class MainActivity extends ActionBarActivity
         return mGpsStatus.getSatellitesFixed();
     }
 
-    void bindGpsTracker(){
-        // Establish a connection with the service. We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
-        getApplicationContext().bindService(new Intent(this, Tracker.class),
-                mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-    private boolean mIsBound = false;
-    private final ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the service object we can use to
-            // interact with the service. Because we have bound to a explicit
-            // service that we know is running in our own process, we can
-            // cast its IBinder to a concrete class and directly access it.
-            mTracker = ((Tracker.LocalBinder) service).getService();
-            // Tell the user about this for our demo.
-            MainActivity.this.onGpsTrackerBound();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            // Because it is running in our same process, we should never
-            // see this happen.
-            mTracker = null;
-        }
-    };
-
     void onGpsTrackerBound() {
         startGps();
         updateView();
     }
+    void updateView(){
+        if (mainFragment!=null){
+            mainFragment.updateView(mGpsStatus);
+        }
+    }
+
     private void startGps(){
         if (mGpsStatus != null && !mGpsStatus.isLogging())
             mGpsStatus.start(this);
-
-        if (mTracker != null) {
-            mTracker.connect();
-        }
     }
+
     private void stopGps(){
         System.err.println("StartActivity.stopGps() skipStop: " + this.skipStopGps);
         if (skipStopGps == true)
             return;
-
-        if (mGpsStatus != null)
-            mGpsStatus.stop(this);
-
-        if (mTracker != null)
-            mTracker.reset();
-    }
-    private void updateView(){
-
+        mGpsStatus.stop(this);
     }
 
+    public View.OnClickListener getBtnStartClickListener(){
+        return btnStartClickListener;
+    }
+    final View.OnClickListener btnStartClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+           if(mGpsStatus.isEnabled() == false){
+               startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+           }else{
+               startGps();
+               skipStopGps = true;
+               mGpsStatus.stop(MainActivity.this);
+               Intent i = new Intent(MainActivity.this, WorkoutActivity.class);
+               Bundle bundles = new Bundle();
+               bundles.putSerializable("Metrics", mainFragment.getMetricsList());
+               bundles.putSerializable("Activity",mainFragment.getSelectedActivity().title);
+               bundles.putSerializable("Type",mainFragment.getSelectedType().title);
+               i.putExtras(bundles);
+               startActivity(i);
+               MainActivity.this.startActivityForResult(i,112);
+               notificationStateManager.cancelNotification();
+               return;
+           }
+            updateView();
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 112) {
+            skipStopGps = false;
+            onGpsTrackerBound();
+        } else {
+            updateView();
+        }
+    }
+    public void displayGPSBoundState(){
+        notificationStateManager.displayNotificationState(gpsBoundState);
+    }
+    public void displayGPSSearchingState(){
+        notificationStateManager.displayNotificationState(gpsSearchingState);
+    }
 }

@@ -81,25 +81,6 @@ public class Fields {
     }
 
     /**
-     * Checks if is can sync.
-     *
-     * @return true, if is can sync
-     */
-    public boolean isCanSync() {
-        return canSync;
-    }
-
-    /**
-     * Sets the can sync.
-     *
-     * @param canSync
-     *            the new can sync
-     */
-    public void setCanSync(boolean canSync) {
-        this.canSync = canSync;
-    }
-
-    /**
      * Gets the name.
      *
      * @return the name
@@ -154,25 +135,6 @@ public class Fields {
      */
     public void setType(String type) {
         this.type = type;
-    }
-
-    /**
-     * Gets the help.
-     *
-     * @return the help
-     */
-    public String getHelp() {
-        return help;
-    }
-
-    /**
-     * Sets the help.
-     *
-     * @param help
-     *            the new help
-     */
-    public void setHelp(String help) {
-        this.help = help;
     }
 
 }

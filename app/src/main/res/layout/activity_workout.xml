@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,65 +7,7 @@
     android:paddingBottom="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
-    <LinearLayout
+    <FrameLayout android:id="@+id/workout_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp">
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context="com.essentia.workout.WorkoutActivity" />
-    </LinearLayout>
-    <ViewSwitcher
-        android:id="@+id/workout_btns_view_switcher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:layout_alignParentBottom="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:id="@+id/btnSessionStart"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="START"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/button_text_size"
-                android:textStyle="bold"
-                android:layout_marginBottom="5dp"
-                android:background="#e1f47239"
-                android:onClick="initSignIn"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:id="@+id/btnSessionPause"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="PAUSE"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/button_text_size"
-                android:textStyle="bold"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/holo_green_light"/>
-            <Button
-                android:id="@+id/btnSessionEnd"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="END"
-                android:layout_marginLeft="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/button_text_size"
-                android:textStyle="bold"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/holo_red_light"/>
-        </LinearLayout>
-    </ViewSwitcher>
-</RelativeLayout>
+        android:layout_height="match_parent"/>
+</LinearLayout>

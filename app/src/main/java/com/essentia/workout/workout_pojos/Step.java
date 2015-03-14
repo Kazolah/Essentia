@@ -144,9 +144,9 @@ public class Step implements TickComponent{
     }
 
     @Override
-    public void onBind(Workout s, HashMap<String, Object> bindValues) {
+    public void onBind(Workout workout, HashMap<String, Object> bindValues) {
         for (Trigger t : triggers) {
-            t.onBind(s, bindValues);
+            t.onBind(workout, bindValues);
         }
     }
 
@@ -171,19 +171,19 @@ public class Step implements TickComponent{
     double lapStartHeartbeats = 0;
 
     @Override
-    public void onStart(Scope what, Workout s) {
-        double time = s.getTime(Scope.WORKOUT);
-        double dist = s.getDistance(Scope.WORKOUT);
-        double beats = s.getHeartbeats(Scope.WORKOUT);
+    public void onStart(Scope what, Workout workout) {
+        double time = workout.getTime(Scope.WORKOUT);
+        double dist = workout.getDistance(Scope.WORKOUT);
+        double beats = workout.getHeartbeats(Scope.WORKOUT);
 
         if (what == Scope.STEP) {
             stepStartTime = time;
             stepStartDistance = dist;
             stepStartHeartbeats = beats;
-            if (s.isPaused())
-                s.tracker.pause();
+            if (workout.isPaused())
+                workout.tracker.pause();
             else
-                s.tracker.resume();
+                workout.tracker.resume();
         } else if (what == Scope.LAP) {
             lapStartTime = time;
             lapStartDistance = dist;
@@ -222,11 +222,10 @@ public class Step implements TickComponent{
                         break;
                 }
             }
-            s.newLap(tmp);
         }
 
         for (Trigger t : triggers) {
-            t.onStart(what, s);
+            t.onStart(what, workout);
         }
     }
 
@@ -273,9 +272,6 @@ public class Step implements TickComponent{
             t.onTick(s);
         }
 
-        if (this.autolap > 0 && s.getDistance(Scope.LAP) >= this.autolap) {
-            s.onNewLap();
-        }
         return false;
     }
 
