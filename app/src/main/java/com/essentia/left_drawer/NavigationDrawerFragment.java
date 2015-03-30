@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.essentia.dbHelpers.UserDBHelper;
+import com.essentia.support.UserObject;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -32,7 +34,14 @@ import java.util.HashMap;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment{
+    //Reference for drawer list
+    public static final int USER_PROFILE = 0;
+    public static final int MAIN = 1;
+    public static final int HISTORY = 2;
+    public static final int STATISTICS = 3;
+    public static final int PLANS = 4;
 
+    private static UserObject userObject;
     /**
      * Remember the position of the selected item.
      */
@@ -64,9 +73,14 @@ public class NavigationDrawerFragment extends Fragment{
     private CustomAdapter adapter;
 
     private ArrayList<HashMap<String, Object>> list;
+    private int icon = R.drawable.male;
+    private static String username = "Username";
     public NavigationDrawerFragment() {
     }
 
+    public void setCurrentSelectedPosition(int position){
+        mCurrentSelectedPosition = position;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +94,19 @@ public class NavigationDrawerFragment extends Fragment{
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
+        if(userObject==null) {
+            UserDBHelper userDBHelper = new UserDBHelper(getActivity());
+            userObject = userDBHelper.getUserObject();
+            username = userObject.getName();
+            if(userObject.getGender().equals("Male")){
+                icon = R.drawable.male;
+            }else{
+                icon = R.drawable.female;
+            }
+        }
+
         NavigationListItems listItems[] = new NavigationListItems[]{
-                new NavigationListItems(R.drawable.female, "Username"),
+                new NavigationListItems(icon, username),
                 new NavigationListItems(R.drawable.workout_icon, "Workout"),
                 new NavigationListItems(R.drawable.history_icon, "History"),
                 new NavigationListItems(R.drawable.statistics_icon, "Statistics"),
@@ -195,7 +220,7 @@ public class NavigationDrawerFragment extends Fragment{
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);

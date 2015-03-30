@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/light_gray">
+        <TextView
+            android:id="@+id/chrl_tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="February 10, 2015"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/orange_pressed"/>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp">
+        <ImageView
+            android:id="@+id/chrl_ivActivity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/running"/>
+        <TextView
+            android:id="@+id/chrl_tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="10 km"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text=" in "/>
+        <TextView
+            android:id="@+id/chrl_tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="00:30:00"/>
+        </LinearLayout>
+</LinearLayout>

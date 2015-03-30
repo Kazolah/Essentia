@@ -434,7 +434,6 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
 
             close();
             isScanning = true;
-//            log("select HR-provider");
             selectProvider();
         }
     };

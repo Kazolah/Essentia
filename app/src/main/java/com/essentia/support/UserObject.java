@@ -5,15 +5,15 @@ package com.essentia.support;
  */
 public class UserObject {
 
-    public static String userId;
-    public static String name;
-    public static String password;
-    public static String gender;
-    public static String weight;
-    public static String height;
-    public static String dateOfBirth;
-    public static String maxHR;
-    public static String avgHR;
+    private  String userId;
+    private  String name;
+    private  String gender;
+    private  String weight;
+    private  String height;
+    private  String age;
+    private  String maxHR;
+    private  String avgHR;
+    private String restingHR;
 
     public String getUserId() {
         return userId;
@@ -55,12 +55,12 @@ public class UserObject {
         this.height = height;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+    public String getAge() {
+        return age;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setAge(String dateOfBirth) {
+        this.age = dateOfBirth;
     }
 
     public String getMaxHR() {
@@ -79,11 +79,11 @@ public class UserObject {
         this.avgHR = avgHR;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRestingHR() {
+        return restingHR;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRestingHR(String restingHR) {
+        this.restingHR = restingHR;
     }
 }

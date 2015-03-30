@@ -47,24 +47,11 @@
                     android:background="@drawable/rounded_edittext"
                     android:paddingLeft="10dp" />
 
-                <EditText android:id="@+id/edtRegisterPassword"
+                <EditText android:id="@+id/edtRegisterAge"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/register"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:background="@drawable/rounded_edittext"
-                    android:paddingLeft="10dp" />
-
-                <EditText android:id="@+id/edtRegisterDateOfBirth"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/prompt_dob"
+                    android:hint="@string/prompt_age"
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:maxLines="1"
@@ -143,8 +130,8 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/button_text_size"
                     android:background="#e1f47239"
-                    android:textStyle="bold" />
-
+                    android:textStyle="bold"
+                    />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

@@ -5,12 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -24,18 +21,11 @@ import com.essentia.workout.workout_pojos.TickListener;
 import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class WorkoutActivity extends FragmentActivity implements TickListener {
 
-
-    private HRZones hrZones;
     private Tracker mTracker = null;
     private Workout workout;
     private Location l = null;
@@ -43,16 +33,12 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
     private MetricsUIRef selectedMetrics;
     //Variables
     private boolean isStarted = false;
-    private String DB_PATH;
-    private String DB_NAME = "EssentiaSQLite";
-
+    private String sport;
     private CharSequence mTitle;
 
     private final Handler handler = new Handler();
-
+    private HRZones hrZones;
     //UI component References
-    private WorkoutMetricsFragment metricsFragment = WorkoutMetricsFragment.newInstance();
-    private WorkoutHRFragment hrFragment = WorkoutHRFragment.newInstance();
     private WorkoutFragment workoutFragment;
     private WorkoutMetricsListFragment workoutMetricsListFragment;
 
@@ -60,20 +46,17 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+
+        Intent i = getIntent();
+        Bundle bundles = i.getExtras();
+        sport = (String) bundles.getSerializable("Sport");
+
         mTitle = getTitle();
-        hrZones = new HRZones();
         workoutFragment = new WorkoutFragment();
         workoutMetricsListFragment = new WorkoutMetricsListFragment();
         inflateWorkoutFragment("");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DB_PATH = getApplicationContext().getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
-        }
-        else {
-            DB_PATH = getApplicationContext().getFilesDir().getPath() + getApplicationContext().getPackageName() + "/databases/";
-        }
     }
-
     private void finishSession( Class<?> cls){
         startActivity(new Intent(this, cls));
     }
@@ -187,7 +170,11 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
     }
 
     void onGpsTrackerBound() {
-        mTracker.start(new Workout());
+        workout = new Workout();
+        workout.setSport(sport);
+
+        /* Initiate the Tracker */
+        mTracker.start(workout);
         mTracker.setup();
         workout = mTracker.getWorkout();
         workoutFragment.setWorkout(this.workout);
@@ -210,17 +197,16 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
 
     public void inflateWorkoutFragment(String newSelectedMetrics){
         if(!newSelectedMetrics.equals("")) {
-            workoutFragment.getMetricsFragment()
-                    .setNewSelectedMetrics(getSelectedMetrics(), newSelectedMetrics);
+            workoutFragment.setSelectedMetrics(newSelectedMetrics);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.workout_container, workoutFragment)
                 .addToBackStack("workout_fragment")
                 .commit();
-        Fragment fragment = fragmentManager.findFragmentByTag("list_fragment");
-        if(fragment != null)
-            fragmentManager.beginTransaction().remove(fragment).commit();
+//        Fragment fragment = fragmentManager.findFragmentByTag("list_fragment");
+//        if(fragment != null)
+//            fragmentManager.beginTransaction().remove(fragment).commit();
     }
 
     public void inflateMetricsListFragment(){
@@ -250,24 +236,7 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
         hrZones = mTracker.getHRZones();
         return hrZones;
     }
-    private void writeToSD() throws IOException {
-        File sd = Environment.getExternalStorageDirectory();
 
-        if (sd.canWrite()) {
-            String currentDBPath = DB_NAME;
-            String backupDBPath = "backupname.db";
-            File currentDB = new File(DB_PATH, currentDBPath);
-            File backupDB = new File(sd, backupDBPath);
-
-            if (currentDB.exists()) {
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-            }
-        }
-    }
     public void endActivity(){
         if(timer!=null){
             workout.onStop(workout);

@@ -59,7 +59,6 @@ public class WorkoutMetricsListFragment extends Fragment {
      */
     private void selectItem(int position){
         selectedMetrics = mListItems[position].title;
-
         workoutActivity.inflateWorkoutFragment(selectedMetrics);
     }
 

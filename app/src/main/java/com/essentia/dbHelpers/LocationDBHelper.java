@@ -62,7 +62,7 @@ public class LocationDBHelper extends BaseDBHelper{
         int cnt = 0;
         Route route = new Route();
         Cursor c = mDB.query(TABLE, from, "activity_id == " + mID,
-                null, null, null, "_id", null);
+                null, null, null, "id", null);
         if (c.moveToFirst()) {
             route = new Route();
             double acc_distance = 0;

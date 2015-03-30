@@ -1,26 +1,44 @@
 package com.essentia.welcome;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.essentia.login.LoginActivity;
+import com.essentia.dbHelpers.DBBuilder;
+import com.essentia.dbHelpers.UserDBHelper;
+import com.essentia.main.MainActivity;
 import com.essentia.register.RegisterActivity;
+import com.essentia.support.ApplicationContext;
+import com.essentia.support.UserObject;
 import com.example.kyawzinlatt94.essentia.R;
 
 
 public class WelcomeActivity extends ActionBarActivity {
-
+    private UserDBHelper userDBHelper;
+    private UserObject userObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+
+        DBBuilder dbBuilder = new DBBuilder(this);
+        dbBuilder.buildDBs();
+
+        userDBHelper = new UserDBHelper(this);
+        int count = userDBHelper.getCount();
+        if(count==0) {
+            setContentView(R.layout.activity_welcome);
+        }else{
+            userObject = userDBHelper.getUserObject();
+            ApplicationContext.userObject = userObject;
+            this.finish();
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
         getSupportActionBar().hide();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -42,14 +60,8 @@ public class WelcomeActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void initRegister(View view){
+    public void initGetStarted(View view){
+        finish();
         startActivity(new Intent(this, RegisterActivity.class));
-    }
-    public void initSignIn(View view){
-        startActivity(new Intent(this, LoginActivity.class));
-    }
-    private boolean isSignedIn(){
-        boolean isSignedIn = false;
-        return isSignedIn;
     }
 }

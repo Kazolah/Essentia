@@ -28,7 +28,7 @@ public class TypeFragment extends Fragment{
         super.onCreate(savedInstanceState);
         NavigationListItems listItems[] = new NavigationListItems[]{
                 new NavigationListItems(R.drawable.basic_workout, getString(R.string.basic_workout)),
-                new NavigationListItems(R.drawable.target_chasing, getString(R.string.target_goal)),
+                new NavigationListItems(R.drawable.target_chasing, getString(R.string.target_heart_rate)),
         };
         mListItems = listItems;
         adapter = new ListCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);

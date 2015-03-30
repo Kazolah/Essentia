@@ -4,7 +4,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.essentia.main.MainActivity$PlaceholderFragment"
-    android:background="@android:color/white">
+    android:background="@color/light_gray">
 
     <ListView
         android:id="@+id/workout_setup_listview"
@@ -13,37 +13,59 @@
         android:choiceMode="singleChoice"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.5dip"
+        android:background="@color/white"
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent">
     </ListView>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnMainStart"
-        android:layout_marginBottom="120dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/workout_setup_listview"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
         android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/imgBtnAudioFeedback"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/voice_feedback_off"
-            android:background="@android:color/transparent" />
-        <ImageButton
-            android:id="@+id/imgBtnAutoPause"
+            android:layout_weight="50"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/ivHRMStatus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="50"
+                android:src="@drawable/ic_heart_rate_na"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="HRM: Not Connected"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/hrm_con_off" />
-        <ImageButton
-            android:id="@+id/imgBtnHRMCon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/auto_pause_off"
-            android:background="@android:color/transparent" />
+            android:layout_weight="50"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/ivGPSStatus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="50"
+                android:src="@drawable/ic_gps_na"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="GPS: Not Connected"/>
+        </LinearLayout>
     </LinearLayout>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

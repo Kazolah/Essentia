@@ -6,8 +6,7 @@
     <string name="action_done">Done</string>
 
     <!-- Welcome Page -->
-    <string name="main_sign_in">SIGN IN</string>
-    <string name="main_register">I AM NEW</string>
+    <string name="main_get_started">GET STARTED</string>
 
     <!-- Main Page (Workout Page) -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

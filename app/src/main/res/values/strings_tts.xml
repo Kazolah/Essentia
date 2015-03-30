@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hrz_shift_up">Alert, Heart Rate Zone Shifted Up.</string>
+    <string name="hrz_shift_down">Alert, Heart Rate Zone Shifted Down.</string>
+    <string name="current_hrz">Current Heart Rate Zone</string>
+    <string name="km">Kilometer</string>
+</resources>

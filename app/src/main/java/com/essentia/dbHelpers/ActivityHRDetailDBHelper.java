@@ -61,11 +61,16 @@ public class ActivityHRDetailDBHelper extends BaseDBHelper{
             "FROM  `activity_hr_detail` " + "WHERE hr_zone =? AND activity_id =?", args);
         try{
             for (HashMap<String, Object> row : resultList) {
-                totalHRDuration = row.get("total").toString();
+                try {
+                    totalHRDuration = row.get("total").toString();
+                }catch(NullPointerException e){
+                    totalHRDuration = "0";
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
         }
+        totalHRDuration = (totalHRDuration.equals(""))?"0":totalHRDuration;
         return Integer.valueOf(totalHRDuration);
     }
     /**

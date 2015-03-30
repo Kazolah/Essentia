@@ -9,6 +9,7 @@ import android.text.format.DateUtils;
 import com.essentia.workout.workout_pojos.Dimension;
 import com.example.kyawzinlatt94.essentia.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -17,6 +18,7 @@ import java.util.Locale;
  * Created by kyawzinlatt94 on 2/24/15.
  */
 public class Formatter implements SharedPreferences.OnSharedPreferenceChangeListener{
+
     public static String formatLowerLimitHRZones(int percent, int zone){
         return percent + " % - Zone "+ (zone-1);
     }
@@ -533,7 +535,7 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
 
     public static String getTodayDate(){
         Date myDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(myDate);
     }
     public static String parseMsIntoTime(String time){
@@ -549,4 +551,17 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
         duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
         return duration;
     }
+
+    public static String parseDate(String date){
+        String formattedDate = "";
+        SimpleDateFormat pFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat nFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        try{
+            formattedDate = nFormat.format(pFormat.parse(date));
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        return formattedDate;
+    }
+
 }

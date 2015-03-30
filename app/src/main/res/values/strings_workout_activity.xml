@@ -45,7 +45,7 @@
 
     <!-- Workout Types -->
     <string name="basic_workout">Basic Workout</string>
-    <string name="target_goal">Target Goal</string>
+    <string name="target_heart_rate">Target Heart Rate</string>
 
     <string name="calorie_off">Calorie: Off</string>
     <string name="calorie_on">Calorie: On</string>
@@ -73,4 +73,6 @@
 
     <string name="essentia_started">Essentia Activity Started</string>
     <string name="activity_ongoing">Activity Ongoing</string>
+
+
 </resources>

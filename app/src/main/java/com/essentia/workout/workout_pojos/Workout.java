@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 
+import com.essentia.support.ApplicationContext;
 import com.essentia.support.Scope;
 import com.essentia.tracker.Tracker;
 import com.essentia.util.HRZones;
@@ -26,6 +27,7 @@ import java.util.HashSet;
 public class Workout implements WorkoutComponent, WorkoutInfo {
 
     boolean paused = false;
+    String sport = "Running";
 //    int sport = DB.ACTIVITY_ID.SPORT_RUNNING;
     private boolean mute;
     class PendingFeedback {
@@ -67,13 +69,10 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
     RUTextToSpeech textToSpeech = null;
 
     public static final String KEY_TTS = "tts";
-    public static final String KEY_COUNTER_VIEW = "CountdownView";
-    public static final String KEY_FORMATTER = "Formatter";
-    public static final String KEY_HRZONES = "HrZones";
     public static final String KEY_MUTE = "mute";
 
     public Workout() {
-        hrZones = new HRZones();
+        hrZones = new HRZones(ApplicationContext.userObject);
     }
 
     public void setTracker(Tracker tracker) {
@@ -271,12 +270,12 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
         return 0.00;
     }
 
-    @Override
-    public int getSport() {
-//        return sport;
-        return 0;
+    public String getSport() {
+        return sport;
     }
-
+    public void setSport(String sport){
+        this.sport = sport;
+    }
     @Override
     public boolean isEnabled(Dimension dim, Scope scope) {
         return false;
@@ -341,7 +340,11 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
                 }
                 return "--";
             case "Distance":
-                return String.valueOf(tracker.getDistance());
+                double distance = tracker.getDistance()/1000;
+                String distanceWithUnit = String.format("%.2f", distance) + " km";
+                if (distance<1)
+                    distanceWithUnit = tracker.getDistance() + " m";
+                return distanceWithUnit;
             case "Calorie":
                 if(tracker!=null){
                     return tracker.getCalorieBurned();
@@ -361,7 +364,7 @@ public class Workout implements WorkoutComponent, WorkoutInfo {
             case "Speed":
                 if(tracker!=null){
                     double speed = tracker.getCurrentSpeed();
-                    return String.valueOf(speed);
+                    return String.format("%.2f",speed);
                 }
                 return "--";
             case "Pace":

@@ -1,9 +1,11 @@
 package com.essentia.support;
 
+import java.io.Serializable;
+
 /**
  * Created by kyawzinlatt94 on 3/14/15.
  */
-public class WorkoutActivity {
+public class WorkoutActivity implements Serializable{
     private String id;
     private String date;
     private String userId;
@@ -16,6 +18,11 @@ public class WorkoutActivity {
     private String avgHR;
     private String sport;
     private String startTime;
+    private String zone1Info = "";
+    private String zone2Info = "";
+    private String zone3Info = "";
+    private String zone4Info = "";
+    private String zone5Info = "";
 
     public String getDuration() {
         return duration;
@@ -111,5 +118,45 @@ public class WorkoutActivity {
 
     public void setCalorie(String calorie) {
         this.calorie = calorie;
+    }
+
+    public String getZone1Info() {
+        return zone1Info;
+    }
+
+    public void setZone1Info(String zone1Info) {
+        this.zone1Info = zone1Info;
+    }
+
+    public String getZone2Info() {
+        return zone2Info;
+    }
+
+    public void setZone2Info(String zone2Info) {
+        this.zone2Info = zone2Info;
+    }
+
+    public String getZone3Info() {
+        return zone3Info;
+    }
+
+    public void setZone3Info(String zone3Info) {
+        this.zone3Info = zone3Info;
+    }
+
+    public String getZone4Info() {
+        return zone4Info;
+    }
+
+    public void setZone4Info(String zone4Info) {
+        this.zone4Info = zone4Info;
+    }
+
+    public String getZone5Info() {
+        return zone5Info;
+    }
+
+    public void setZone5Info(String zone5Info) {
+        this.zone5Info = zone5Info;
     }
 }

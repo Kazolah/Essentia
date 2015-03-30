@@ -26,15 +26,15 @@ public class WorkoutMetricsFragment extends Fragment{
     private TextView mTextViewList[];
     private WorkoutActivity workoutActivity;
     private ArrayList<Metrics> metricsList;
-    private int totalMetricsCount;
+    private int totalMetricsCount = 0;
     private String activity;
     private String type;
     private boolean isCreated = false;
-    private String descSelected;
+    private String listSelectedItem;
     private Formatter formatter;
 
-    private int selectedLayoutIndex;
-    private String txtSelectedMetrics;
+    private int selectedLayoutIndex = 0;
+    private String txtPreviousSelectedMetrics;
     public HashMap<String, MetricsUIRef> mBundle;
 
 
@@ -50,9 +50,8 @@ public class WorkoutMetricsFragment extends Fragment{
         metricsList = (ArrayList<Metrics>)bundles.getSerializable("Metrics");
         activity = (String) bundles.getSerializable("Activity");
         type = (String) bundles.getSerializable("Type");
-        descSelected = "";
+        listSelectedItem = "";
         metricsRefls = new ArrayList<MetricsUIRef>();
-
     }
 
     @Override
@@ -112,7 +111,9 @@ public class WorkoutMetricsFragment extends Fragment{
      */
     private int getLayout(){
         int layout;
-        totalMetricsCount = getSelectedMetricsNo(metricsList);
+        if(totalMetricsCount==0) {
+            totalMetricsCount = getSelectedMetricsNo(metricsList);
+        }
         switch (totalMetricsCount){
             case 3:
                 layout = R.layout.fragment_workout_3metrics;
@@ -130,6 +131,10 @@ public class WorkoutMetricsFragment extends Fragment{
         return layout;
     }
 
+    /**
+     * Bind ui components according to the metrics count on layout
+     * @param view
+     */
     private void bindUIComponents(View view){
         switch (totalMetricsCount){
             case 3:
@@ -165,6 +170,9 @@ public class WorkoutMetricsFragment extends Fragment{
         }
     }
 
+    /**
+     * Populate data to UI references
+     */
     private void setResources(){
         int count = 1;
         for(Metrics metrics: metricsList){
@@ -206,32 +214,36 @@ public class WorkoutMetricsFragment extends Fragment{
         }
     }
 
-    final View.OnClickListener layoutOnClick = new View.OnClickListener() {
+    private View.OnClickListener layoutOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(v.getId() == mRef1.getLayoutId()){
-                txtSelectedMetrics = mRef1.getDescription();
+                txtPreviousSelectedMetrics = mRef1.getDescription();
                 selectedLayoutIndex = 1;
             }else if(v.getId() == mRef2.getLayoutId()){
-                txtSelectedMetrics = mRef2.getDescription();
+                txtPreviousSelectedMetrics = mRef2.getDescription();
                 selectedLayoutIndex = 2;
             }else if(v.getId() == mRef3.getLayoutId()){
-                txtSelectedMetrics = mRef3.getDescription();
+                txtPreviousSelectedMetrics = mRef3.getDescription();
                 selectedLayoutIndex = 3;
             }else if(v.getId() == mRef4.getLayoutId()){
-                txtSelectedMetrics = mRef4.getDescription();
+                txtPreviousSelectedMetrics = mRef4.getDescription();
                 selectedLayoutIndex = 4;
             }else if(v.getId() == mRef5.getLayoutId()){
-                txtSelectedMetrics = mRef5.getDescription();
+                txtPreviousSelectedMetrics = mRef5.getDescription();
                 selectedLayoutIndex = 5;
             }
-            descSelected ="";
+            listSelectedItem ="";
             workoutActivity.inflateMetricsListFragment();
         }
     };
 
-    public void setNewSelectedMetrics(MetricsUIRef metricsUIRef, String description){
-        this.descSelected = description;
+    /**
+     * Set the selected from list metrics visible
+     * @param description
+     */
+    public void setNewSelectedMetrics(String description){
+        this.listSelectedItem = description;
     }
     public void setRefResource(MetricsUIRef currentRef, MetricsUIRef previousRef){
         currentRef.setResource(previousRef.getIcon(), previousRef.getDescription(),
@@ -244,19 +256,27 @@ public class WorkoutMetricsFragment extends Fragment{
      * Update with new selected metrics
      */
     public void populateMetrics(){
-        MetricsUIRef uiRef = getSelectedLayout();
-        if(descSelected.equals("") || uiRef==null || txtSelectedMetrics.equals(descSelected))
+        //Previously selected UI Ref
+        MetricsUIRef uiRef = getSelectedUIRef();
+        if(listSelectedItem.equals("") || uiRef==null || txtPreviousSelectedMetrics.equals(listSelectedItem))
             return;
         if(swapPositionIfPossible(uiRef))
             return;
-        setPreviousMetricsInvisible(uiRef.getDescription());
+        setPreviousMetricsInvisible(txtPreviousSelectedMetrics);
+        setCurrentMetricsVisible(this.listSelectedItem);
         deploySelectedMetrics(uiRef);
     }
 
+    /**
+     * Swap position with the previously selected UI Ref
+     * @param uiRef Previously selected UI Ref
+     * @return
+     */
     public boolean swapPositionIfPossible(MetricsUIRef uiRef){
         boolean possible = false;
+
         for(MetricsUIRef metricsRef:metricsRefls) {
-            if(descSelected.equals(metricsRef.getDescription())) {
+            if(listSelectedItem.equals(metricsRef.getDescription())) {
                 String desc = metricsRef.getDescription();
                 String unit = metricsRef.getUnit();
                 int icon = metricsRef.getIcon();
@@ -264,6 +284,7 @@ public class WorkoutMetricsFragment extends Fragment{
                 mBundle.remove(uiRef.getDescription());
                 metricsRef.setResource(uiRef.getIcon(),uiRef.getDescription(),"",uiRef.getUnit());
                 uiRef.setResource(icon, desc,"",unit);
+
                 mBundle.put(metricsRef.getDescription(), metricsRef);
                 mBundle.put(uiRef.getDescription(), uiRef);
                 possible = true;
@@ -278,9 +299,16 @@ public class WorkoutMetricsFragment extends Fragment{
             }
         }
     }
+    public void setCurrentMetricsVisible(String description){
+        for(Metrics metrics:metricsList){
+            if(metrics.getDescription().equals(description)){
+                metrics.setIsDisplayed(true);
+            }
+        }
+    }
     public void deploySelectedMetrics(MetricsUIRef uiRef){
         for (Metrics metrics:metricsList){
-            if(metrics.getDescription().equals(descSelected)){
+            if(metrics.getDescription().equals(listSelectedItem)){
                 metrics.setIsDisplayed(true);
                 mBundle.remove(uiRef.getDescription());
                 uiRef.setResource(metrics.getDrawable(), metrics.getDescription(),
@@ -290,7 +318,7 @@ public class WorkoutMetricsFragment extends Fragment{
             }
         }
     }
-    public MetricsUIRef getSelectedLayout(){
+    public MetricsUIRef getSelectedUIRef(){
         switch (selectedLayoutIndex){
             case 1: return mRef1;
             case 2: return mRef2;

@@ -2,18 +2,44 @@ package com.essentia.util;
 
 import android.util.Pair;
 
+import com.essentia.support.UserObject;
+
 /**
  * Created by kyawzinlatt94 on 2/20/15.
  */
 public class HRZones {
 
     private static final int DEFAULT_MAX_HR = 250;
-    private int hrMax = DEFAULT_MAX_HR;
+    private int hrMax;
     public static final int ZONE1 = 1;
     public static final int ZONE2 = 2;
     public static final int ZONE3 = 3;
     public static final int ZONE4 = 4;
     public static final int ZONE5 = 5;
+
+    public static final String ZONE1_DES = "Recovery Zone";
+    public static final String ZONE2_DES = "Fat Burning Zone";
+    public static final String ZONE3_DES = "Fitness Zone";
+    public static final String ZONE4_DES = "Increase Performance Zone";
+    public static final String ZONE5_DES = "Maximize Performance Zone";
+
+    public static final String ZONE1_IN_TXT = "Zone 1";
+    public static final String ZONE2_IN_TXT = "Zone 2";
+    public static final String ZONE3_IN_TXT = "Zone 3";
+    public static final String ZONE4_IN_TXT = "Zone 4";
+    public static final String ZONE5_IN_TXT = "Zone 5";
+
+    public static final String ZONE1_LEVEL = "VERY LIGHT";
+    public static final String ZONE2_LEVEL = "LIGHT";
+    public static final String ZONE3_LEVEL = "MODERATE";
+    public static final String ZONE4_LEVEL = "HARD";
+    public static final String ZONE5_LEVEL = "MAXIMUM";
+
+    public static final String ZONE5_ADV = "Working out at Zone 5 develops maximum performance and speed";
+    public static final String ZONE4_ADV = "Working out at Zone 4 increases maximum performance capacity";
+    public static final String ZONE3_ADV = "Working out at Zone 3 improves aerobic fitness";
+    public static final String ZONE2_ADV = "Working out at Zone 2 improves basic endurance and fat burning";
+    public static final String ZONE1_ADV = "Working out at Zone 1 improves overall health and helps recovery";
 
 
     private String zone1DurationDetails = "";
@@ -31,8 +57,16 @@ public class HRZones {
     private int zone3Percent = 0;
     private int zone4Percent = 0;
     private int zone5Percent = 0;
-    public HRZones(){
 
+    UserObject userObject;
+    public HRZones(UserObject userObject){
+        this.userObject = userObject;
+        int maxHR = Integer.parseInt(userObject.getMaxHR());
+        if( maxHR==0){
+            hrMax = DEFAULT_MAX_HR - Integer.valueOf(userObject.getAge());
+        }else{
+            hrMax = maxHR;
+        }
     }
 
     public int getCurrentHRZone(int hrValue){
@@ -152,19 +186,19 @@ public class HRZones {
     }
 
     public void setZone1DurationDetails(String data){
-        zone1DurationDetails = "Zone 1:\n" + data;
+        zone1DurationDetails += data;
     }
     public void setZone2DurationDetails(String data){
-        zone2DurationDetails = "Zone 2:\n" + data;
+        zone2DurationDetails += data;
     }
     public void setZone3DurationDetails(String data){
-        zone3DurationDetails = "Zone 3:\n" + data;
+        zone3DurationDetails += data;
     }
     public void setZone4DurationDetails(String data){
-        zone4DurationDetails = "Zone 4:\n" + data;
+        zone4DurationDetails += data;
     }
     public void setZone5DurationDetails(String data){
-        zone5DurationDetails = "Zone 5:\n" + data;
+        zone5DurationDetails += data;
     }
 
     public void addZonesDuration(long milliSec, int currentHRZone){
@@ -205,6 +239,22 @@ public class HRZones {
         duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
         return duration;
     }
+    public String getZoneIntensityLevel(int heartRateZone){
+        switch (heartRateZone){
+            case 1:
+                return "Recovery Zone";
+            case 2:
+                return "Fat Burning Zone";
+            case 3:
+                return "Fitness Zone";
+            case 4:
+                return "Performance Zone";
+            case 5:
+                return "Maximizing Zone";
+            default:
+                return "Not available";
+        }
+    }
     public double getZonePercentage(int zone, long totalTimeMs){
         double percent = 0;
         switch(zone){
@@ -231,5 +281,15 @@ public class HRZones {
             return 0;
         else
             return ((double)zoneDuration/(double)totalTimeMs) * 100;
+    }
+
+    public static int getMaxHeartRateZone(Double age, String gender){
+        double HRmax = 0;
+        if(gender.equals("Male")){
+            HRmax = 205.8 - (0.685 * age);
+        }else {
+            HRmax = 206 - (0.88 * age);
+        }
+        return (int) HRmax;
     }
 }

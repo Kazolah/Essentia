@@ -40,9 +40,10 @@ public class DBBuilder {
         ActivityHRDetailDBHelper dbHelper = new ActivityHRDetailDBHelper(context);
 
         activityDBHelper.executeSQL("INSERT INTO `activity` (`start_time`, `date`," +
-                " `user_id`, `calorie`, `duration`,`distance`, `avg_pace`, `avg_speed`, `max_hr`," +
-                " `avg_hr`, `sport`) VALUES ('00:10:00 AM', '14-03-2015', '1', '1200', " +
-                "'10000','3000', '0', '0', '210', '190', '1');",null);
+                " `calorie`, `duration`,`distance`, `avg_pace`, `avg_speed`, `max_hr`," +
+                " `avg_hr`, `sport`, `zone1_info`,`zone2_info`,`zone3_info`,`zone4_info`,`zone5_info`)" +
+                " VALUES ('00:10:00 AM', '14-03-2015', '1200', " +
+                "'55000','3000', '0', '0', '210', '190', 'Running','','','','','');",null);
 
         locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
                 "VALUES ('1', '1', '1000', '3.139019', '101.686748')",null);
@@ -57,7 +58,7 @@ public class DBBuilder {
             if(i>5)
                 j=2;
             dbHelper.executeSQL("INSERT INTO `activity_hr_detail` (`time_stamp`, `hr_value`, `hr_zone`, `activity_id`) " +
-                    "VALUES ('"+(1000*i)+"', '"+(134+i)+"', '"+j+"', '1')", null);
+                    "VALUES ('"+1000*i+"', '"+(134+i)+"', '"+j+"', '1')", null);
         }
 
     }

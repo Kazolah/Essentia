@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    <TextView
+        android:id="@+id/tvRemind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="Remind me to workout on"/>
+    <LinearLayout
+        android:id="@+id/dateChooser"
+        android:layout_below="@+id/tvRemind"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <ImageView
+            android:id="@+id/iv_SUN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_sun_off"/>
+        <ImageView
+            android:id="@+id/iv_MON"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_monday_off"/>
+        <ImageView
+            android:id="@+id/iv_TUE"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_tuesday_off"/>
+        <ImageView
+            android:id="@+id/iv_WED"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_wednesday_off"/>
+        <ImageView
+            android:id="@+id/iv_THURS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_thrusday_off"/>
+        <ImageView
+            android:id="@+id/iv_Fri"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_friday_off"/>
+        <ImageView
+            android:id="@+id/iv_Sat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="14.3"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_sat_off"/>
+    </LinearLayout>
+    <TimePicker
+        android:id="@+id/timePicker1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dateChooser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SAVE PLAN"
+        android:id="@+id/btnPlansSave"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/timePicker1"
+        android:background="#e1f47239"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/button_text_size"/>
+
+</RelativeLayout>

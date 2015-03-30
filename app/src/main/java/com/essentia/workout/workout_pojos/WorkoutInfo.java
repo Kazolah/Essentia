@@ -27,8 +27,6 @@ public interface WorkoutInfo {
 
     double getHeartRateZone(Scope scope);
 
-    int getSport();
-
     /* TODO make better/more elaborate state visible... */
     boolean isPaused();
 

@@ -1,46 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TabHost
-        android:id="@+id/tabHost"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#03000000">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:orientation="horizontal">
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/hrSummaryPieChart"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="65"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="35"
+            android:layout_marginLeft="15dp"
+            android:background="@color/white"
             android:orientation="vertical">
-            <TabWidget
-                android:id="@android:id/tabs"
+            <TextView
+                android:id="@+id/fwsh_tvZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingLeft="5dp"
+                android:textColor="@color/background_material_dark"
+                android:text="Zone 1"
+                android:textSize="25dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/fwsh_tvZoneLevel"
+                android:layout_below="@+id/fwsh_tvZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="2dp"
+                android:paddingLeft="5dp"
+                android:textColor="@color/red"
+                android:text="Moderate"
+                android:textSize="13dp"
+                android:layout_gravity="center" />
+            <View
+                android:id="@+id/hrLine"
+                android:layout_below="@+id/fwsh_tvZoneLevel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TabWidget>
-            <FrameLayout
-                android:id="@android:id/tabcontent"
+                android:layout_height="0.5dp"
+                android:layout_margin="10dp"
+                android:background="@color/button_material_light"
+                />
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:id="@+id/tabChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/hrSummaryLineChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/tabChart2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/hrSummaryPieChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/hrLine">
+                <TextView
+                    android:id="@+id/fwsh_zoneDurationDetail"
+                    android:textAlignment="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/background_material_dark"
+                    android:layout_gravity="center"
+                    android:text="00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55"/>
 
-    </TabHost>
+            </ScrollView>
+            <ImageView
+                android:id="@+id/fwsh_ivInfo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/ic_info"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:layout_marginTop="30dp">
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/hrSummaryLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>

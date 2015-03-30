@@ -1,0 +1,60 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <PreferenceCategory android:title = "Trigger Frequency"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:persistent="true"
+        android:key="@string/cue_distance"
+        android:title="@string/distance_triggered"/>
+    <com.essentia.util.TextPreference
+       android:dependency = "@string/cue_distance"
+        android:defaultValue = "1000"
+        android:inputType = "number"
+        android:key = "@string/cue_distance_interval"
+        android:persistent = "true"
+        android:title = "@string/distance_interval"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:persistent="true"
+        android:key="@string/cue_heart_rate_zone_shift"
+        android:title="@string/hrz_shift_triggerred"/>
+    <PreferenceCategory android:key="cueinfo" android:title="@string/cue_information">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_distance"
+            android:title="@string/distance" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_time"
+            android:title="@string/duration" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_hr"
+            android:title="@string/heart_rate" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_hrz"
+            android:title="@string/heart_rate_zone" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_speed"
+            android:title="@string/speed" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_pace"
+            android:title="@string/pace" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:persistent="true"
+            android:key="@string/cueinfo_total_calorie"
+            android:title="@string/calorie" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -175,6 +175,10 @@ public class WorkoutFragment extends Fragment{
     public WorkoutMetricsFragment getMetricsFragment(){
         return metricsFragment;
     }
+    public void setSelectedMetrics(String newSelectedMetrics){
+        metricsFragment
+                .setNewSelectedMetrics(newSelectedMetrics);
+    }
     public void setWorkout(Workout workout){
         this.workout = workout;
     }

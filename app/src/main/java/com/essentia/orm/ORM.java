@@ -139,6 +139,14 @@ public class ORM extends SQLiteDatabaseHelper{
         return id;
     }
 
+    public void updateRecord(BaseDBHelper dbHelper, ContentValues data_values,
+                             String where, String[] whereArgs) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.update(modelToTable(dbHelper.getModelName()), data_values, where,
+                whereArgs);
+        db.close();
+    }
+
     public long create(SQLiteDatabase db, BaseDBHelper dbHelper, ContentValues data_values){
         ContentValues values = new ContentValues();
 
@@ -364,5 +372,43 @@ public class ORM extends SQLiteDatabaseHelper{
         StringBuffer table = new StringBuffer();
         table.append(model.replaceAll("\\.", "_"));
         return table.toString();
+    }
+
+    /**
+     * Delete the record with id
+     * @param db Database to update
+     * @param id Id to be updated
+     * @return Boolean Status on operation
+     */
+    public boolean delete(BaseDBHelper db, int id) {
+        try {
+            SQLiteDatabase sdb = getWritableDatabase();
+            String where = "id = " + id;
+            sdb.delete(modelToTable(db.getModelName()), where, null);
+            sdb.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Delete record with where clause
+     * @param db Database to be updated
+     * @param where Where Clause
+     * @param whereArgs Args Clause
+     * @return Status on Operation
+     */
+    public boolean delete(BaseDBHelper db, String where, String[] whereArgs){
+        try {
+            SQLiteDatabase sdb = getWritableDatabase();
+            sdb.delete(modelToTable(db.getModelName()), where, whereArgs);
+            sdb.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

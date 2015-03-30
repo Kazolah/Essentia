@@ -42,8 +42,6 @@ public class WorkoutHRPercentageFragment extends Fragment{
         hrBarChart.setDescription("HR Zones");
         hrBarChart.setOnChartValueSelectedListener(new ChartValueSelectedListener());
         hrBarChart.setMarkerView(mv);
-        hrZones = new HRZones();
-        populateBarChart(hrZones);
         return rootView;
     }
     public void updateView(HRZones hrZones){
@@ -67,17 +65,20 @@ public class WorkoutHRPercentageFragment extends Fragment{
 //        e2 = new BarEntry(10.000f, 0);
         zone2.add(e2);
 
-        e3 = new BarEntry(35.000f, 0);
+        e3 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE3, workoutActivity.getTotalDurationLong()), 0);
+//        e3 = new BarEntry(35.000f, 0);
         zone3.add(e3);
 
-        e4 = new BarEntry(15.000f, 0);
+        e4 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE4, workoutActivity.getTotalDurationLong()), 0);
+//        e4 = new BarEntry(15.000f, 0);
         zone4.add(e4);
 
-        e5 = new BarEntry(20.000f, 0);
+        e5 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE5, workoutActivity.getTotalDurationLong()), 0);
+//        e5 = new BarEntry(20.000f, 0);
         zone5.add(e5);
 
         setZone1 = new BarDataSet(zone1, "Zone 1");
-        setZone1.setColor(getResources().getColor(R.color.holo_gray_light));
+        setZone1.setColor(getResources().getColor(R.color.holo_gray_dark));
 
         setZone2 = new BarDataSet(zone2, "Zone 2");
         setZone2.setColor(getResources().getColor(R.color.holo_blue_light));

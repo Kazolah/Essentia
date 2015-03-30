@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.essentia.account.UserProfileActivity;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -30,12 +29,12 @@ public class SettingActivity extends ActionBarActivity{
                         getString(R.string.description_profile)),
                 new ListItems(getString(R.string.title_heart_rate_monitor),
                         getString(R.string.description_heart_rate_monitor)),
-                new ListItems(getString(R.string.title_workout_preferences),
-                        getString(R.string.description_workout_preferences)),
                 new ListItems(getString(R.string.title_audio_preferences),
                         getString(R.string.description_audio_preferences)),
-                new ListItems(getString(R.string.title_notification_settings),
-                        getString(R.string.description_notification_settings)),
+//                new ListItems(getString(R.string.title_workout_preferences),
+//                        getString(R.string.description_workout_preferences)),
+//                new ListItems(getString(R.string.title_notification_settings),
+//                        getString(R.string.description_notification_settings)),
                 new ListItems(getString(R.string.title_about),
                         getString(R.string.description_about))
         };
@@ -79,12 +78,21 @@ public class SettingActivity extends ActionBarActivity{
         switch(position){
             case 0:
                 finish();
-                startActivity(new Intent(this, UserProfileActivity.class));
+                startActivity(new Intent(this, ProfileSettingActivity.class));
                 break;
             case 1:
                 finish();
-                startActivity(new Intent(this,HRMonitorSettingActivity.class ));
+                startActivity(new Intent(this, HRMonitorSettingActivity.class ));
                 break;
+            case 2:
+                finish();
+                startActivity(new Intent(this, AudioFeedBackSettingActivity.class ));
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+
         }
     }
     private ArrayList<HashMap<String, Object>> populateList(ListItems[] listItems){

@@ -64,7 +64,7 @@ public class Distance extends Metrics{
 
     @Override
     public String getUnit() {
-        return "km";
+        return "";
     }
 
     @Override

@@ -1,10 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
     <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager_workout_hr"
+        android:id="@+id/pager_workout_summary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonLayouts"/>
+    <LinearLayout
+        android:id="@+id/buttonLayouts"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/btnSummaryDiscard"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="DISCARD"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/button_text_size"
+                android:textStyle="bold"
+                android:background="@android:color/holo_red_light"/>
+            <Button
+                android:id="@+id/btnSummarySave"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="SAVE"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/button_text_size"
+                android:textStyle="bold"
+                android:background="@android:color/holo_green_light"/>
+    </LinearLayout>
+</RelativeLayout>

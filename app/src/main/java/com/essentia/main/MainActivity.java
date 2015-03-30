@@ -3,6 +3,7 @@ package com.essentia.main;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,10 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
-import com.essentia.account.UserProfileActivity;
-import com.essentia.dbHelpers.DBBuilder;
-import com.essentia.history.HistoryActivity;
+import com.essentia.dbHelpers.UserDBHelper;
+import com.essentia.history.HistoryFragment;
 import com.essentia.left_drawer.NavigationDrawerFragment;
 import com.essentia.left_drawer.NavigationListItems;
 import com.essentia.metrics.Metrics;
@@ -24,8 +25,11 @@ import com.essentia.notification.GpsSearchingState;
 import com.essentia.notification.NotificationManagerDisplayStrategy;
 import com.essentia.notification.NotificationStateManager;
 import com.essentia.plans.PlansActivity;
+import com.essentia.setting.ProfileSettingActivity;
 import com.essentia.setting.SettingActivity;
 import com.essentia.statistics.StatisticsActivity;
+import com.essentia.summary.WorkoutSummaryActivity;
+import com.essentia.support.ApplicationContext;
 import com.essentia.tracker.GpsInformation;
 import com.essentia.tracker.GpsStatus;
 import com.essentia.workout.WorkoutActivity;
@@ -54,29 +58,18 @@ public class MainActivity extends ActionBarActivity
     boolean skipStopGps = false;
 //    private GpsSearchingState pgsSearchingState;
 
-    //Reference for drawer list
-    private static final int USER_PROFILE = 0;
-    private static final int MAIN = 1;
-    private static final int HISTORY = 2;
-    private static final int STATISTICS = 3;
-    private static final int PLANS = 4;
-
+    boolean doubleBackToExitPressedOnce = false;
     //Reference for activity setup list
     private static final int ACTIVITY = 0;
     private static final int TYPE = 2;
     private static final int METRICS = 1;
 
     private MainFragment mainFragment;
+    private UserDBHelper userDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /**
-         * Later move under welcome activity
-         */
-        DBBuilder dbBuilder = new DBBuilder(this);
-        dbBuilder.buildDBs();
 
         mainFragment = new MainFragment();
         mGpsStatus = new GpsStatus(this);
@@ -88,6 +81,11 @@ public class MainActivity extends ActionBarActivity
 
         setContentView(R.layout.activity_main);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        if(ApplicationContext.userObject==null){
+            userDBHelper = new UserDBHelper(this);
+            ApplicationContext.userObject = userDBHelper.getUserObject();
+        }
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -126,24 +124,25 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch(position) {
-            case USER_PROFILE:
-                finish();
-                startActivity(new Intent(this, UserProfileActivity.class));
+            case NavigationDrawerFragment.USER_PROFILE:
+                startActivity(new Intent(this, ProfileSettingActivity.class));
                 break;
-            case MAIN:
+            case NavigationDrawerFragment.MAIN:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, mainFragment)
                         .commit();
                     break;
-            case HISTORY:
-                finish();
-                startActivity(new Intent(this, HistoryActivity.class));
+            case NavigationDrawerFragment.HISTORY:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new HistoryFragment())
+                        .addToBackStack("history")
+                        .commit();
                 break;
-            case STATISTICS:
+            case NavigationDrawerFragment.STATISTICS:
                 finish();
                 startActivity(new Intent(this, StatisticsActivity.class));
                 break;
-            case PLANS:
+            case NavigationDrawerFragment.PLANS:
                 finish();
                 startActivity(new Intent(this, PlansActivity.class));
                 break;
@@ -203,6 +202,24 @@ public class MainActivity extends ActionBarActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            this.finish();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -340,5 +357,15 @@ public class MainActivity extends ActionBarActivity
     }
     public void displayGPSSearchingState(){
         notificationStateManager.displayNotificationState(gpsSearchingState);
+    }
+
+    /**
+     * Load Activity for selected item from History
+     * @param id
+     */
+    public void loadActivity(long id){
+        Intent i = new Intent(this, WorkoutSummaryActivity.class);
+        i.putExtra("ID",id);
+        startActivity(i);
     }
 }

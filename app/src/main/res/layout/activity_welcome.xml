@@ -13,30 +13,14 @@
             android:id="@+id/btnWelcomeSignIn"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:text="@string/main_sign_in"
+            android:text="@string/main_get_started"
             android:textColor="@android:color/white"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="81dp"
             android:textSize="@dimen/button_text_size"
             android:background="#e1f47239"
-            android:onClick="initSignIn"
+            android:onClick="initGetStarted"
             android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnWelcomeRegister"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:text="@string/main_register"
-            android:layout_alignLeft="@+id/btnWelcomeSignIn"
-            android:layout_alignStart="@+id/btnWelcomeSignIn"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:background="#db646464"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:textSize="@dimen/button_text_size"
-            android:onClick="initRegister"/>
 
         <ImageView
             android:layout_width="wrap_content"

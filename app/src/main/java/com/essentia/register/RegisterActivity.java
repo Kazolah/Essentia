@@ -1,8 +1,6 @@
 package com.essentia.register;
 
-import
-
-android.animation.Animator;
+import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,26 +13,24 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.essentia.dbHelpers.UserDBHelper;
 import com.essentia.main.MainActivity;
-import com.essentia.support.UserObject;
+import com.essentia.util.HRZones;
 import com.example.kyawzinlatt94.essentia.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -60,30 +56,30 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
     private EditText mNameView;
     private EditText mWeightView;
     private EditText mHeightView;
-    private EditText mDOBView;
+    private EditText mAgeView;
+
     private RadioGroup rdoGroupGender;
     private RadioButton rdoMale;
     private RadioButton rdoFemale;
-    private EditText mPasswordView;
+
     private View mProgressView;
     private View mRegisterFormView;
-    private Context context = this;
-    private RegisterDBHelper registerDBHelper;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
 
+        setContentView(R.layout.activity_register);
         // Set up the register form.
         mNameView = (EditText) findViewById(R.id.edtRegisterName);
-        mPasswordView = (EditText) findViewById(R.id.edtRegisterPassword);
-        mDOBView = (EditText) findViewById(R.id.edtRegisterDateOfBirth);
+        mAgeView = (EditText) findViewById(R.id.edtRegisterAge);
         mWeightView = (EditText) findViewById(R.id.edtRegisterWeight);
         mHeightView =(EditText) findViewById(R.id.edtRegisterHeight);
         rdoGroupGender = (RadioGroup) findViewById(R.id.rdoGenderGroup);
         rdoMale = (RadioButton) findViewById(R.id.rdoRegisterMale);
         rdoFemale = (RadioButton) findViewById(R.id.rdoRegisterFemale);
+        context = getApplicationContext();
 
         Button mRegisterButton = (Button) findViewById(R.id.btnRegister);
         mRegisterButton.setOnClickListener(new OnClickListener() {
@@ -114,15 +110,13 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
 
         // Reset errors.
         mNameView.setError(null);
-        mPasswordView.setError(null);
-        mDOBView.setError(null);
+        mAgeView.setError(null);
         mWeightView.setError(null);
         mHeightView.setError(null);
 
         // Store values at the time of the register attempt.
         String name = mNameView.getText().toString();
-        String password = mPasswordView.getText().toString();
-        String dob = mDOBView.getText().toString();
+        String age = mAgeView.getText().toString();
         String weight = mWeightView.getText().toString();
         String height = mHeightView.getText().toString();
 
@@ -130,26 +124,12 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
         View focusView = null;
 
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(name)) {
-            mNameView.setError(getString(R.string.error_field_required));
-            focusView = mNameView;
-            cancel = true;
-        }
-
         //Check for a valid date of birth
-        if(!TextUtils.isEmpty(dob)){
+        if(!TextUtils.isEmpty(age)){
 
         }else {
-            mDOBView.setError(getString(R.string.error_field_required));
-            focusView = mDOBView;
+            mAgeView.setError(getString(R.string.error_field_required));
+            focusView = mAgeView;
             cancel = true;
         }
 
@@ -176,19 +156,9 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mRegTask = new UserRegisterTask(name, password, dob, gender, weight, height);
+            mRegTask = new UserRegisterTask(name, age, gender, weight, height);
             mRegTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -253,7 +223,6 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
     }
 
     @Override
@@ -278,16 +247,19 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
      */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
-        private UserObject user = new UserObject();
+        private ContentValues dataVals = new ContentValues();
 
-        public UserRegisterTask(String name, String password, String dob,
+        public UserRegisterTask(String name, String age,
                          String gender, String weight, String height) {
-            user.setName(name);
-            user.setPassword(password);
-            user.setDateOfBirth(dob);
-            user.setGender(gender);
-            user.setWeight(weight);
-            user.setHeight(height);
+            double dAge = Double.valueOf(age);
+            dataVals.put(UserDBHelper.NAME, name);
+            dataVals.put(UserDBHelper.AGE, age);
+            dataVals.put(UserDBHelper.HEIGHT, height);
+            dataVals.put(UserDBHelper.WEIGHT, weight);
+            dataVals.put(UserDBHelper.MAX_HR, HRZones.getMaxHeartRateZone(dAge, gender));
+            dataVals.put(UserDBHelper.RESTING_HR, 0);
+            dataVals.put(UserDBHelper.AVG_HR, 0);
+            dataVals.put(UserDBHelper.GENDER, gender);
         }
 
         @Override
@@ -301,15 +273,8 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
                 return false;
             }
 
-            //Create Databases for the app
-            createDatabases();
-
-            //Create Record in database for registration
-//            if(RegisterUtil.checkUserNameExists(user.getName())) {
-//                createUserRecord(user);
-//            }else
-//                return false;
-
+            UserDBHelper userDBHelper = new UserDBHelper(context);
+            userDBHelper.create(userDBHelper, dataVals);
             return true;
         }
 
@@ -321,9 +286,6 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
             if (success) {
                 finish();
                 startActivity(new Intent(context, MainActivity.class));
-            } else {
-                mNameView.setError(getString(R.string.error_user_exist));
-                mNameView.requestFocus();
             }
         }
 
@@ -331,22 +293,6 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
         protected void onCancelled() {
             mRegTask = null;
             showProgress(false);
-        }
-
-        private void createDatabases(){
-            registerDBHelper = new RegisterDBHelper(context);
-            registerDBHelper.createTable(registerDBHelper.createStatement(registerDBHelper));
-        }
-        private void createUserRecord(UserObject user){
-            ContentValues dataVals = new ContentValues();
-            dataVals.put("username",user.getName());
-            dataVals.put("password",user.getPassword());
-            dataVals.put("weight",user.getWeight());
-            dataVals.put("height",user.getHeight());
-            dataVals.put("gender",user.getGender());
-            dataVals.put("dob",user.getDateOfBirth());
-            dataVals.put("active", "true");
-            registerDBHelper.create(registerDBHelper, dataVals);
         }
     }
 }
