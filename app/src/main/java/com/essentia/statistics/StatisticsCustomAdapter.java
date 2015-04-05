@@ -59,7 +59,7 @@ public class StatisticsCustomAdapter extends ArrayAdapter {
                 "May", "June", "July", "August", "September",
                 "October", "November", "December"};
         int index = Integer.valueOf(listItem.month);
-        holder.month.setText(months[index]);
+        holder.month.setText(months[index-1]);
         holder.year.setText(listItem.year);
         holder.distance.setText(listItem.distance);
         holder.duration.setText(listItem.duration);

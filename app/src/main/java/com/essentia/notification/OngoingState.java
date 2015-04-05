@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.essentia.support.Constants;
-import com.essentia.support.Scope;
 import com.essentia.util.Formatter;
 import com.essentia.workout.WorkoutActivity;
-import com.essentia.workout.workout_pojos.WorkoutInfo;
+import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
 
 /**
@@ -18,11 +17,11 @@ import com.example.kyawzinlatt94.essentia.R;
  */
 public class OngoingState implements NotificationState {
     private final Formatter formatter;
-    private final WorkoutInfo workoutInfo;
+    private final Workout workoutInfo;
     private final Context context;
     private final NotificationCompat.Builder builder;
 
-    public OngoingState(Formatter formatter, WorkoutInfo workoutInfo, Context context) {
+    public OngoingState(Formatter formatter, Workout workoutInfo, Context context) {
         this.formatter = formatter;
         this.workoutInfo = workoutInfo;
         this.context = context;
@@ -39,17 +38,14 @@ public class OngoingState implements NotificationState {
         builder.setSmallIcon(R.drawable.workout_icon);
         builder.setOngoing(true);
         builder.setOnlyAlertOnce(true);
-//        builder.setLocalOnly(true);
+        builder.setLocalOnly(true);
     }
 
     @Override
     public Notification createNotification() {
-        String distance = formatter.formatDistance(Formatter.TXT_SHORT,
-                Math.round(workoutInfo.getDistance(Scope.WORKOUT)));
-        String time = formatter.formatElapsedTime(Formatter.TXT_LONG,
-                Math.round(workoutInfo.getTime(Scope.WORKOUT)));
-        String pace = formatter.formatPace(Formatter.TXT_SHORT,
-                workoutInfo.getPace(Scope.WORKOUT));
+        String distance = workoutInfo.getMetrics("Distance");
+        String time = workoutInfo.getMetrics("Duration");
+        String pace = workoutInfo.getMetrics("Pace");
 
         String content = String.format("%s: %s %s: %s %s: %s",
                 context.getString(R.string.distance), distance,

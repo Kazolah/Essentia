@@ -56,7 +56,7 @@ public class HistoryListCustomAdapter extends ArrayAdapter {
         WorkoutActivity listItem = data.get(position);
         holder.date.setText(Formatter.parseDate(listItem.getDate()));
 
-        int distance = Integer.parseInt(listItem.getDistance());
+        double distance = Double.parseDouble(listItem.getDistance());
         int calorie = Integer.parseInt(listItem.getCalorie());
         String metrics = "";
         metrics = (distance==0 && calorie!=0)?distance + " km" : calorie + " kcal";

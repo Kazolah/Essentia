@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <PreferenceCategory android:title = "Trigger Frequency"/>
+    <PreferenceCategory android:title = "Triggers"/>
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -56,5 +56,10 @@
             android:persistent="true"
             android:key="@string/cueinfo_total_calorie"
             android:title="@string/calorie" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/test_audio_cue">
+        <Preference android:title="@string/push"
+            android:key="test_cueinfo"
+            android:summary="@string/test_audio_cue"/>
     </PreferenceCategory>
 </PreferenceScreen>

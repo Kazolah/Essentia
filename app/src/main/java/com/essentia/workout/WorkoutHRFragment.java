@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.essentia.workout.workout_pojos.CustomViewPager;
 import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
 
@@ -34,9 +35,11 @@ public class WorkoutHRFragment extends Fragment {
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    CustomViewPager mViewPager;
     Context context;
-
+    private RelativeLayout tabInfo;
+    private RelativeLayout tabChart;
+    private boolean isInfo;
     private int currentHRValue;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,16 +53,37 @@ public class WorkoutHRFragment extends Fragment {
         tvAvgHR = (TextView) rootView.findViewById(R.id.fwh_avg_hr);
         tvMaxHR = (TextView) rootView.findViewById(R.id.fwh_max_hr);
         context = getActivity();
-
+        isInfo = true;
+        tabInfo = (RelativeLayout) rootView.findViewById(R.id.fwh_tab_zones);
+        tabInfo.setOnClickListener(tabInfoClickListener);
+        tabChart = (RelativeLayout) rootView.findViewById(R.id.fwh_tab_chart);
+        tabChart.setOnClickListener(tabChartClickListener);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager_workout_hr);
+        mViewPager = (CustomViewPager) rootView.findViewById(R.id.pager_workout_hr);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setPagingEnabled(false);
         return rootView;
     }
+    final View.OnClickListener tabInfoClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            tabInfo.setBackgroundColor(getResources().getColor(R.color.holo_gray_dark));
+            tabChart.setBackgroundColor(getResources().getColor(R.color.gray));
+            mViewPager.setCurrentItem(0);
+        }
+    };
+    final View.OnClickListener tabChartClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            tabChart.setBackgroundColor(getResources().getColor(R.color.holo_gray_dark));
+            tabInfo.setBackgroundColor(getResources().getColor(R.color.gray));
+            mViewPager.setCurrentItem(1);
+        }
+    };
     /**
      * Returns a new instance of this fragment for the given section
      * number.

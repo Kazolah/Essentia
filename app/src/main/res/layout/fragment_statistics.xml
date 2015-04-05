@@ -24,7 +24,7 @@
                 android:text="Distance"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="16sp"
                 android:layout_above="@+id/fs_distance"/>
             <TextView
@@ -42,7 +42,7 @@
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:layout_below="@+id/fs_distance"/>
         </RelativeLayout>
         <RelativeLayout
@@ -59,7 +59,7 @@
                 android:text="Avg. HR"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="16sp"
                 android:layout_above="@+id/fs_hr"/>
             <TextView
@@ -94,7 +94,7 @@
                 android:text="Calorie"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="16sp"
                 android:layout_above="@+id/fs_calorie"/>
             <TextView

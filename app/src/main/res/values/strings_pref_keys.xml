@@ -46,4 +46,6 @@
     <string name="pref_hour">pref_hour</string>
     <string name="pref_min">pref_min</string>
 
+    <string name="test_audio_cue">Test Audio Feedback</string>
+    <string name="push">Test Run</string>
 </resources>

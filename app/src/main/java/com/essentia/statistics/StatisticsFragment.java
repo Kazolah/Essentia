@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.essentia.dbHelpers.ActivityDBHelper;
+import com.essentia.main.MainActivity;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class StatisticsFragment extends Fragment{
     private TextView tvDistance;
     private ListView lsStatistics;
     private ArrayList<StatisticListItem> list;
-    private StatisticsActivity statisticsActivity;
+    private MainActivity mainActivity;
     private StatisticsCustomAdapter adapter;
     private ActivityDBHelper activityDBHelper;
     private Context context;
@@ -32,7 +33,7 @@ public class StatisticsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set up list items for list view
-        context = statisticsActivity.getApplicationContext();
+        context = mainActivity.getApplicationContext();
         activityDBHelper = new ActivityDBHelper(context);
         list = activityDBHelper.getStatisticsItems();
         adapter = new StatisticsCustomAdapter(getActivity(), R.layout.custom_statistics_row_layout,list);
@@ -59,12 +60,12 @@ public class StatisticsFragment extends Fragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        statisticsActivity = (StatisticsActivity) activity;
+        mainActivity = (MainActivity) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        statisticsActivity = null;
+        mainActivity = null;
     }
 }

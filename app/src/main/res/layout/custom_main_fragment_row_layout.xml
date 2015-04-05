@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/cmfrl_iv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="45dp"
+        android:layout_height="45dp"/>
     <ImageView
         android:id="@+id/cmfrl_iv2"
         android:layout_width="wrap_content"

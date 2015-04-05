@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.essentia.hrm.HRProvider;
 import com.essentia.left_drawer.NavigationListItems;
 import com.essentia.metrics.Calorie;
 import com.essentia.metrics.Distance;
@@ -19,6 +22,7 @@ import com.essentia.metrics.Metrics;
 import com.essentia.metrics.Pace;
 import com.essentia.metrics.Speed;
 import com.essentia.tracker.GpsStatus;
+import com.essentia.tracker.component.TrackerHRM;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.ArrayList;
@@ -38,7 +42,12 @@ public class MainFragment extends Fragment{
     private NavigationListItems selectedActivity;
     private NavigationListItems selectedType;
     private Button btnStart;
-
+    private ImageView ivHRM;
+    private ImageView ivGPS;
+    private TextView tvHRMConStatus;
+    private TextView tvGPSConStatus;
+    private TrackerHRM trackerHRM;
+    private HRProvider hrProvider;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +91,18 @@ public class MainFragment extends Fragment{
         setupListView.setAdapter(adapter);
         btnStart = (Button) rootView.findViewById(R.id.btnMainStart);
         btnStart.setOnClickListener(((MainActivity)mainActivity).getBtnStartClickListener());
+        ivHRM = (ImageView) rootView.findViewById(R.id.ivHRMStatus);
+        ivGPS = (ImageView) rootView.findViewById(R.id.ivGPSStatus);
+        tvGPSConStatus = (TextView) rootView.findViewById(R.id.txtGPSConnection);
+        tvHRMConStatus = (TextView) rootView.findViewById(R.id.txtHRMConnection);
         ((MainActivity)mainActivity).onGpsTrackerBound();
+        //Check HRM is connected
+        trackerHRM = new TrackerHRM();
+        hrProvider = trackerHRM.getHrProvider();
+        if(hrProvider!=null) {
+            ivHRM.setImageResource(R.drawable.ic_heart_rate);
+            tvHRMConStatus.setText(getString(R.string.hrm_connection_on));
+        }
         return rootView;
     }
     private void selectItem(int position){
@@ -170,25 +190,31 @@ public class MainFragment extends Fragment{
     }
 
     public void updateView(GpsStatus mGpsStatus){
-//        if(mGpsStatus.isEnabled() == false){
-//            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
-//            btnStart.setEnabled(true);
-//            btnStart.setText("Enable GPS");
-//        }else if(mGpsStatus.isLogging() == false){
-//            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
-//            btnStart.setEnabled(true);
-//            btnStart.setText("Start GPS");
-//        }else if(mGpsStatus.isFixed() == false){
-//            btnStart.setEnabled(false);
-//            btnStart.setBackgroundColor(getResources().getColor(R.color.holo_gray_light));
-//            btnStart.setText("Waiting for GPS");
-//            ((MainActivity)mainActivity).displayGPSSearchingState();
-//        }else{
+        if(hrProvider!=null && hrProvider.getHRValue()>0) {
+            ivHRM.setImageResource(R.drawable.ic_heart_rate);
+            tvHRMConStatus.setText(getString(R.string.hrm_connection_on));
+        }
+        if(mGpsStatus.isEnabled() == false){
+            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
+            btnStart.setEnabled(true);
+            btnStart.setText("Enable GPS");
+        }else if(mGpsStatus.isLogging() == false){
+            btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
+            btnStart.setEnabled(true);
+            btnStart.setText("Start GPS");
+        }else if(mGpsStatus.isFixed() == false){
+            btnStart.setEnabled(false);
+            btnStart.setBackgroundColor(getResources().getColor(R.color.gray));
+            btnStart.setText("Waiting for GPS");
+            ((MainActivity)mainActivity).displayGPSSearchingState();
+        }else{
+            ivGPS.setImageResource(R.drawable.ic_gps_connected);
+            tvGPSConStatus.setText(getString(R.string.gps_connection_on));
             btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
             btnStart.setEnabled(true);
             btnStart.setText("START");
             ((MainActivity)mainActivity).displayGPSBoundState();
-//        }
+        }
     }
     public Button getStartButton(){
         return btnStart;

@@ -40,8 +40,6 @@ public class WorkoutHRPercentageFragment extends Fragment{
         hrBarChart.disableScroll();
         hrBarChart.setBackgroundColor(getResources().getColor(R.color.white));
         hrBarChart.setDescription("HR Zones");
-        hrBarChart.setOnChartValueSelectedListener(new ChartValueSelectedListener());
-        hrBarChart.setMarkerView(mv);
         return rootView;
     }
     public void updateView(HRZones hrZones){
@@ -62,19 +60,15 @@ public class WorkoutHRPercentageFragment extends Fragment{
         zone1.add(e1);
 
         e2 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE2, workoutActivity.getTotalDurationLong()), 0);
-//        e2 = new BarEntry(10.000f, 0);
         zone2.add(e2);
 
         e3 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE3, workoutActivity.getTotalDurationLong()), 0);
-//        e3 = new BarEntry(35.000f, 0);
         zone3.add(e3);
 
         e4 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE4, workoutActivity.getTotalDurationLong()), 0);
-//        e4 = new BarEntry(15.000f, 0);
         zone4.add(e4);
 
         e5 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE5, workoutActivity.getTotalDurationLong()), 0);
-//        e5 = new BarEntry(20.000f, 0);
         zone5.add(e5);
 
         setZone1 = new BarDataSet(zone1, "Zone 1");
@@ -104,6 +98,8 @@ public class WorkoutHRPercentageFragment extends Fragment{
 
         BarData data = new BarData(xVals, dataSets);
         hrBarChart.setData(data);
+        hrBarChart.setOnChartValueSelectedListener(new ChartValueSelectedListener());
+        hrBarChart.setMarkerView(mv);
 
     }
     public void updateBarChart(HRZones hrZones){
@@ -125,19 +121,19 @@ public class WorkoutHRPercentageFragment extends Fragment{
         @Override
         public void onValueSelected(Entry e, int dataSetIndex) {
             if(e.equals(e1)){
-                mv.setMarkerResource(hrZones.getZone1DurationDetails());
+                mv.setMarkerResource(hrZones.getZone1Duration());
             }
             if(e.equals(e2)){
-                mv.setMarkerResource(hrZones.getZone2DurationDetails());
+                mv.setMarkerResource(hrZones.getZone2Duration());
             }
             if(e.equals(e3)){
-                mv.setMarkerResource(hrZones.getZone3DurationDetails());
+                mv.setMarkerResource(hrZones.getZone3Duration());
             }
             if(e.equals(e4)){
-                mv.setMarkerResource(hrZones.getZone4DurationDetails());
+                mv.setMarkerResource(hrZones.getZone4Duration());
             }
             if(e.equals(e5)){
-                mv.setMarkerResource(hrZones.getZone5DurationDetails());
+                mv.setMarkerResource(hrZones.getZone5Duration());
             }
         }
 

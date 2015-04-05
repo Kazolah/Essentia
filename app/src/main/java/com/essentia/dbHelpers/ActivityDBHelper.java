@@ -117,7 +117,7 @@ public class ActivityDBHelper extends BaseDBHelper{
                 workoutActivity.setDate(row.get(DATE).toString());
                 workoutActivity.setStartTime(row.get(START_TIME).toString());
                 workoutActivity.setCalorie(row.get(CALORIE).toString());
-                workoutActivity.setDuration(row.get(DURATION).toString());
+                workoutActivity.setDuration(Formatter.parseMsIntoTime(row.get(DURATION).toString()));
                 workoutActivity.setAvgPace(row.get(AVG_PACE).toString());
                 workoutActivity.setAvgSpeed(row.get(AVG_SPEED).toString());
                 workoutActivity.setAvgHR(row.get(AVG_HR).toString());
@@ -145,10 +145,13 @@ public class ActivityDBHelper extends BaseDBHelper{
     public String getTotalAvgHR(){
         return getMetrics(AVG_HR);
     }
-    public String getMetrics(String metricCol){
+    private String getMetrics(String metricCol){
        String total = "0";
        String[] whereArgs = new String[]{};
-        List<HashMap<String, Object>> resultList = this.executeSQL("SELECT SUM("+ metricCol +") AS total " +
+        String operator = "SUM";
+        if(metricCol.equals(AVG_HR))
+            operator = "AVG";
+        List<HashMap<String, Object>> resultList = this.executeSQL("SELECT "+operator+"("+ metricCol +") AS total " +
                 "FROM  `activity` ", whereArgs);
         try{
             for (HashMap<String, Object> row : resultList) {
@@ -166,15 +169,15 @@ public class ActivityDBHelper extends BaseDBHelper{
     public ArrayList<StatisticListItem> getStatisticsItems(){
         ArrayList<StatisticListItem> list = new ArrayList<>();
         String sql = "SELECT SUM(calorie) as calorie, SUM(duration) as duration, SUM(distance) as distance, " +
-                "SUM(avg_hr) as avg_hr, COUNT(*) as session, strftime('%m', 'date') as stat_month, " +
-                "strftime('%Y', 'date') as stat_year\n" + "FROM `activity`\n" + "GROUP BY stat_month, stat_year";
+                "AVG(avg_hr) as avg_hr, COUNT(*) as session, strftime('%m', date) as stat_month, " +
+                "strftime('%Y', date) as stat_year FROM `activity` GROUP BY stat_month, stat_year";
         List<HashMap<String, Object>> resultList = this.executeSQL(sql, null);
         try{
             for (HashMap<String, Object> row : resultList) {
                 try {
                     StatisticListItem listItem = new StatisticListItem();
                     listItem.calorie = row.get("calorie").toString();
-                    listItem.duration = Formatter.parseMsIntoTime(row.get("duration").toString());
+                    listItem.duration = Formatter.parseMsIntoTimeWithUnit(row.get("duration").toString());
                     listItem.distance = row.get("distance").toString();
                     listItem.heartRate = row.get("avg_hr").toString();
                     listItem.sessions = row.get("session").toString();

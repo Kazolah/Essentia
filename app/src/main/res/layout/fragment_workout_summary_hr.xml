@@ -63,7 +63,7 @@
                     android:padding="5dp"
                     android:textColor="@color/background_material_dark"
                     android:layout_gravity="center"
-                    android:text="00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55\n00:38 - 00:40 \n00:50 - 00:55"/>
+                    android:text=""/>
 
             </ScrollView>
             <ImageView

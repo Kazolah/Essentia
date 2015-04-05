@@ -4,58 +4,100 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.essentia.main.MainActivity;
 import com.essentia.summary.WorkoutSummaryActivity;
 import com.essentia.tracker.Tracker;
 import com.essentia.util.HRZones;
-import com.essentia.workout.workout_pojos.MetricsUIRef;
 import com.essentia.workout.workout_pojos.TickListener;
 import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class WorkoutActivity extends FragmentActivity implements TickListener {
+public class WorkoutActivity extends ActionBarActivity implements TickListener {
 
     private Tracker mTracker = null;
     private Workout workout;
     private Location l = null;
     private Timer timer;
-    private MetricsUIRef selectedMetrics;
+
     //Variables
-    private boolean isStarted = false;
     private String sport;
-    private CharSequence mTitle;
+    private boolean doubleBackToExitPressedOnce = false;
 
     private final Handler handler = new Handler();
     private HRZones hrZones;
+
     //UI component References
     private WorkoutFragment workoutFragment;
     private WorkoutMetricsListFragment workoutMetricsListFragment;
+
+    private String DB_PATH;
+    private ActionBar actionBar;
+    private int targetHRZone = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+        actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setTitle("Workout Session");
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#707070")));
 
         Intent i = getIntent();
         Bundle bundles = i.getExtras();
         sport = (String) bundles.getSerializable("Sport");
-
-        mTitle = getTitle();
+        String type = (String) bundles.getSerializable("Type");
+        if(!type.equals(getString(R.string.basic_workout))){
+            switch(type){
+                case HRZones.ZONE1_DES:
+                    targetHRZone = 1;
+                    break;
+                case HRZones.ZONE2_DES:
+                    targetHRZone = 2;
+                    break;
+                case HRZones.ZONE3_DES:
+                    targetHRZone = 3;
+                    break;
+                case HRZones.ZONE4_DES:
+                    targetHRZone = 4;
+                    break;
+                case HRZones.ZONE5_DES:
+                    targetHRZone = 5;
+                    break;
+            }
+        }
         workoutFragment = new WorkoutFragment();
         workoutMetricsListFragment = new WorkoutMetricsListFragment();
         inflateWorkoutFragment("");
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    public ActionBar getActivityActionBar(){
+        return actionBar;
     }
     private void finishSession( Class<?> cls){
         startActivity(new Intent(this, cls));
@@ -126,13 +168,6 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
         if (workout != null) {
             workout.onTick();
             workoutFragment.updateView();
-
-//            if (mTracker != null) {
-//                Location l2 = mTracker.getLastKnownLocation();
-//                if (!l2.equals(l)) {
-//                    l = l2;
-//                }
-//            }
         }
     }
 
@@ -164,7 +199,7 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
 
 
     public void bindGpsTracker(){
-        boolean status = getApplicationContext().bindService(new Intent(this, Tracker.class),
+        getApplicationContext().bindService(new Intent(this, Tracker.class),
                 mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
@@ -175,14 +210,9 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
 
         /* Initiate the Tracker */
         mTracker.start(workout);
-        mTracker.setup();
+        mTracker.setup(targetHRZone);
         workout = mTracker.getWorkout();
         workoutFragment.setWorkout(this.workout);
-//        try {
-//            writeToSD();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         mTracker.onStartTimer();
         startTimer();
     }
@@ -191,6 +221,7 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
         if (mIsBound) {
             // Detach our existing connection.
             getApplicationContext().unbindService(mConnection);
+            mTracker.stopSelf();
             mIsBound = false;
         }
     }
@@ -202,23 +233,36 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.workout_container, workoutFragment)
-                .addToBackStack("workout_fragment")
                 .commit();
-//        Fragment fragment = fragmentManager.findFragmentByTag("list_fragment");
-//        if(fragment != null)
-//            fragmentManager.beginTransaction().remove(fragment).commit();
     }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            unbindGpsTracker();
+            stopTimer();
+            finish();
+            super.onBackPressed();
+            startActivity(new Intent(this, MainActivity.class));
+            return;
+        }
 
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to Stop Activity", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
     public void inflateMetricsListFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.workout_container, workoutMetricsListFragment)
                 .addToBackStack("list_fragment")
                 .commit();
-    }
-
-    public MetricsUIRef getSelectedMetrics(){
-        return selectedMetrics;
     }
 
     public Workout getWorkout(){
@@ -242,10 +286,43 @@ public class WorkoutActivity extends FragmentActivity implements TickListener {
             workout.onStop(workout);
             stopTimer();
             mTracker.stopForeground(true); //Remove Notification
+            unbindGpsTracker();
             Intent intent = new Intent(WorkoutActivity.this, WorkoutSummaryActivity.class);
-            intent.putExtra("ID",mTracker.getActivityId());
+            intent.putExtra("ID", mTracker.getActivityId());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                DB_PATH = getApplicationContext().getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+            }
+            else {
+                DB_PATH = getApplicationContext().getFilesDir().getPath() + getApplicationContext().getPackageName() + "/databases/";
+            }
+            try {
+                writeToSD();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             finish();
             startActivity(intent);
+        }
+    }
+
+    private void writeToSD() throws IOException {
+        File sd = Environment.getExternalStorageDirectory();
+
+        if (sd.canWrite()) {
+            String currentDBPath = "EssentiaSQLite";
+            String backupDBPath = "backupname.db";
+            File currentDB = new File(DB_PATH, currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
+
+            if (currentDB.exists()) {
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+            }
         }
     }
 

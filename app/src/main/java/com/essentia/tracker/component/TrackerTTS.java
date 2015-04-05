@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 
 import com.essentia.tracker.Tracker;
-import com.essentia.workout.feedback.RUTextToSpeech;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.Locale;
@@ -16,13 +15,18 @@ import java.util.Locale;
  * Created by kyawzinlatt94 on 2/20/15.
  */
 public class TrackerTTS{
+    public static final int END = 0;
+    public static final int PAUSED = 1;
+    public static final int RESUMED = 2;
+    public static final int STARTED = 4;
     private TextToSpeech tts;
     private Context context;
-    private RUTextToSpeech ruTTS;
     private Tracker tracker;
     private Vibrator vibrator;
     private int hrValue;
     private boolean pace, speed, duration, distance, calorie, heartRateZone, heartRate;
+    private SharedPreferences sharedPrefs;
+    private boolean isHRShiftOn;
     public TrackerTTS(Context context, Tracker tracker){
         tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
@@ -37,6 +41,7 @@ public class TrackerTTS{
         this.tracker = tracker;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        isHRShiftOn = prefs.getBoolean(context.getString(R.string.cue_heart_rate_zone_shift),false);
         pace = prefs.getBoolean(context.getString(R.string.cueinfo_total_pace), false);
         speed = prefs.getBoolean(context.getString(R.string.cueinfo_total_speed), false);
         duration = prefs.getBoolean(context.getString(R.string.cueinfo_total_time), false);
@@ -77,27 +82,31 @@ public class TrackerTTS{
         }
         tts.speak(speech, TextToSpeech.QUEUE_ADD, null);
     }
-    public void emitHeartRateZoneShifted(boolean shiftUp){
+
+    public void emitHeartRateZoneShifted(boolean shiftUp, boolean outOfZone){
+        if(!isHRShiftOn)
+            return;
         String textToSpeech = "";
         vibrator.vibrate(1000);
-        if(shiftUp){
-            textToSpeech = context.getResources().getText(R.string.hrz_shift_up).toString();
-        }else{
-            textToSpeech = context.getResources().getText(R.string.hrz_shift_down).toString();
+        if (outOfZone){
+            textToSpeech += context.getResources().getText(R.string.out_of_target_zone).toString()+" ";
         }
+        if(shiftUp){
+            textToSpeech += context.getResources().getText(R.string.hrz_shift_up).toString();
+        }else{
+            textToSpeech += context.getResources().getText(R.string.hrz_shift_down).toString();
+        }
+        tts.speak(textToSpeech, TextToSpeech.QUEUE_FLUSH, null);
+    }
+    public void emitOutOfTargetHeartRateZone(){
+        String textToSpeech = "Alert ";
+        textToSpeech += context.getResources().getText(R.string.out_of_target_zone).toString();
         tts.speak(textToSpeech, TextToSpeech.QUEUE_ADD, null);
-
     }
-    RUTextToSpeech getTTS(SharedPreferences prefs) {
-        final String mute = prefs.getString(context.getString(R.string.pref_mute), "no");
-        ruTTS = new RUTextToSpeech(tts, mute, context);
-        return ruTTS;
-    }
-
     public String getCalorieTTS(){
         String speech = "Calorie Burned ";
         speech += tracker.getCalorieBurned();
-        speech += " kilo calorie";
+        speech += " kcal";
         return speech;
     }
     public String getDistanceTTS(){
@@ -116,9 +125,9 @@ public class TrackerTTS{
         return speech;
     }
     public String getSpeedTTS(){
-        String speech = "Current Speech ";
+        String speech = "Current Speed ";
         double speed = tracker.getCurrentSpeed() * 3.6;
-        speech += speed + " kmh";
+        speech += speed + " km per hour";
         return speech;
     }
     public String getHrTTS(int hrValue){
@@ -154,5 +163,21 @@ public class TrackerTTS{
         String ss = String.valueOf(secs) + " seconds ";
         speech += ss;
         return speech;
+    }
+    public void emitActivityState(int state){
+        switch(state){
+            case STARTED:
+                tts.speak(context.getText(R.string.activity_started).toString(), TextToSpeech.QUEUE_FLUSH, null);
+                break;
+            case END:
+                tts.speak(context.getText(R.string.activity_end).toString(), TextToSpeech.QUEUE_FLUSH, null);
+                break;
+            case PAUSED:
+                tts.speak(context.getText(R.string.activity_paused).toString(), TextToSpeech.QUEUE_FLUSH, null);
+                break;
+            case RESUMED:
+                tts.speak(context.getText(R.string.activity_resumed).toString(), TextToSpeech.QUEUE_FLUSH, null);
+                break;
+        }
     }
 }

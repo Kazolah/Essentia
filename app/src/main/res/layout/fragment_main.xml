@@ -42,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="HRM: Not Connected"/>
+                android:text="HRM: Not Connected"
+                android:id="@+id/txtHRMConnection" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -62,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="GPS: Not Connected"/>
+                android:text="GPS: Not Connected"
+                android:id="@+id/txtGPSConnection" />
         </LinearLayout>
     </LinearLayout>
 
@@ -79,7 +81,6 @@
         android:background="#e1f47239"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:textSize="@dimen/button_text_size"
-        android:onClick="startWorkoutSession"/>
+        android:textSize="@dimen/button_text_size"/>
 
 </RelativeLayout>

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment{
     private ListView lsHistory;
     private ArrayList<WorkoutActivity> list;
-    private MainActivity historyActivity;
+    private MainActivity mainActivity;
     private HistoryListCustomAdapter adapter;
     private ActivityDBHelper activityDBHelper;
     private Context context;
@@ -32,7 +32,7 @@ public class HistoryFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set up list items for list view
-        context = historyActivity.getApplicationContext();
+        context = mainActivity.getApplicationContext();
         activityDBHelper = new ActivityDBHelper(context);
         list = activityDBHelper.queryAllActivity();
         adapter = new HistoryListCustomAdapter(getActivity(), R.layout.custom_history_row_layout,list);
@@ -56,17 +56,17 @@ public class HistoryFragment extends Fragment{
     private void selectItem(int position){
        String txtId = list.get(position).getId();
        long id = Long.parseLong(txtId);
-//       historyActivity.loadActivity(id);
+       mainActivity.loadActivity(id);
     }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        historyActivity = (MainActivity) activity;
+        mainActivity = (MainActivity) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        historyActivity = null;
+        mainActivity = null;
     }
 }

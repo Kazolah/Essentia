@@ -118,7 +118,22 @@ public class NavigationDrawerFragment extends Fragment{
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
     }
-
+    public void updateUsername(String username, String gender){
+        if(gender.equals("Male")){
+            icon = R.drawable.male;
+        }else{
+            icon = R.drawable.female;
+        }
+        NavigationListItems listItems[] = new NavigationListItems[]{
+                new NavigationListItems(icon, username),
+                new NavigationListItems(R.drawable.workout_icon, "Workout"),
+                new NavigationListItems(R.drawable.history_icon, "History"),
+                new NavigationListItems(R.drawable.statistics_icon, "Statistics"),
+                new NavigationListItems(R.drawable.plans_icon, "Plans")
+        };
+        adapter = new CustomAdapter(
+                getActionBar().getThemedContext(), R.layout.custom_drawer_row_layout,listItems);
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

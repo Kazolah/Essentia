@@ -3,6 +3,7 @@ package com.essentia.setting;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.essentia.dbHelpers.UserDBHelper;
+import com.essentia.main.MainActivity;
+import com.essentia.support.ApplicationContext;
 import com.essentia.support.UserObject;
 import com.example.kyawzinlatt94.essentia.R;
 
@@ -37,7 +40,7 @@ public class ProfileSettingActivity extends Activity{
     private UserObject userObject;
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,7 @@ public class ProfileSettingActivity extends Activity{
         setTitle(getString((R.string.title_profile)));
         userDBHelper = new UserDBHelper(this);
         userObject = userDBHelper.getUserObject();
-
+        context = this;
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
 
@@ -80,23 +83,52 @@ public class ProfileSettingActivity extends Activity{
     private final View.OnClickListener updateClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
+            int selected = rdoGender.getCheckedRadioButtonId();
+            RadioButton rdoBtn = (RadioButton)findViewById(selected);
+            String gender = rdoBtn.getText().toString();
+
+            //if maximum heart rate is put 0,
+            // use the default equation to decide maximum heart rate
+            String maxHR = edtMaxHR.getText().toString();
+            if(maxHR.equals("0")){
+                double age = Double.valueOf(edtAge.getText().toString());
+                maxHR = String.valueOf(getMaxHeartRateZone(age, gender));
+            }
+
             ContentValues dataVals = new ContentValues();
             String userId = userObject.getUserId();
             dataVals.put(UserDBHelper.AGE, edtAge.getText().toString());
             dataVals.put(UserDBHelper.WEIGHT, edtWeight.getText().toString());
             dataVals.put(UserDBHelper.HEIGHT, edtHeight.getText().toString());
             dataVals.put(UserDBHelper.NAME, edtUserName.getText().toString());
-            dataVals.put(UserDBHelper.MAX_HR, edtMaxHR.getText().toString());
+            dataVals.put(UserDBHelper.GENDER, gender);
+            dataVals.put(UserDBHelper.MAX_HR, maxHR);
             dataVals.put(UserDBHelper.RESTING_HR, edtRestingHR.getText().toString());
             String where = "id=?";
             String[] whereArgs = new String[]{userId};
             try {
                 userDBHelper.updateRecord(userDBHelper, dataVals, where, whereArgs);
+                ApplicationContext.userObject = userDBHelper.getUserObject();
                 Toast.makeText(getApplicationContext(), "Successfully Updated", Toast.LENGTH_LONG).show();
+                finish();
+                startActivity(new Intent(context, MainActivity.class));
             }catch(Exception e){
                 Toast.makeText(getApplicationContext(), "Updated failed", Toast.LENGTH_LONG).show();
             }
         }
     };
-
+        public static int getMaxHeartRateZone(Double age, String gender){
+            double HRmax = 0;
+            if(gender.equals("Male")){
+                HRmax = 205.8 - (0.685 * age);
+            }else {
+                HRmax = 206 - (0.88 * age);
+            }
+            return (int) HRmax;
+        }
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
 }

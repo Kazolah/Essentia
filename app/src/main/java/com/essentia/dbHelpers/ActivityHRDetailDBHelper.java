@@ -57,8 +57,30 @@ public class ActivityHRDetailDBHelper extends BaseDBHelper{
         }
         String totalHRDuration = "";
         String[] args = new String[]{hrZone, activityId};
-        List<HashMap<String, Object>> resultList = this.executeSQL("SELECT SUM( time_stamp ) AS total " +
+        List<HashMap<String, Object>> resultList = this.executeSQL("SELECT COUNT(*) AS total " +
             "FROM  `activity_hr_detail` " + "WHERE hr_zone =? AND activity_id =?", args);
+        try{
+            for (HashMap<String, Object> row : resultList) {
+                try {
+                    totalHRDuration = row.get("total").toString();
+                }catch(NullPointerException e){
+                    totalHRDuration = "0";
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        totalHRDuration = (totalHRDuration.equals(""))?"0":totalHRDuration;
+        return Integer.valueOf(totalHRDuration);
+    }
+    public int queryHRRowCounts(String activityId){
+        if(activityId.equals(null)){
+            return 0;
+        }
+        String totalHRDuration = "";
+        String[] args = new String[]{activityId};
+        List<HashMap<String, Object>> resultList = this.executeSQL("SELECT COUNT(*) AS total " +
+                "FROM  `activity_hr_detail` " + "WHERE activity_id =?", args);
         try{
             for (HashMap<String, Object> row : resultList) {
                 try {

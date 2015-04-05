@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.essentia.metrics.Metrics;
-import com.essentia.support.Scope;
-import com.essentia.util.Formatter;
 import com.essentia.workout.workout_pojos.MetricsUIRef;
 import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
@@ -31,8 +29,6 @@ public class WorkoutMetricsFragment extends Fragment{
     private String type;
     private boolean isCreated = false;
     private String listSelectedItem;
-    private Formatter formatter;
-
     private int selectedLayoutIndex = 0;
     private String txtPreviousSelectedMetrics;
     public HashMap<String, MetricsUIRef> mBundle;
@@ -48,8 +44,10 @@ public class WorkoutMetricsFragment extends Fragment{
         Bundle bundles = i.getExtras();
         mBundle = new HashMap<String, MetricsUIRef>();
         metricsList = (ArrayList<Metrics>)bundles.getSerializable("Metrics");
+
         activity = (String) bundles.getSerializable("Activity");
         type = (String) bundles.getSerializable("Type");
+
         listSelectedItem = "";
         metricsRefls = new ArrayList<MetricsUIRef>();
     }
@@ -83,7 +81,6 @@ public class WorkoutMetricsFragment extends Fragment{
         return fragment;
     }
     public void updateView(Workout workout){
-        double distance = workout.getDistance(Scope.WORKOUT);
         updateMetricsValue(((MetricsUIRef) mBundle.get("Duration")), workout.getMetrics("Duration"));
         updateMetricsValue(((MetricsUIRef) mBundle.get("Heart Rate")), workout.getMetrics("Heart Rate"));
         updateMetricsValue(((MetricsUIRef) mBundle.get("Pace")), workout.getMetrics("Pace"));
@@ -328,6 +325,7 @@ public class WorkoutMetricsFragment extends Fragment{
             default: return null;
         }
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

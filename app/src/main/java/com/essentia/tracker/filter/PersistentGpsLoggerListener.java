@@ -81,7 +81,9 @@ public class PersistentGpsLoggerListener extends LocationListenerBase implements
         if (arg0.hasBearing()) {
             values.put(LocationDBHelper.BEARING, arg0.getBearing());
         }
-        locationDB.create(mDB, locationDB, values);
+        if(mDB != null) {
+            locationDB.create(mDB, locationDB, values);
+        }
     }
 
     @Override

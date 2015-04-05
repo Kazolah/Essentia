@@ -5,7 +5,7 @@
     android:background="@color/white">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:background="@color/light_gray">
         <TextView
             android:id="@+id/csrl_tvMonth"
@@ -14,6 +14,7 @@
             android:text="February"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="10dp"
+            android:textSize="20sp"
             android:textColor="@color/orange_pressed"/>
         <TextView
             android:id="@+id/csrl_tvYear"
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="2015"
             android:layout_marginTop="8dp"
+            android:textSize="20sp"
             android:layout_marginLeft="10dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"

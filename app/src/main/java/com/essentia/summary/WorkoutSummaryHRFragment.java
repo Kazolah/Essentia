@@ -87,17 +87,17 @@ public class WorkoutSummaryHRFragment extends Fragment{
     }
 
     public void loadPieChartData(){
-        int totalDuration = Integer.valueOf(workoutActivity.getDuration());
+        int totalRows = hrDetailDBHelper.queryHRRowCounts(workoutActivity.getId());
         int zone1Duration = hrDetailDBHelper.queryZonePercentage(workoutActivity.getId(), HRZones.ZONE1);
         int zone2Duration = hrDetailDBHelper.queryZonePercentage(workoutActivity.getId(), HRZones.ZONE2);
         int zone3Duration = hrDetailDBHelper.queryZonePercentage(workoutActivity.getId(), HRZones.ZONE3);
         int zone4Duration = hrDetailDBHelper.queryZonePercentage(workoutActivity.getId(), HRZones.ZONE4);
         int zone5Duration = hrDetailDBHelper.queryZonePercentage(workoutActivity.getId(), HRZones.ZONE5);
-        zone1 = ((float)zone1Duration/(float)totalDuration) * 100;
-        zone2 = ((float)zone2Duration/(float)totalDuration) * 100;
-        zone3 = ((float)zone3Duration/(float)totalDuration) * 100;
-        zone4 = ((float)zone4Duration/(float)totalDuration) * 100;
-        zone5 = ((float)zone5Duration/(float)totalDuration) * 100;
+        zone1 = ((float)zone1Duration/(float)totalRows) * 100;
+        zone2 = ((float)zone2Duration/(float)totalRows) * 100;
+        zone3 = ((float)zone3Duration/(float)totalRows) * 100;
+        zone4 = ((float)zone4Duration/(float)totalRows) * 100;
+        zone5 = ((float)zone5Duration/(float)totalRows) * 100;
     }
     public void animateCharts(){
         if(pieChart!=null && lineChart!=null){
@@ -154,7 +154,7 @@ public class WorkoutSummaryHRFragment extends Fragment{
         ArrayList<HRDetailQuery> hrDetailList = hrDetailDBHelper.queryHRDetail(summaryActivity.getActivityId());
         int i = 0;
         for(HRDetailQuery detailQuery: hrDetailList){
-            xVals.add(Formatter.parseMsIntoTime(detailQuery.getTimeInMs()));
+            xVals.add(Formatter.parseMsIntoTimeWithUnit(detailQuery.getTimeInMs()));
             Float hrValue = Float.valueOf(detailQuery.getHrValue());
             Entry entry = new Entry(hrValue, i);
             entryList.add(entry);

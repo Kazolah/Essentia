@@ -88,16 +88,20 @@ public class WorkoutSummaryMapFragment extends Fragment implements CustomMapFrag
         return map;
     }
     public void setRoute(Route route){
-        if (map != null) {
-            map.addPolyline(route.path);
-            mapBounds = route.bounds.build();
-            System.err.println("Added polyline");
-            int cnt = 0;
-            for (MarkerOptions m : route.markers) {
-                cnt++;
-                map.addMarker(m);
+        try {
+            if (map != null) {
+                map.addPolyline(route.path);
+                mapBounds = route.bounds.build();
+                System.err.println("Added polyline");
+                int cnt = 0;
+                for (MarkerOptions m : route.markers) {
+                    cnt++;
+                    map.addMarker(m);
+                }
+                System.err.println("Added " + cnt + " markers");
             }
-            System.err.println("Added " + cnt + " markers");
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
     @Override

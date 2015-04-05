@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
-import com.essentia.workout.workout_pojos.Dimension;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.text.ParseException;
@@ -19,11 +18,11 @@ import java.util.Locale;
  */
 public class Formatter implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-    public static String formatLowerLimitHRZones(int percent, int zone){
-        return percent + " % - Zone "+ (zone-1);
+    public static String formatLowerLimitHRZones(int percent, String zone){
+        return percent + " % - "+zone;
     }
-    public static String formatUpperLimitHRZones(int percent, int zone){
-        return percent + " % - Zone "+ (zone+1);
+    public static String formatLimitHRZones(int percent, String zone){
+        return percent + " % - "+zone;
     }
 
 
@@ -129,23 +128,6 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
         return this.base_unit;
     }
 
-    public String format(int target, Dimension dimension, double value) {
-        switch (dimension) {
-            case DISTANCE:
-                return formatDistance(target, Math.round(value));
-            case TIME:
-                return formatElapsedTime(target, Math.round(value));
-            case PACE:
-                return formatPace(target, value);
-            case HR:
-                return formatHeartRate(target, value);
-            case HRZ:
-                return formatHeartRateZone(target, value);
-            case SPEED:
-                return formatSpeed(target, value);
-        }
-        return "";
-    }
 
     public String formatElapsedTime(int target, long seconds) {
         switch (target) {
@@ -179,7 +161,7 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
             includeDimension = true;
             s.append(hours)
                     .append(" ")
-                    .append(resources.getQuantityString(R.plurals.cue_hour, (int)hours));
+                    .append(resources.getQuantityString(R.plurals.cue_hour, (int) hours));
         }
         if (minutes > 0) {
             if (hours > 0)
@@ -484,23 +466,6 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
         return s.toString();
     }
 
-    public String formatRemaining(int target, Dimension dimension, double value) {
-        switch (dimension) {
-            case DISTANCE:
-                return formatRemainingDistance(target, value);
-            case TIME:
-                return formatRemainingTime(target, value);
-            case PACE:
-            case SPEED:
-                break;
-            case HR:
-                break;
-            default:
-                break;
-        }
-        return "";
-    }
-
     public String formatRemainingTime(int target, double value) {
         return formatElapsedTime(target, Math.round(value));
     }
@@ -546,12 +511,24 @@ public class Formatter implements SharedPreferences.OnSharedPreferenceChangeList
         int hours = mins / 60;
         secs = secs % 60;
         mins = mins % 60;
-        if(hours>0)
-            duration = String.format("%02d", hours) + ":" ;
-        duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
+        duration += String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs);
         return duration;
     }
-
+    public static String parseMsIntoTimeWithUnit(String time){
+        String duration = "";
+        int updatedTime = Integer.valueOf(time);
+        int secs = (int) (updatedTime / 1000);
+        int mins = secs / 60;
+        int hours = mins / 60;
+        secs = secs % 60;
+        mins = mins % 60;
+        if(hours>0)
+            duration = String.format("%02d", hours) + " h " ;
+        if(mins>0)
+            duration += String.format("%02d", mins) + " m ";
+        duration += String.format("%02d", secs) +" s";
+        return duration;
+    }
     public static String parseDate(String date){
         String formattedDate = "";
         SimpleDateFormat pFormat = new SimpleDateFormat("yyyy-MM-dd");

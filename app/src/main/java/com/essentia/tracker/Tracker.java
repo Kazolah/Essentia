@@ -3,6 +3,7 @@ package com.essentia.tracker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 
 import com.essentia.dbHelpers.ActivityDBHelper;
 import com.essentia.dbHelpers.ActivityHRDetailDBHelper;
@@ -33,11 +35,11 @@ import com.essentia.util.Formatter;
 import com.essentia.util.HRZones;
 import com.essentia.util.ValueModel;
 import com.essentia.workout.workout_pojos.Workout;
+import com.example.kyawzinlatt94.essentia.R;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by kyawzinlatt94 on 2/18/15.
@@ -55,13 +57,12 @@ public class Tracker extends android.app.Service implements
     double mElapsedDistance = 0;
     double mHeartbeats = 0;
     double mHeartbeatMillis = 0; // since we might loose HRM connectivity...
-    double netCalBurned = 0;
     int mMaxHR = 0;
     int hrCount = 0;
     int burnedCalorie = 0;
     long previousTimeMillis = 0;
     final boolean mWithoutGps = false;
-
+    int targetHRZone = 0;
     TrackerState trackerState;
     final ValueModel<TrackerState> state = new ValueModel<TrackerState>(TrackerState.INIT);
     int mLocationType = LocationDBHelper.TYPE_START;
@@ -88,6 +89,8 @@ public class Tracker extends android.app.Service implements
     private LocationDBHelper locationDBHelper;
     private ActivityHRDetailDBHelper hrDetailDBHelper;
     private TrackerTTS textToSpeech;
+    private boolean onDistanceTrigger;
+    private int distanceMileStone;
 
     @Override
     public void onCreate() {
@@ -102,6 +105,12 @@ public class Tracker extends android.app.Service implements
         }catch(NullPointerException e){
             e.printStackTrace();
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        onDistanceTrigger = prefs.getBoolean(getResources().getString(R.string.cue_distance),false);
+        if(onDistanceTrigger){
+            distanceMileStone = prefs.getInt(getResources().getString(R.string.cue_distance_interval), 500);
+        }
+
         wakeLock(false);
     }
 
@@ -126,12 +135,13 @@ public class Tracker extends android.app.Service implements
         reset();
     }
 
-    public void setup() {
+    public void setup(int targetHRZone) {
         TrackerComponent.ResultCode result = trackerGPS.onInit(getApplicationContext());
         if (result == TrackerComponent.ResultCode.RESULT_OK) {
             connect();
             return;
         }
+        setTargetMode(targetHRZone);
     }
 
 
@@ -158,8 +168,11 @@ public class Tracker extends android.app.Service implements
         mDBWriter = new PersistentGpsLoggerListener(this, mDB, tmp);
         return mActivityId;
     }
-
+    public void setTargetMode(int targetHRZone){
+        this.targetHRZone = targetHRZone;
+    }
     public void start(Workout workout_) {
+        textToSpeech.emitActivityState(TrackerTTS.STARTED);
         // connect workout and tracker
         this.workout = workout_;
         workout.setTracker(this);
@@ -168,12 +181,6 @@ public class Tracker extends android.app.Service implements
          * create the DB activity
          */
         createActivity(workout.getSport());
-
-        // do bindings
-        doBind();
-
-        // Let workout do initializations
-        workout.onInit(workout);
 
         mElapsedDistance = 0;
         mHeartbeats = 0;
@@ -184,7 +191,7 @@ public class Tracker extends android.app.Service implements
 
         // New location update will be tagged with START
         setNextLocationType(LocationDBHelper.TYPE_START);
-
+        trackerState = TrackerState.STARTED;
         state.set(TrackerState.STARTED);
 
         activityOngoingState = new OngoingState(new Formatter(this), workout, this);
@@ -195,24 +202,8 @@ public class Tracker extends android.app.Service implements
         workout.onStart(Scope.WORKOUT, this.workout);
     }
 
-    private void doBind() {
-        /**
-         * Let components populate bindValues
-         */
-        HashMap<String, Object> bindValues = new HashMap<String, Object>();
-        Context ctx = getApplicationContext();
-        bindValues.put(TrackerComponent.KEY_CONTEXT, ctx);
-//        bindValues.put(Workout.KEY_FORMATTER, new Formatter(ctx));
-//        bindValues.put(Workout.KEY_HRZONES, new HRZones(ctx));
-        bindValues.put(Workout.KEY_MUTE, new Boolean(workout.getMute()));
-
-        /**
-         * and then give them to workout
-         */
-        workout.onBind(workout, bindValues);
-    }
-
     public void pause() {
+        textToSpeech.emitActivityState(TrackerTTS.PAUSED);
         trackerState = TrackerState.PAUSED;
         setNextLocationType(LocationDBHelper.TYPE_PAUSE);
         if (mActivityLastLocation != null) {
@@ -222,8 +213,6 @@ public class Tracker extends android.app.Service implements
             internalOnLocationChanged(mActivityLastLocation);
         }
         this.onPause();
-//        saveActivity();
-
     }
 
     public void stop() {
@@ -243,6 +232,7 @@ public class Tracker extends android.app.Service implements
     }
 
     public void resume() {
+        textToSpeech.emitActivityState(TrackerTTS.RESUMED);
         trackerState = TrackerState.STARTED;
         onResume();
         // TODO: check is mLastLocation is recent enough
@@ -269,6 +259,7 @@ public class Tracker extends android.app.Service implements
 
 
     public void completeActivity() {
+        textToSpeech.emitActivityState(TrackerTTS.END);
         setNextLocationType(LocationDBHelper.TYPE_END);
         if (mActivityLastLocation != null) {
             mDBWriter.onLocationChanged(mActivityLastLocation);
@@ -281,7 +272,7 @@ public class Tracker extends android.app.Service implements
     private void saveActivity() {
         ContentValues tmp = new ContentValues();
         tmp.put(ActivityDBHelper.DISTANCE, getDistanceInKM());
-        tmp.put(ActivityDBHelper.DURATION, getDuration());
+        tmp.put(ActivityDBHelper.DURATION, getDurationLong());
         tmp.put(ActivityDBHelper.CALORIE, getCalorieBurned());
         tmp.put(ActivityDBHelper.AVG_PACE, getAvgPace());
         tmp.put(ActivityDBHelper.AVG_SPEED, getAvgSpeed());
@@ -308,11 +299,11 @@ public class Tracker extends android.app.Service implements
     }
     private String getDistanceInKM(){
         double km = mElapsedDistance/1000;
-        return String.valueOf(km);
+        return String.format("%.2f", km);
     }
     private String getAvgPace(){
         if(mElapsedDistance==0){
-            return "00:00";
+            return "0";
         }
         double mElapsedSecs = mElapsedTimeMillis / 1000;
         double mElapsedDistanceKM = mElapsedDistance/1000;
@@ -346,14 +337,19 @@ public class Tracker extends android.app.Service implements
     }
 
     public void saveHRDetails(int hrValue, long timeStamp){
-        if(hrValue!=-1) {
-            return;
-        }
-        ContentValues vals = new ContentValues();
-        vals.put(ActivityHRDetailDBHelper.ACTIVITY_ID, mActivityId);
-        vals.put(ActivityHRDetailDBHelper.HR_VALUE, hrValue);
-        vals.put(ActivityHRDetailDBHelper.TIME_IN_MS, timeStamp);
-        hrDetailDBHelper.create(hrDetailDBHelper, vals);
+      try {
+          if (hrValue == -1) {
+              return;
+          }
+          ContentValues vals = new ContentValues();
+          vals.put(ActivityHRDetailDBHelper.ACTIVITY_ID, mActivityId);
+          vals.put(ActivityHRDetailDBHelper.HR_VALUE, hrValue);
+          vals.put(ActivityHRDetailDBHelper.HR_ZONE, hrZones.getCurrentHRZone(hrValue));
+          vals.put(ActivityHRDetailDBHelper.TIME_IN_MS, timeStamp);
+          mDB.insert("activity_hr_detail", "nullColumnHack", vals);
+      }catch(Exception e){
+          e.printStackTrace();
+      }
     }
 
     /**
@@ -362,13 +358,15 @@ public class Tracker extends android.app.Service implements
      */
     @Override
     public void onLocationChanged(Location arg0) {
-
+//       if(trackerState != TrackerState.STARTED){
+//           return;
+//       }
         if (mActivityLastLocation != null) {
             double distDiff = arg0.distanceTo(mActivityLastLocation);
             mElapsedDistance += distDiff;
 
             // Emit Speech
-            if(mElapsedDistance%500 == 0 && mElapsedDistance != 0){
+            if(mElapsedDistance%distanceMileStone == 0 && mElapsedDistance != 0 && onDistanceTrigger){
                 textToSpeech.emitIntervalFeedback();
             }
         }
@@ -452,7 +450,6 @@ public class Tracker extends android.app.Service implements
         }
     }
 
-
     public Double getCurrentSpeed() {
         return getCurrentSpeed(System.currentTimeMillis(), 3000);
     }
@@ -485,7 +482,6 @@ public class Tracker extends android.app.Service implements
             return 0.0;
         return (double) mLastLocation.getSpeed();
     }
-
 
     public Integer getCurrentBatteryLevel() {
         HRProvider hrProvider = trackerHRM.getHrProvider();
@@ -537,24 +533,27 @@ public class Tracker extends android.app.Service implements
             int hours = mins / 60;
             secs = secs % 60;
             mins = mins % 60;
-            if(hours>0){
-                duration = String.format("%02d", hours) + ":";
-            }
-            duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
+
+            duration = String.format("%02d", hours) + ":"+ String.format("%02d", mins) + ":" + String.format("%02d", secs);
 
             //Save the hr details into database
-            compHROperations();
+            compHROperations(secs);
             handler.postDelayed(this, 0);
         }
     };
 
+    int previousSecs = 0;
     /**
      * Compute HR operations
      * 1. Add duration to each zone
      * 2. Add duration detail to each zone
      * 3. Save hr details along with the time stamp
      */
-    public void compHROperations(){
+    public void compHROperations(int secs){
+        if(previousSecs == secs) {
+            return;
+        }
+
         int hrValue = getCurrentHRValue();
 
         //Proceed only if hrValue is not null
@@ -564,9 +563,10 @@ public class Tracker extends android.app.Service implements
 
             //Add duration detail to each zone
             populateZoneDurationDetail(updatedTime, hrZones.getCurrentHRZone(hrValue));
-
+            int dominant = (int) updatedTime/1000;
             //Save hr details
-            saveHRDetails(hrValue, updatedTime);
+            saveHRDetails(hrValue, dominant*1000);
+            previousSecs= secs;
         }
     }
     public String getDuration(){
@@ -629,7 +629,8 @@ public class Tracker extends android.app.Service implements
         if(mHeartbeats==0)
             return "0";
         double avgHR = mHeartbeats/hrCount;
-        String txtAvgHR = (avgHR<1)?"--":String.valueOf(avgHR);
+
+        String txtAvgHR = (avgHR<1)?"0":String.valueOf((int)avgHR);
         return txtAvgHR;
     }
 
@@ -669,22 +670,29 @@ public class Tracker extends android.app.Service implements
             previousHRZone = currentHRZone;
             return;
         }
-
         if(previousHRZone == currentHRZone){
             return;
         }else{
+            //Emit speech on heart rate zone switching
+            boolean isOutZone = isOutZone(currentHRZone);
             if(previousHRZone<currentHRZone){
-                textToSpeech.emitHeartRateZoneShifted(HRZ_UP);
+                textToSpeech.emitHeartRateZoneShifted(HRZ_UP, isOutZone);
             }else{
-                textToSpeech.emitHeartRateZoneShifted(HRZ_DOWN);
+                textToSpeech.emitHeartRateZoneShifted(HRZ_DOWN, isOutZone);
             }
             appendDurationText(previousHRZone, Formatter.parseMsIntoTime(String.valueOf(ms)), 1);
             appendDurationText(currentHRZone, Formatter.parseMsIntoTime(String.valueOf(ms)), 0);
             previousHRZone = currentHRZone;
         }
-
     }
-
+    private boolean isOutZone(int currentZone){
+      if(targetHRZone ==0 ) {
+          return false;
+      }else if(currentZone != targetHRZone){
+           return true;
+      }else
+          return false;
+    }
     /**
      * Set Duration Detail Text for each heart rate zone
      * @param currentHRZone Heart Rate Zone to append the text
@@ -699,37 +707,37 @@ public class Tracker extends android.app.Service implements
                     if(txtPos==0)
                         hrZones.setZone1DurationDetails(duration +" - ");
                     else
-                        hrZones.setZone1DurationDetails(duration +"\n");
+                        hrZones.setZone1DurationDetails(duration +"\r\n");
                 break;
             case HRZones.ZONE2:
                     if(txtPos==0)
                         hrZones.setZone2DurationDetails(duration +" - ");
                     else
-                        hrZones.setZone2DurationDetails(duration +"\n");
+                        hrZones.setZone2DurationDetails(duration +"\r\n");
                 break;
             case HRZones.ZONE3:
                     if(txtPos==0)
                         hrZones.setZone3DurationDetails(duration +" - ");
                     else
-                        hrZones.setZone3DurationDetails(duration +"\n");
+                        hrZones.setZone3DurationDetails(duration +"\r\n");
                 break;
             case HRZones.ZONE4:
                     if(txtPos==0)
                         hrZones.setZone4DurationDetails(duration +" - ");
                     else
-                        hrZones.setZone4DurationDetails(duration +"\n");
+                        hrZones.setZone4DurationDetails(duration +"\r\n");
                 break;
             case HRZones.ZONE5:
                     if(txtPos==0)
                         hrZones.setZone5DurationDetails(duration +" - ");
                     else
-                        hrZones.setZone5DurationDetails(duration +"\n");
+                        hrZones.setZone5DurationDetails(duration +"\r\n");
                 break;
         }
     }
     public String getCurrentZoneLevel(int hrValue){
         int hrZone = hrZones.getCurrentHRZone(hrValue);
-        return hrZones.getZoneIntensityLevel(hrZone);
+        return hrZones.getZoneIntensityDescription(hrZone);
     }
     public String getZoneDurationData(int hrZone){
         switch(hrZone){

@@ -2,9 +2,10 @@ package com.essentia.summary;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,12 +19,11 @@ import android.widget.Toast;
 import com.essentia.dbHelpers.ActivityDBHelper;
 import com.essentia.dbHelpers.ActivityHRDetailDBHelper;
 import com.essentia.dbHelpers.ActivityHRDetailDBHelper.HRDetailQuery;
-import com.essentia.dbHelpers.DBBuilder;
 import com.essentia.dbHelpers.LocationDBHelper;
+import com.essentia.dbHelpers.UserDBHelper;
 import com.essentia.main.MainActivity;
+import com.essentia.support.UserObject;
 import com.essentia.support.WorkoutActivity;
-import com.essentia.tracker.Tracker;
-import com.essentia.tracker.component.TrackerTTS;
 import com.essentia.util.Route;
 import com.example.kyawzinlatt94.essentia.R;
 
@@ -40,6 +40,7 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
     private long mID;
 
     private ActivityHRDetailDBHelper hrDetailDBHelper;
+    private UserDBHelper userDBHelper;
     private ActivityDBHelper activityDBHelper;
     private WorkoutActivity workoutActivity;
     private ArrayList<HRDetailQuery> hrQueriesList;
@@ -48,12 +49,12 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
     private WorkoutSummaryHRFragment hrFragment;
     private WorkoutSummaryMapFragment mapFragment;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private String DB_PATH;
+
     private ViewPager mViewPager;
     private Button btnSaveActivity;
     private Button btnDiscardActivity;
+    private boolean isDestoryed;
 
-    private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +62,9 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#707070")));
         context = getApplicationContext();
+        isDestoryed = false;
         dataFragment = new WorkoutSummaryDataFragment();
         hrFragment = new WorkoutSummaryHRFragment();
         mapFragment = new WorkoutSummaryMapFragment();
@@ -85,15 +88,13 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
                 actionBar.setSelectedNavigationItem(position);
             }
         });
-        final TrackerTTS ttts = new TrackerTTS(context, new Tracker());
         // Create a tab listener that is called when the user changes tabs.
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 if(tab.getPosition()==1){
-                    hrFragment.animateCharts();
-                    ttts.emitHeartRateZoneShifted(true);
+//                    hrFragment.animateCharts();
                 }
             }
 
@@ -111,11 +112,7 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(tabListener));
         }
-
-        //Prepare Database
-        DBBuilder dbBuilder = new DBBuilder(this);
-        dbBuilder.buildDBs();
-
+        userDBHelper = new UserDBHelper(this);
         activityDBHelper = new ActivityDBHelper(this);
         locationDBHelper = new LocationDBHelper(this);
         hrDetailDBHelper = new ActivityHRDetailDBHelper(this);
@@ -125,15 +122,6 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
 
         workoutActivity = activityDBHelper.queryActivity(String.valueOf(mID)); //Query and load the info for the activity
         hrQueriesList = hrDetailDBHelper.queryHRDetail(String.valueOf(mID));   //Get the hrDetail data with activity id
-
-        tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    tts.setLanguage(Locale.UK);
-                }
-            }
-        });
     }
 
     /**
@@ -190,17 +178,22 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
      * Load Route from database to populate in MapFragment
      */
     public void loadRoute(){
-         loadRouteTask = new AsyncTask<String, String, Route>() {
-             @Override
-             protected Route doInBackground(String... params) {
-                 Route route = locationDBHelper.loadRoute(context, mID);
-                 return route;
-             }
-             @Override
-             protected void onPostExecute(Route route) {
-                 mapFragment.setRoute(route);
-             }
-         }.execute();
+        try {
+            loadRouteTask = new AsyncTask<String, String, Route>() {
+                @Override
+                protected Route doInBackground(String... params) {
+                    Route route = locationDBHelper.loadRoute(context, mID);
+                    return route;
+                }
+
+                @Override
+                protected void onPostExecute(Route route) {
+                    mapFragment.setRoute(route);
+                }
+            }.execute();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     public ArrayList<HRDetailQuery> getHRQueriesList(){
         return hrQueriesList;
@@ -215,36 +208,50 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
     public final View.OnClickListener btnSaveClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
+            updateAvgHR();
             Toast.makeText(context,"Activity Successfully Saved",Toast.LENGTH_LONG).show();
             Intent i = new Intent(context, MainActivity.class);
             finish();
             startActivity(i);
         }
     };
-
+    private void updateAvgHR(){
+        UserObject userObject = userDBHelper.getUserObject();
+        String userId = userObject.getUserId();
+        userDBHelper.updateAvgHR(userId, activityDBHelper.getTotalAvgHR());
+    }
     public final View.OnClickListener btnDiscardClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-           boolean status = false;
-           String where = LocationDBHelper.ACTIVITY_ID + "=?";
-           String[] whereArgs = new String[]{String.valueOf(mID)};
-
-            if(locationDBHelper.delete(locationDBHelper, where, whereArgs) ||
-                hrDetailDBHelper.delete(hrDetailDBHelper, where, whereArgs) ||
-                activityDBHelper.delete(locationDBHelper, (int)mID)){
-                status = true;
-           }
-            String toSpeak = "Alert, out of Target Heart Rate Zone";
-            tts.speak(toSpeak,TextToSpeech.QUEUE_ADD,null);
-           if(status){
-               Toast.makeText(context,"Activity Successfully Deleted",Toast.LENGTH_LONG).show();
-           }else{
-               Toast.makeText(context,"Problem deleting activity",Toast.LENGTH_LONG).show();
-           }
-           Intent i = new Intent(context, MainActivity.class);
-           finish();
-           startActivity(i);
+           discardActivity();
         }
     };
+
+    private void discardActivity(){
+        boolean status = false;
+        String where = LocationDBHelper.ACTIVITY_ID + "=?";
+        String[] whereArgs = new String[]{String.valueOf(mID)};
+        String whereID = "id=?";
+        if(locationDBHelper.delete(locationDBHelper, where, whereArgs) &&
+                hrDetailDBHelper.delete(hrDetailDBHelper, where, whereArgs) &&
+                activityDBHelper.delete(activityDBHelper, whereID, whereArgs)){
+            updateAvgHR();
+            status = true;
+            isDestoryed = true;
+        }
+        if(status){
+            Toast.makeText(context,"Activity Successfully Discarded",Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(context,"Problem deleting activity",Toast.LENGTH_LONG).show();
+        }
+        Intent i = new Intent(context, MainActivity.class);
+        finish();
+        startActivity(i);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
 }
 

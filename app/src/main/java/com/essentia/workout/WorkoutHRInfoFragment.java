@@ -67,11 +67,7 @@ public class WorkoutHRInfoFragment extends Fragment{
        this.currentHRValue = hrValue;
        this.currentHRPercentage = hrZones.getCurrentHRPercentage(currentHRValue);
        currentHRZone = hrZones.getCurrentHRZone(currentHRValue);
-       if(currentHRZone != previousHRZone){
-           //Trigger Speech
 
-       }
-//       workoutActivity.populateZoneDurationData(currentHRZone);
        previousHRZone = currentHRZone;
 
        Pair<Integer, Integer> hrValueBound = hrZones.getCurrentHRValueBound(currentHRValue, currentHRZone);
@@ -80,7 +76,7 @@ public class WorkoutHRInfoFragment extends Fragment{
        tvCurrentHrPercent.setText(currentHRPercentage+" %");
        tvLowerHrLimit.setText(hrValueBound.first+" ");
        tvUpperHrLimit.setText(hrValueBound.second+" ");
-       tvCurrentHrZone.setText("Zone "+currentHRZone);
+       tvCurrentHrZone.setText(hrZones.getZoneIntensityDescription(currentHRZone));
 
         switch(currentHRZone){
             case 0:
@@ -114,8 +110,8 @@ public class WorkoutHRInfoFragment extends Fragment{
                 tvUpperHrZone.setVisibility(View.GONE);
                 break;
         }
-        tvLowerHrZone.setText(formatter.formatLowerLimitHRZones(hrPercentBound.first, currentHRZone));
-        tvUpperHrZone.setText(formatter.formatUpperLimitHRZones(hrPercentBound.second, currentHRZone));
+        tvLowerHrZone.setText(formatter.formatLimitHRZones(hrPercentBound.second, HRZones.getZoneIntensityDescription(currentHRZone - 1)));
+        tvUpperHrZone.setText(formatter.formatLimitHRZones(hrPercentBound.second, HRZones.getZoneIntensityDescription(currentHRZone + 1)));
     }
     @Override
     public void onAttach(Activity activity) {

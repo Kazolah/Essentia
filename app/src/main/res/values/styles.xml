@@ -2,8 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarTabTextStyle">@style/tabtextcolor</item>
         <!-- Customize your theme here. -->
     </style>
     <!-- Text Styles -->
-
+    <style name="tabtextcolor" parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

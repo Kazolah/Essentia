@@ -27,7 +27,7 @@ public class GpsSearchingState implements NotificationState {
         Intent i = new Intent(context, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         i.putExtra(Constants.Intents.FROM_NOTIFICATION, true);
-        PendingIntent pi = PendingIntent.getActivity(context, 0, i, 0);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(pi);
         builder.setContentTitle(context.getString(R.string.searching_for_gps));

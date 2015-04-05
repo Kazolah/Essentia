@@ -35,11 +35,11 @@ public class HRZones {
     public static final String ZONE4_LEVEL = "HARD";
     public static final String ZONE5_LEVEL = "MAXIMUM";
 
-    public static final String ZONE5_ADV = "Working out at Zone 5 develops maximum performance and speed";
-    public static final String ZONE4_ADV = "Working out at Zone 4 increases maximum performance capacity";
-    public static final String ZONE3_ADV = "Working out at Zone 3 improves aerobic fitness";
-    public static final String ZONE2_ADV = "Working out at Zone 2 improves basic endurance and fat burning";
-    public static final String ZONE1_ADV = "Working out at Zone 1 improves overall health and helps recovery";
+    public static final String ZONE5_ADV = "Develops maximum performance and speed";
+    public static final String ZONE4_ADV = "Increases maximum performance capacity";
+    public static final String ZONE3_ADV = "Improves aerobic fitness";
+    public static final String ZONE2_ADV = "Improves basic endurance and fat burning";
+    public static final String ZONE1_ADV = "Improves overall health and helps recovery";
 
 
     private String zone1DurationDetails = "";
@@ -201,28 +201,38 @@ public class HRZones {
         zone5DurationDetails += data;
     }
 
+    public String getZone1Duration(){
+        return Formatter.parseMsIntoTimeWithUnit(String.valueOf(zone1Duration));
+    }
+    public String getZone2Duration(){
+        return Formatter.parseMsIntoTimeWithUnit(String.valueOf(zone2Duration));
+    }
+    public String getZone3Duration(){
+        return Formatter.parseMsIntoTimeWithUnit(String.valueOf(zone3Duration));
+    }
+    public String getZone4Duration(){
+        return Formatter.parseMsIntoTimeWithUnit(String.valueOf(zone4Duration));
+    }
+    public String getZone5Duration(){
+        return Formatter.parseMsIntoTimeWithUnit(String.valueOf(zone5Duration));
+    }
     public void addZonesDuration(long milliSec, int currentHRZone){
         int ms = (int) milliSec;
         switch (currentHRZone){
             case HRZones.ZONE1:
                 zone1Duration += ms;
-                setZone1DurationDetails(parseDuration(zone1Duration));
                 break;
             case HRZones.ZONE2:
                 zone2Duration += ms;
-                setZone2DurationDetails(parseDuration(zone2Duration));
                 break;
             case HRZones.ZONE3:
                 zone3Duration += ms;
-                setZone3DurationDetails(parseDuration(zone3Duration));
                 break;
             case HRZones.ZONE4:
                 zone4Duration += ms;
-                setZone4DurationDetails(parseDuration(zone4Duration));
                 break;
             case HRZones.ZONE5:
                 zone5Duration += ms;
-                setZone5DurationDetails(parseDuration(zone5Duration));
                 break;
         }
     }
@@ -239,7 +249,7 @@ public class HRZones {
         duration += String.format("%02d", mins) + ":" + String.format("%02d", secs);
         return duration;
     }
-    public String getZoneIntensityLevel(int heartRateZone){
+    public static String getZoneIntensityDescription(int heartRateZone){
         switch (heartRateZone){
             case 1:
                 return "Recovery Zone";
@@ -276,6 +286,13 @@ public class HRZones {
         }
         return percent;
     }
+
+    /**
+     * Calculate zone percent for total duration
+     * @param zoneDuration
+     * @param totalTimeMs
+     * @return
+     */
     private double calculatePercentage(int zoneDuration, long totalTimeMs){
         if(totalTimeMs==0)
             return 0;
@@ -292,4 +309,5 @@ public class HRZones {
         }
         return (int) HRmax;
     }
+
 }

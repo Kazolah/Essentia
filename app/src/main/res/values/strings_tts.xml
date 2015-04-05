@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hrz_shift_up">Alert, Heart Rate Zone Shifted Up.</string>
-    <string name="hrz_shift_down">Alert, Heart Rate Zone Shifted Down.</string>
+    <string name="hrz_shift_up">Heart Rate Zone Shifted Up.</string>
+    <string name="hrz_shift_down">Heart Rate Zone Shifted Down.</string>
+    <string name="out_of_target_zone">Out Of Target Heart Rate Zone</string>
     <string name="current_hrz">Current Heart Rate Zone</string>
     <string name="km">Kilometer</string>
+    <string name="activity_started">Activity Started</string>
+    <string name="activity_paused">Activity Paused</string>
+    <string name="activity_resumed">Activity Resumed</string>
+    <string name="activity_end">Activity End</string>
+
+    <string name="test_audio_speech">Current Duration 1 hour 12 minutes, Current distance 2.3 km, Calorie Burned 100 kcal,
+    Current Pace 5 minutes per km, Current Speed, 10 km per hour, Current Heart Rate 100 beat per minute,
+    Current Heart Rate Zone Recovery Zone</string>
+
 </resources>

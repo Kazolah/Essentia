@@ -45,7 +45,7 @@
 
     <!-- Workout Types -->
     <string name="basic_workout">Basic Workout</string>
-    <string name="target_heart_rate">Target Heart Rate</string>
+    <string name="target_heart_rate">Target Heart Rate Zone</string>
 
     <string name="calorie_off">Calorie: Off</string>
     <string name="calorie_on">Calorie: On</string>

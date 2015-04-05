@@ -4,5 +4,9 @@
     <string name="list_prompt_activity">Activity</string>
     <string name="list_prompt_type">Type</string>
     <string name="list_prompt_metrics">Metrics</string>
+    <string name="hrm_connection_on">HRM: Connected</string>
+    <string name="hrm_connection_off">HRM: Disconnected</string>
+    <string name="gps_connection_on">GPS: Connected</string>
+    <string name="gps_connection_off">GPS: Disconnected</string>
 
 </resources>

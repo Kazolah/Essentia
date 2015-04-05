@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.essentia.main.MainActivity;
 import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.Calendar;
@@ -24,7 +25,7 @@ import java.util.Calendar;
  * Created by kyawzinlatt94 on 2/3/15.
  */
 public class PlansFragment extends Fragment{
-    private PlansActivity plansActivity;
+    private MainActivity mainActivity;
     private Context context;
     private Button btnSavePlan;
     private ImageView ivMon, ivTue, ivWed, ivThurs, ivFri, ivSat, ivSun;
@@ -37,7 +38,7 @@ public class PlansFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = plansActivity.getApplicationContext();
+        context = mainActivity.getApplicationContext();
         sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
     }
@@ -48,17 +49,16 @@ public class PlansFragment extends Fragment{
         btnSavePlan = (Button) rootView.findViewById(R.id.btnPlansSave);
         btnSavePlan.setOnClickListener(btnSavePlanListener);
         ivMon = (ImageView) rootView.findViewById(R.id.iv_MON);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_monday),false)){
+        onMon = sharedPrefs.getBoolean(getString(R.string.pref_monday),false);
+        if(onMon){
             ivMon.setImageResource(R.drawable.ic_monday_on);
-            onMon = true;
         }else{
             ivMon.setImageResource(R.drawable.ic_monday_off);
-            onMon = false;
         }
         ivMon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivMon.getDrawable() == getResources().getDrawable(R.drawable.ic_monday_off)){
+                if(!onMon){
                     ivMon.setImageResource(R.drawable.ic_monday_on);
                     onMon = true;
                 }else{
@@ -68,17 +68,16 @@ public class PlansFragment extends Fragment{
             }
         });
         ivTue = (ImageView) rootView.findViewById(R.id.iv_TUE);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_tuesday),false)){
+        onTue = sharedPrefs.getBoolean(getString(R.string.pref_tuesday),false);
+        if(onTue){
             ivTue.setImageResource(R.drawable.ic_tuesday_on);
-            onTue = true;
         }else{
             ivTue.setImageResource(R.drawable.ic_tuesday_off);
-            onTue = false;
         }
         ivTue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivTue.getDrawable() == getResources().getDrawable(R.drawable.ic_tuesday_off)){
+                if(!onTue){
                     ivTue.setImageResource(R.drawable.ic_tuesday_on);
                     onTue = true;
                 }else{
@@ -89,17 +88,16 @@ public class PlansFragment extends Fragment{
         });
 
         ivWed = (ImageView) rootView.findViewById(R.id.iv_WED);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_wednesday),false)){
+        onWed = sharedPrefs.getBoolean(getString(R.string.pref_wednesday),false);
+        if(onWed){
             ivWed.setImageResource(R.drawable.ic_wednesday_on);
-            onWed = true;
         }else{
             ivWed.setImageResource(R.drawable.ic_wednesday_off);
-            onWed = false;
         }
         ivWed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivWed.getDrawable() == getResources().getDrawable(R.drawable.ic_wednesday_off)){
+                if(!onWed){
                     ivWed.setImageResource(R.drawable.ic_wednesday_on);
                     onWed = true;
                 }else{
@@ -110,17 +108,16 @@ public class PlansFragment extends Fragment{
         });
 
         ivThurs = (ImageView) rootView.findViewById(R.id.iv_THURS);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_thursday),false)){
+        onThurs = sharedPrefs.getBoolean(getString(R.string.pref_thursday),false);
+        if(onThurs){
             ivThurs.setImageResource(R.drawable.ic_thrusday_on);
-            onThurs = true;
         }else{
             ivThurs.setImageResource(R.drawable.ic_thrusday_off);
-            onThurs = false;
         }
         ivThurs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivThurs.getDrawable() == getResources().getDrawable(R.drawable.ic_thrusday_off)){
+                if(!onThurs){
                     ivThurs.setImageResource(R.drawable.ic_thrusday_on);
                     onThurs = true;
                 }else{
@@ -131,17 +128,16 @@ public class PlansFragment extends Fragment{
         });
 
         ivFri = (ImageView) rootView.findViewById(R.id.iv_Fri);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_friday),false)){
+        onFri = sharedPrefs.getBoolean(getString(R.string.pref_friday),false);
+        if(onFri){
             ivFri.setImageResource(R.drawable.ic_friday_on);
-            onFri = true;
         }else{
             ivFri.setImageResource(R.drawable.ic_friday_off);
-            onFri = false;
         }
         ivFri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivFri.getDrawable() == getResources().getDrawable(R.drawable.ic_friday_off)){
+                if(!onFri){
                     ivFri.setImageResource(R.drawable.ic_friday_on);
                     onFri = true;
                 }else{
@@ -152,17 +148,16 @@ public class PlansFragment extends Fragment{
         });
 
         ivSat = (ImageView) rootView.findViewById(R.id.iv_Sat);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_sat),false)){
+        onSat = sharedPrefs.getBoolean(getString(R.string.pref_sat),false);
+        if(onSat){
             ivSat.setImageResource(R.drawable.ic_sat_on);
-            onSat = true;
         }else{
             ivSat.setImageResource(R.drawable.ic_sat_off);
-            onSat = false;
         }
         ivSat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivSat.getDrawable() == getResources().getDrawable(R.drawable.ic_sat_off)){
+                if(!onSat){
                     ivSat.setImageResource(R.drawable.ic_sat_on);
                     onSat = true;
                 }else{
@@ -173,18 +168,17 @@ public class PlansFragment extends Fragment{
         });
 
         ivSun = (ImageView) rootView.findViewById(R.id.iv_SUN);
-        if(sharedPrefs.getBoolean(getString(R.string.pref_sun),false)){
+        onSun = sharedPrefs.getBoolean(getString(R.string.pref_sun),false);
+        if(onSun){
             ivSun.setImageResource(R.drawable.ic_sun_on);
-            onSun = true;
         }else{
             ivSun.setImageResource(R.drawable.ic_sun_off);
-            onSun = false;
         }
 
         ivSun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ivSun.getDrawable() == getResources().getDrawable(R.drawable.ic_sun_off)){
+                if(!onSun){
                     ivSun.setImageResource(R.drawable.ic_sun_on);
                     onSun = true;
                 }else{
@@ -216,37 +210,74 @@ public class PlansFragment extends Fragment{
             editor.putInt(getString(R.string.pref_min), timePicker.getCurrentMinute());
             editor.commit();
 
+            Intent intent = new Intent(getActivity(), NotifyReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            alarmMgr.cancel(pendingIntent);
+
             Calendar calendar = Calendar.getInstance();
+
             if(onMon || onTue || onWed || onThurs || onFri || onSat || onSun){
-                calendar.set(Calendar.HOUR,timePicker.getCurrentHour());
+                boolean am = true;
+                if(timePicker.getCurrentHour()/12>0)
+                    am = false;
+                int hour = timePicker.getCurrentHour()%12;
+                if(!am && hour==0) hour = 12;
+                calendar.set(Calendar.HOUR,hour);
                 calendar.set(Calendar.MINUTE,timePicker.getCurrentMinute());
+                if(am)
+                    calendar.set(Calendar.AM_PM, Calendar.AM);
+                else
+                    calendar.set(Calendar.AM_PM, Calendar.PM);
             }
 
-            if(onMon){calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);}
-            if(onTue){calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);}
-            if(onWed){calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);}
-            if(onThurs){calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);}
-            if(onFri){calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);}
-            if(onSat){calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);}
-            if(onSun){calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);}
+            if(onMon){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onTue){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onWed){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onThurs){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onFri){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));}
+            if(onSat){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onSun){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
 
-            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(getActivity(), NotifyService.class);
-            pendingIntent = PendingIntent.getService(context, 0, intent, 0);
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*60*24 , pendingIntent);
-
-            Toast.makeText(context,"Workout Plan Successfully Saved", Toast.LENGTH_LONG);
+            Toast.makeText(context,"Workout Plan Successfully Saved", Toast.LENGTH_LONG).show();
         }
     };
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        plansActivity = (PlansActivity) activity;
+        mainActivity = (MainActivity) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        plansActivity = null;
+        mainActivity = null;
     }
 }

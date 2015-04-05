@@ -51,7 +51,7 @@ public class WorkoutSummaryDataFragment extends Fragment{
         tvSportType.setText(workoutActivity.getSport());
         tvDate.setText(Formatter.parseDate(workoutActivity.getDate()));
         tvTime.setText(workoutActivity.getStartTime());
-        tvDuration.setText(workoutActivity.getDuration());
+        tvDuration.setText(Formatter.parseMsIntoTime(workoutActivity.getDuration()));
         tvCalorie.setText(workoutActivity.getCalorie());
         tvAvgPace.setText(workoutActivity.getAvgPace());
         tvAvgSpeed.setText(workoutActivity.getAvgSpeed());

@@ -42,7 +42,7 @@ public class DBBuilder {
         activityDBHelper.executeSQL("INSERT INTO `activity` (`start_time`, `date`," +
                 " `calorie`, `duration`,`distance`, `avg_pace`, `avg_speed`, `max_hr`," +
                 " `avg_hr`, `sport`, `zone1_info`,`zone2_info`,`zone3_info`,`zone4_info`,`zone5_info`)" +
-                " VALUES ('00:10:00 AM', '14-03-2015', '1200', " +
+                " VALUES ('00:10:00 AM', '2015-03-21', '1200', " +
                 "'55000','3000', '0', '0', '210', '190', 'Running','','','','','');",null);
 
         locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +

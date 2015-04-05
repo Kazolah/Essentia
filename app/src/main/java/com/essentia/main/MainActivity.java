@@ -24,10 +24,10 @@ import com.essentia.notification.GpsBoundState;
 import com.essentia.notification.GpsSearchingState;
 import com.essentia.notification.NotificationManagerDisplayStrategy;
 import com.essentia.notification.NotificationStateManager;
-import com.essentia.plans.PlansActivity;
+import com.essentia.plans.PlansFragment;
 import com.essentia.setting.ProfileSettingActivity;
 import com.essentia.setting.SettingActivity;
-import com.essentia.statistics.StatisticsActivity;
+import com.essentia.statistics.StatisticsFragment;
 import com.essentia.summary.WorkoutSummaryActivity;
 import com.essentia.support.ApplicationContext;
 import com.essentia.tracker.GpsInformation;
@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private String mTitle;
     private GpsStatus mGpsStatus;
     private GpsSearchingState gpsSearchingState;
     private GpsBoundState gpsBoundState;
@@ -89,7 +89,6 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
@@ -125,26 +124,40 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch(position) {
             case NavigationDrawerFragment.USER_PROFILE:
+                finish();
                 startActivity(new Intent(this, ProfileSettingActivity.class));
                 break;
             case NavigationDrawerFragment.MAIN:
+                mTitle = "Workout";
+                setActionBarTitle(mTitle);
                 fragmentManager.beginTransaction()
+                        .addToBackStack("main")
                         .replace(R.id.container, mainFragment)
                         .commit();
                     break;
             case NavigationDrawerFragment.HISTORY:
+                mTitle = "History";
+                setActionBarTitle(mTitle);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new HistoryFragment())
                         .addToBackStack("history")
                         .commit();
                 break;
             case NavigationDrawerFragment.STATISTICS:
-                finish();
-                startActivity(new Intent(this, StatisticsActivity.class));
+                mTitle = "Statistics";
+                setActionBarTitle(mTitle);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new StatisticsFragment())
+                        .addToBackStack("statistics")
+                        .commit();
                 break;
             case NavigationDrawerFragment.PLANS:
-                finish();
-                startActivity(new Intent(this, PlansActivity.class));
+                mTitle = "Plans";
+                setActionBarTitle(mTitle);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new PlansFragment())
+                        .addToBackStack("plans")
+                        .commit();
                 break;
         }
     }
@@ -188,7 +201,6 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -206,9 +218,14 @@ public class MainActivity extends ActionBarActivity
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             this.finish();
+            notificationStateManager.cancelNotification();
             return;
         }
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .addToBackStack("main")
+                .replace(R.id.container, mainFragment)
+                .commit();
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
@@ -234,18 +251,7 @@ public class MainActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
-    /**
-     * Start Workout session
-     */
-    public void startWorkoutSession(View v){
-        Intent i = new Intent(this, WorkoutActivity.class);
-        Bundle bundles = new Bundle();
-        bundles.putSerializable("Metrics",mainFragment.getMetricsList());
-        bundles.putSerializable("Activity",mainFragment.getSelectedActivity().title);
-        bundles.putSerializable("Type",mainFragment.getSelectedType().title);
-        i.putExtras(bundles);
-        startActivity(i);
-    }
+
     public void metricsCallback(HashMap<String, Metrics> metrics){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(metrics!=null) {
@@ -273,6 +279,29 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, mainFragment)
                 .commit();
+    }
+    public void inflateTargetFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, new TargetZoneFragment())
+                .commit();
+    }
+    public void targetFragmentCallBack(TargetZoneFragment.TargetZoneListItems targetType){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(targetType!=null){
+            mainFragment.setSelectedType(TargetZoneListItemAdapter(targetType));
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, mainFragment).commit();
+    }
+    private NavigationListItems TargetZoneListItemAdapter(TargetZoneFragment.TargetZoneListItems targetType){
+        NavigationListItems item = new NavigationListItems();
+        item.icon = targetType.icon;
+        item.title = targetType.title;
+        return item;
+    }
+    public void setActionBarTitle(String title){
+       getSupportActionBar().setTitle(title);
     }
     @Override
     public void onTick() {
@@ -331,11 +360,12 @@ public class MainActivity extends ActionBarActivity
                Intent i = new Intent(MainActivity.this, WorkoutActivity.class);
                Bundle bundles = new Bundle();
                bundles.putSerializable("Metrics", mainFragment.getMetricsList());
-               bundles.putSerializable("Activity",mainFragment.getSelectedActivity().title);
+               bundles.putSerializable("Sport",mainFragment.getSelectedActivity().title);
                bundles.putSerializable("Type",mainFragment.getSelectedType().title);
                i.putExtras(bundles);
+               finish();
                startActivity(i);
-               MainActivity.this.startActivityForResult(i,112);
+//               MainActivity.this.startActivityForResult(i,112);
                notificationStateManager.cancelNotification();
                return;
            }

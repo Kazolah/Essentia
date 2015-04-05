@@ -37,7 +37,6 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="5dp"
                 android:background="#e1f47239"
-                android:onClick="initSignIn"
                 />
         </LinearLayout>
         <LinearLayout

@@ -1,5 +1,6 @@
 package com.essentia.dbHelpers;
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import com.essentia.orm.BaseDBHelper;
@@ -42,6 +43,13 @@ public class UserDBHelper extends BaseDBHelper{
         columns.add(new Fields(MAX_HR,"Maximum Heart Rate",Types.integer()));
         columns.add(new Fields(AVG_HR,"Average Heart Rate",Types.integer()));
         columns.add(new Fields(RESTING_HR,"Resting Heart Rate",Types.integer()));
+    }
+    public void updateAvgHR(String id, String avgHR){
+        String where = "id=?";
+        String[] whereArgs = new String[]{id};
+        ContentValues dataVals = new ContentValues();
+        dataVals.put(AVG_HR, avgHR);
+        this.updateRecord(this,dataVals, where, whereArgs);
     }
     public UserObject getUserObject(){
         UserObject user = new UserObject();

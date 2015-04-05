@@ -6,7 +6,7 @@
         android:id="@+id/fwhi_upper_limit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="112"
+        android:text="--"
         android:textColor="@android:color/black"
         android:layout_gravity="center"
         android:textSize="25sp"
@@ -31,7 +31,7 @@
                android:layout_height="wrap_content"
                android:layout_marginTop="15dp"
                android:layout_centerHorizontal="true"
-               android:text="100% - Zone 5"
+               android:text="- -"
                android:layout_alignParentTop="true"
                android:textSize = "20sp"
                android:textColor="@android:color/white"/>
@@ -51,7 +51,7 @@
                     android:id="@+id/fwhi_current_percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100%"
+                    android:text="--%"
                     android:textColor="@android:color/white"
                     android:layout_gravity="center"
                     android:textSize="80sp"/>
@@ -61,7 +61,7 @@
                      android:layout_height="wrap_content"
                      android:layout_marginTop="30dp"
                      android:layout_gravity="center"
-                     android:text="Zone 5"
+                     android:text="--"
                      android:textSize = "35sp"
                      android:textColor="@android:color/white"/>
                </LinearLayout>
@@ -69,7 +69,7 @@
                    android:id="@+id/fwhi_lower_zone"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="87% - Zone 3"
+                   android:text="--"
                    android:textSize = "20sp"
                    android:textColor="@android:color/white"
                    android:layout_centerHorizontal="true"
@@ -81,7 +81,7 @@
         android:id="@+id/fwhi_lower_limit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="112"
+        android:text="--"
         android:textColor="@android:color/black"
         android:layout_gravity="center"
         android:textSize="25sp"
