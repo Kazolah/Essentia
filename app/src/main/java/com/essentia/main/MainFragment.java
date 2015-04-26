@@ -1,11 +1,13 @@
 package com.essentia.main;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +26,8 @@ import com.essentia.metrics.Speed;
 import com.essentia.tracker.GpsStatus;
 import com.essentia.tracker.component.TrackerHRM;
 import com.example.kyawzinlatt94.essentia.R;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,12 +46,14 @@ public class MainFragment extends Fragment{
     private NavigationListItems selectedActivity;
     private NavigationListItems selectedType;
     private Button btnStart;
+    private Button btnForceStart;
     private ImageView ivHRM;
     private ImageView ivGPS;
     private TextView tvHRMConStatus;
     private TextView tvGPSConStatus;
     private TrackerHRM trackerHRM;
     private HRProvider hrProvider;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +62,10 @@ public class MainFragment extends Fragment{
             Calorie.NAME, Distance.NAME, Duration.NAME,
                 HeartRate.NAME,Pace.NAME, Speed.NAME
         };
+
         selectedActivity = new NavigationListItems(R.drawable.running, getString(R.string.running));
         selectedType = new NavigationListItems(R.drawable.basic_workout, getString(R.string.basic_workout));
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +99,10 @@ public class MainFragment extends Fragment{
         setupListView.setAdapter(adapter);
         btnStart = (Button) rootView.findViewById(R.id.btnMainStart);
         btnStart.setOnClickListener(((MainActivity)mainActivity).getBtnStartClickListener());
+
+        btnForceStart = (Button) rootView.findViewById(R.id.btnForceStart);
+        btnForceStart.setOnClickListener(((MainActivity)mainActivity).getBtnStartClickListener());
+
         ivHRM = (ImageView) rootView.findViewById(R.id.ivHRMStatus);
         ivGPS = (ImageView) rootView.findViewById(R.id.ivGPSStatus);
         tvGPSConStatus = (TextView) rootView.findViewById(R.id.txtGPSConnection);
@@ -104,6 +116,26 @@ public class MainFragment extends Fragment{
             tvHRMConStatus.setText(getString(R.string.hrm_connection_on));
         }
         return rootView;
+    }
+
+    final Target viewTarget = new Target() {
+        @Override
+        public Point getPoint() {
+            return new ViewTarget(getActivity().findViewById(R.id.workout_setup_listview)).getPoint();
+        }
+    };
+
+    final Target viewTarget1 = new Target() {
+        @Override
+        public Point getPoint() {
+            return new ViewTarget(getActionBarView()).getPoint();
+        }
+    };
+    public View getActionBarView() {
+        Window window = getActivity().getWindow();
+        View v = window.getDecorView();
+        int resId = getResources().getIdentifier("action_bar_container", "id", "android");
+        return v.findViewById(resId);
     }
     private void selectItem(int position){
         if(mainActivity!=null){
@@ -189,25 +221,36 @@ public class MainFragment extends Fragment{
         return metrics;
     }
 
-    public void updateView(GpsStatus mGpsStatus){
-        if(hrProvider!=null && hrProvider.getHRValue()>0) {
+    public void updateHRMIcon(){
+        //Heart Rate Connection Icon Update
+        if(hrProvider!=null) {
             ivHRM.setImageResource(R.drawable.ic_heart_rate);
             tvHRMConStatus.setText(getString(R.string.hrm_connection_on));
+        }else{
+            ivHRM.setImageResource(R.drawable.ic_heart_rate_na);
+            tvHRMConStatus.setText(getString(R.string.hrm_connection_off));
         }
+    }
+    public void updateView(GpsStatus mGpsStatus){
+        //GPS icon update and button update
         if(mGpsStatus.isEnabled() == false){
             btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
             btnStart.setEnabled(true);
             btnStart.setText("Enable GPS");
+            btnForceStart.setVisibility(View.GONE);
         }else if(mGpsStatus.isLogging() == false){
+            btnForceStart.setVisibility(View.GONE);
             btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
             btnStart.setEnabled(true);
             btnStart.setText("Start GPS");
         }else if(mGpsStatus.isFixed() == false){
+            btnForceStart.setVisibility(View.VISIBLE);
             btnStart.setEnabled(false);
             btnStart.setBackgroundColor(getResources().getColor(R.color.gray));
             btnStart.setText("Waiting for GPS");
             ((MainActivity)mainActivity).displayGPSSearchingState();
         }else{
+            btnForceStart.setVisibility(View.GONE);
             ivGPS.setImageResource(R.drawable.ic_gps_connected);
             tvGPSConStatus.setText(getString(R.string.gps_connection_on));
             btnStart.setBackgroundColor(getResources().getColor(R.color.orange_button));
@@ -222,4 +265,6 @@ public class MainFragment extends Fragment{
     public void setBtnStartListener(View.OnClickListener l){
         btnStart.setOnClickListener(l);
     }
+
+
 }

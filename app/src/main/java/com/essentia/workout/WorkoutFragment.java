@@ -178,6 +178,7 @@ public class WorkoutFragment extends Fragment{
         @Override
         public void onClick(View v) {
             switcher.showNext();
+            metricsFragment.displayTutorial();
             workoutActivity.bindGpsTracker();
             isStarted = true;
         }

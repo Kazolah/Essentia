@@ -155,11 +155,11 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_pace"/>
+                    android:src="@drawable/ic_distance"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/avg_pace"
+                    android:text="@string/distance"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textColor="@android:color/black"
@@ -175,7 +175,13 @@
                     android:text="@string/measurement"
                     android:textColor="@android:color/black"
                     android:textSize="35dp"
-                    android:id="@+id/fwsd_tvAvgPace" />
+                    android:id="@+id/fwsd_tvDistance" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="km"
+                    android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -237,6 +243,40 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pace"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/avg_pace"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="20dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/measurement"
+                    android:textColor="@android:color/black"
+                    android:textSize="35dp"
+                    android:id="@+id/fwsd_tvAvgPace" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/ic_heart_rate"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -266,10 +306,19 @@
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+
+    <!-- 5th row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:weightSum="1"
+        android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -306,5 +355,8 @@
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
+
+
 </LinearLayout>

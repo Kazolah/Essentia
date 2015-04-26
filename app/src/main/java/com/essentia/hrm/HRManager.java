@@ -24,11 +24,7 @@ public class HRManager {
 
     private static HRProvider getHRProviderImpl(Context ctx, String src) {
         System.err.println("getHRProvider(" + src + ")");
-//        if (src.contentEquals(SamsungBLEHRProvider.NAME)) {
-//            if (!SamsungBLEHRProvider.checkLibrary())
-//                return null;
-//            return new SamsungBLEHRProvider(ctx);
-//        }
+
         if (src.contentEquals(AndroidBLEHRProvider.NAME)) {
             if (!AndroidBLEHRProvider.checkLibrary(ctx))
                 return null;
@@ -44,14 +40,6 @@ public class HRManager {
                 return null;
             return new Bt20Base.PolarHRM(ctx);
         }
-
-//        if (src.contentEquals(AntPlus.NAME)) {
-//            if (!AntPlus.checkLibrary(ctx))
-//                return null;
-//            HRProvider p = new AntPlus(ctx);
-//            System.err.println("getHRProvider(" + src + ") => " + p);
-//            return p;
-//        }
 
         if (src.contentEquals(Bt20Base.StHRMv1.NAME)) {
             if (!Bt20Base.checkLibrary(ctx))
@@ -78,32 +66,13 @@ public class HRManager {
         }
 
         List<HRProvider> providers = new ArrayList<HRProvider>();
-//        if (SamsungBLEHRProvider.checkLibrary()) {
-//            providers.add(new SamsungBLEHRProvider(ctx));
-//        }
-
+//
         if (AndroidBLEHRProvider.checkLibrary(ctx)) {
             providers.add(new AndroidBLEHRProvider(ctx));
         }
 
-//        if (Bt20Base.checkLibrary(ctx)) {
-//            providers.add(new Bt20Base.ZephyrHRM(ctx));
-//        }
-//
-//        if (Bt20Base.checkLibrary(ctx)) {
-//            providers.add(new Bt20Base.PolarHRM(ctx));
-//        }
-
         if (experimental && Bt20Base.checkLibrary(ctx)) {
             providers.add(new Bt20Base.StHRMv1(ctx));
-        }
-
-//        if (AntPlus.checkLibrary(ctx)) {
-//            providers.add(new AntPlus(ctx));
-//        }
-
-        if (mock) {
-            providers.add(new MockHRProvider(ctx));
         }
 
         return providers;

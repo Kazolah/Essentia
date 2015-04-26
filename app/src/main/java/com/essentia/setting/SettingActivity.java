@@ -19,6 +19,8 @@ public class SettingActivity extends ActionBarActivity{
     private ListView setupListView;
     private SimpleAdapter adapter;
     private ArrayList<HashMap<String, Object>> list;
+    private static Callback callback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +33,7 @@ public class SettingActivity extends ActionBarActivity{
                         getString(R.string.description_heart_rate_monitor)),
                 new ListItems(getString(R.string.title_audio_preferences),
                         getString(R.string.description_audio_preferences)),
-//                new ListItems(getString(R.string.title_workout_preferences),
-//                        getString(R.string.description_workout_preferences)),
-//                new ListItems(getString(R.string.title_notification_settings),
-//                        getString(R.string.description_notification_settings)),
+
                 new ListItems(getString(R.string.title_about),
                         getString(R.string.description_about))
         };
@@ -82,6 +81,7 @@ public class SettingActivity extends ActionBarActivity{
                 break;
             case 1:
                 finish();
+                HRMonitorSettingActivity.setCallbackActivity(callback);
                 startActivity(new Intent(this, HRMonitorSettingActivity.class ));
                 break;
             case 2:
@@ -116,5 +116,12 @@ public class SettingActivity extends ActionBarActivity{
             this.title = title;
             this.description = description;
         }
+    }
+    public static void setCallbackActivity(Callback callbackActivity){
+        callback = callbackActivity;
+    }
+
+    public interface Callback{
+        void updateHRMIcon();
     }
 }

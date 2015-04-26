@@ -86,21 +86,25 @@ public class TrackerTTS{
     public void emitHeartRateZoneShifted(boolean shiftUp, boolean outOfZone){
         if(!isHRShiftOn)
             return;
-        String textToSpeech = "";
+        String textToSpeech = " ";
         vibrator.vibrate(1000);
         if (outOfZone){
-            textToSpeech += context.getResources().getText(R.string.out_of_target_zone).toString()+" ";
+            textToSpeech += "Out of Target Heart Rate Zone ";
         }
-        if(shiftUp){
-            textToSpeech += context.getResources().getText(R.string.hrz_shift_up).toString();
-        }else{
-            textToSpeech += context.getResources().getText(R.string.hrz_shift_down).toString();
+        if(isHRShiftOn) {
+            if (shiftUp) {
+                textToSpeech += context.getResources().getText(R.string.hrz_shift_up).toString();
+            } else {
+                textToSpeech += context.getResources().getText(R.string.hrz_shift_down).toString();
+            }
         }
         tts.speak(textToSpeech, TextToSpeech.QUEUE_FLUSH, null);
     }
+
     public void emitOutOfTargetHeartRateZone(){
-        String textToSpeech = "Alert ";
-        textToSpeech += context.getResources().getText(R.string.out_of_target_zone).toString();
+        String textToSpeech = "Alert, ";
+        vibrator.vibrate(1000);
+        textToSpeech += "Out of Target Heart Rate Zone.";
         tts.speak(textToSpeech, TextToSpeech.QUEUE_ADD, null);
     }
     public String getCalorieTTS(){

@@ -2,7 +2,10 @@ package com.essentia.summary;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +20,9 @@ import com.essentia.support.WorkoutActivity;
 import com.essentia.util.Formatter;
 import com.essentia.util.HRZones;
 import com.example.kyawzinlatt94.essentia.R;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -56,7 +62,8 @@ public class WorkoutSummaryHRFragment extends Fragment{
 
     private String selectedZone = "";
     private String zoneBenefits = "";
-
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,8 @@ public class WorkoutSummaryHRFragment extends Fragment{
         workoutActivity = summaryActivity.getWorkoutActivity();
         loadLineChartData();
         loadPieChartData();
+        sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
     }
 
     @Override
@@ -85,6 +94,13 @@ public class WorkoutSummaryHRFragment extends Fragment{
         tvZoneDurationDetail = (TextView) rootView.findViewById(R.id.fwsh_zoneDurationDetail);
         return rootView;
     }
+
+    final Target viewTarget = new Target() {
+        @Override
+        public Point getPoint() {
+            return new ViewTarget(getActivity().findViewById(R.id.hrSummaryPieChart)).getPoint();
+        }
+    };
 
     public void loadPieChartData(){
         int totalRows = hrDetailDBHelper.queryHRRowCounts(workoutActivity.getId());
@@ -246,5 +262,21 @@ public class WorkoutSummaryHRFragment extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         summaryActivity = (WorkoutSummaryActivity) activity;
+    }
+
+    public void displayTutorial(){
+        boolean mainTutorial = sharedPrefs.getBoolean(getString(R.string.pref_tutorial_pie_chart),true);
+        if(mainTutorial) {
+            new ShowcaseView.Builder(getActivity())
+                    .setStyle(R.style.ThemeOverlay_AppCompat_Dark_ActionBar)
+                    .setTarget(viewTarget)
+                    .setContentTitle("Heart Rate Zone Detail")
+                    .setContentText("Select zone to display duration detail in panel")
+                    .hideOnTouchOutside()
+                    .build();
+
+        }
+        editor.putBoolean(getString(R.string.pref_tutorial_pie_chart), false);
+        editor.commit();
     }
 }

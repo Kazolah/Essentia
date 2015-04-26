@@ -125,23 +125,37 @@ public class RegisterActivity extends Activity implements LoaderCallbacks<Cursor
 
 
         //Check for a valid date of birth
-        if(!TextUtils.isEmpty(age)){
-
-        }else {
+        if(TextUtils.isEmpty(age)){
             mAgeView.setError(getString(R.string.error_field_required));
             focusView = mAgeView;
+            cancel = true;
+        }else if(Integer.valueOf(age)>300){
+            mAgeView.setError("Invalid Age Value");
             cancel = true;
         }
 
         //Check for a valid weight.
         if(TextUtils.isEmpty(weight)){
+            focusView = mWeightView;
             mWeightView.setError(getString(R.string.error_field_required));
+            cancel = true;
+        }else if(Integer.valueOf(weight)>300){
+            focusView = mWeightView;
+            mWeightView.setError("Invalid Weight Value");
+            cancel = true;
         }
 
         //Check for a valid height.
         if(TextUtils.isEmpty(height)){
+            focusView = mHeightView;
             mHeightView.setError(getString(R.string.error_field_required));
+            cancel = true;
+        }else if(Integer.valueOf(height)>300){
+            focusView = mHeightView;
+            mHeightView.setError("Invalid Height Value");
+            cancel = true;
         }
+
 
         //Get the Selected Gender
         int selected = rdoGroupGender.getCheckedRadioButtonId();

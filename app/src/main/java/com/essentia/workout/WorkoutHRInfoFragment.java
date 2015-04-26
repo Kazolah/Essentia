@@ -110,7 +110,7 @@ public class WorkoutHRInfoFragment extends Fragment{
                 tvUpperHrZone.setVisibility(View.GONE);
                 break;
         }
-        tvLowerHrZone.setText(formatter.formatLimitHRZones(hrPercentBound.second, HRZones.getZoneIntensityDescription(currentHRZone - 1)));
+        tvLowerHrZone.setText(formatter.formatLimitHRZones(hrPercentBound.first, HRZones.getZoneIntensityDescription(currentHRZone - 1)));
         tvUpperHrZone.setText(formatter.formatLimitHRZones(hrPercentBound.second, HRZones.getZoneIntensityDescription(currentHRZone + 1)));
     }
     @Override

@@ -1,11 +1,16 @@
 package com.essentia.setting;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.essentia.dbHelpers.UserDBHelper;
+import com.essentia.hrm.HRProvider;
 import com.essentia.main.MainActivity;
 import com.essentia.support.ApplicationContext;
 import com.essentia.support.UserObject;
+import com.essentia.tracker.component.TrackerHRM;
 import com.example.kyawzinlatt94.essentia.R;
 
 /**
@@ -41,6 +48,8 @@ public class ProfileSettingActivity extends Activity{
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
     private Context context;
+    TrackerHRM trackerHRM;
+    HRProvider hrProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +75,9 @@ public class ProfileSettingActivity extends Activity{
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         btnUpdate.setOnClickListener(updateClickListener);
 
-        tvAvgHr.setText(userObject.getAvgHR());
+        double dAvgHR = Double.valueOf(userObject.getAvgHR());
+        int iAvgHR = (int) dAvgHR;
+        tvAvgHr.setText(iAvgHR+"");
         tvMaxHr.setText(userObject.getMaxHR());
         edtMaxHR.setText(userObject.getMaxHR());
         edtRestingHR.setText(userObject.getRestingHR());
@@ -79,6 +90,8 @@ public class ProfileSettingActivity extends Activity{
         }else{
             rdoFemale.setSelected(true);
         }
+        trackerHRM = new TrackerHRM();
+        hrProvider = trackerHRM.getHrProvider();
     }
     private final View.OnClickListener updateClickListener = new View.OnClickListener(){
         @Override
@@ -130,5 +143,92 @@ public class ProfileSettingActivity extends Activity{
     public void onBackPressed() {
         finish();
         startActivity(new Intent(this, MainActivity.class));
+    }
+    public void openNotice(View view){
+        final ProfileSettingActivity profileActivity = this;
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Notice: Measuring Resting Heart Rate");
+        alertDialogBuilder.setMessage("Ensure you are at complete rest to measure an accurate resting heart rate.");
+        alertDialogBuilder.setPositiveButton("Start Measuring",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        arg0.dismiss();
+                        MeasureRestHRTask hrTask = new MeasureRestHRTask(profileActivity);
+                        hrTask.execute();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+    public void measureRestingHR(String message){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Information");
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        arg0.dismiss();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+    private void setRestingHRText(String restingHR){
+        edtRestingHR.setText(restingHR);
+    }
+    private class MeasureRestHRTask extends AsyncTask<Void, Void, Boolean>{
+        private ProgressDialog dialog;
+        int totalHR = 0;
+        int counter = 0;
+        int restingHR = 0;
+
+        public MeasureRestHRTask(ProfileSettingActivity activity) {
+            dialog = new ProgressDialog(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Measuring...");
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            setRestingHRText(restingHR + "");
+            if(result){
+                dialog.dismiss();
+                measureRestingHR("Resting Heart Rate Updated.");
+            }else{
+                dialog.dismiss();
+                measureRestingHR("Heart Rate Monitor Unavailable.");
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            long startTime = SystemClock.uptimeMillis();
+            long endTime = 0L;
+            while(endTime-startTime<20000){
+                if (hrProvider == null) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                } else {
+                    int hrValue = hrProvider.getHRValue();
+                    totalHR += hrValue;
+                    counter++;
+                    restingHR = (int) totalHR / counter;
+                }
+                endTime = SystemClock.uptimeMillis();
+            }
+            return true;
+        }
     }
 }

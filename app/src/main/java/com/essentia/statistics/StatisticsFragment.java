@@ -49,7 +49,9 @@ public class StatisticsFragment extends Fragment{
         tvCalorie.setText(activityDBHelper.getTotalCalorie());
 
         tvAvgHeartRate = (TextView) rootView.findViewById(R.id.fs_hr);
-        tvAvgHeartRate.setText(activityDBHelper.getTotalAvgHR());
+        double dAvgHR = Double.valueOf(activityDBHelper.getTotalAvgHR());
+        int iAvgHR = (int) dAvgHR;
+        tvAvgHeartRate.setText(iAvgHR+"");
 
         tvDistance = (TextView) rootView.findViewById(R.id.fs_distance);
         tvDistance.setText(activityDBHelper.getTotalDistance());

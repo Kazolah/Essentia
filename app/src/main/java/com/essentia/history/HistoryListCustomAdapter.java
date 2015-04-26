@@ -59,7 +59,7 @@ public class HistoryListCustomAdapter extends ArrayAdapter {
         double distance = Double.parseDouble(listItem.getDistance());
         int calorie = Integer.parseInt(listItem.getCalorie());
         String metrics = "";
-        metrics = (distance==0 && calorie!=0)?distance + " km" : calorie + " kcal";
+        metrics = (distance==0 && calorie!=0)?calorie + " kcal": distance + " km" ;
         holder.metrics.setText(metrics);
 
         holder.time.setText(listItem.getDuration());

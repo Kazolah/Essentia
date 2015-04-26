@@ -2,7 +2,7 @@
 <resources>
     <string name="hrz_shift_up">Heart Rate Zone Shifted Up.</string>
     <string name="hrz_shift_down">Heart Rate Zone Shifted Down.</string>
-    <string name="out_of_target_zone">Out Of Target Heart Rate Zone</string>
+    <string name="out_of_target_zone">Out Of Target Heart Rate Zone.</string>
     <string name="current_hrz">Current Heart Rate Zone</string>
     <string name="km">Kilometer</string>
     <string name="activity_started">Activity Started</string>

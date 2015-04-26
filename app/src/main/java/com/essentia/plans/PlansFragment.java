@@ -229,15 +229,25 @@ public class PlansFragment extends Fragment{
                     calendar.set(Calendar.AM_PM, Calendar.AM);
                 else
                     calendar.set(Calendar.AM_PM, Calendar.PM);
-            }
 
-            if(onMon){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            }
+            if(onSun){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
                         PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
-            if(onTue){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+            if(onSat){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
+            if(onFri){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
+                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));}
+
+            if(onThurs){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
                         PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
@@ -246,26 +256,16 @@ public class PlansFragment extends Fragment{
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
                         PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
-            if(onThurs){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+            if(onTue){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
                         PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
-            if(onFri){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
-                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));}
-            if(onSat){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+            if(onMon){
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
                         PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
-            if(onSun){
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000,
-                        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
-            }
-
             Toast.makeText(context,"Workout Plan Successfully Saved", Toast.LENGTH_LONG).show();
         }
     };

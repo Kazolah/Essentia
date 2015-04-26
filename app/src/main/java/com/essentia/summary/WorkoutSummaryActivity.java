@@ -94,7 +94,7 @@ public class WorkoutSummaryActivity extends ActionBarActivity {
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 if(tab.getPosition()==1){
-//                    hrFragment.animateCharts();
+                    hrFragment.displayTutorial();
                 }
             }
 

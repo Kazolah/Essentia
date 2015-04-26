@@ -275,7 +275,12 @@ public class WorkoutActivity extends ActionBarActivity implements TickListener {
         else
             return 0;
     }
-
+    public int getTotalHRDuration(){
+        if(mTracker!=null)
+            return mTracker.getTotalHRDuration();
+        else
+            return 0;
+    }
     public HRZones getHRZones(){
         hrZones = mTracker.getHRZones();
         return hrZones;

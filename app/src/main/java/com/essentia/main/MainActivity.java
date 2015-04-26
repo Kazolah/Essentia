@@ -1,7 +1,10 @@
 package com.essentia.main;
 
+import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -13,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.essentia.dbHelpers.UserDBHelper;
@@ -32,6 +36,7 @@ import com.essentia.summary.WorkoutSummaryActivity;
 import com.essentia.support.ApplicationContext;
 import com.essentia.tracker.GpsInformation;
 import com.essentia.tracker.GpsStatus;
+import com.essentia.util.CustomTutorialDialog;
 import com.essentia.workout.WorkoutActivity;
 import com.essentia.workout.workout_pojos.TickListener;
 import com.example.kyawzinlatt94.essentia.R;
@@ -40,7 +45,7 @@ import java.util.HashMap;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.ActivitySetUp,
-        TickListener, GpsInformation {
+        TickListener, GpsInformation, SettingActivity.Callback {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -66,6 +71,9 @@ public class MainActivity extends ActionBarActivity
 
     private MainFragment mainFragment;
     private UserDBHelper userDBHelper;
+
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +101,9 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.main_drawer_layout));
+        sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+        displayTutorial();
     }
     @Override
     public void onStart(){
@@ -246,6 +257,7 @@ public class MainActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.main_action_settings) {
+            SettingActivity.setCallbackActivity(this);
             startActivity(new Intent(this, SettingActivity.class));
         }
 
@@ -303,6 +315,7 @@ public class MainActivity extends ActionBarActivity
     public void setActionBarTitle(String title){
        getSupportActionBar().setTitle(title);
     }
+
     @Override
     public void onTick() {
         updateView();
@@ -365,7 +378,7 @@ public class MainActivity extends ActionBarActivity
                i.putExtras(bundles);
                finish();
                startActivity(i);
-//               MainActivity.this.startActivityForResult(i,112);
+               MainActivity.this.startActivityForResult(i,112);
                notificationStateManager.cancelNotification();
                return;
            }
@@ -397,5 +410,31 @@ public class MainActivity extends ActionBarActivity
         Intent i = new Intent(this, WorkoutSummaryActivity.class);
         i.putExtra("ID",id);
         startActivity(i);
+    }
+
+    @Override
+    public void updateHRMIcon() {
+        mainFragment.updateHRMIcon();
+    }
+
+    private void displayTutorial() {
+        boolean mainTutorial = sharedPrefs.getBoolean(getString(R.string.pref_tutorial_main), true);
+        if (mainTutorial) {
+            CustomTutorialDialog dialog = new CustomTutorialDialog();
+            dialog.show(getSupportFragmentManager(), "");
+        }
+        editor.putBoolean(getString(R.string.pref_tutorial_main), false);
+        editor.commit();
+
+    }
+
+    public static class Tab1Activity extends Activity {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            ImageView iv = new ImageView(this);
+            iv.setImageResource(R.drawable.navigation_tutorial);
+            setContentView(iv);
+        }
     }
 }

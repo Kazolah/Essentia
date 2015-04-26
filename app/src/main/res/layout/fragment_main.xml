@@ -67,7 +67,19 @@
                 android:id="@+id/txtGPSConnection" />
         </LinearLayout>
     </LinearLayout>
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FORCE START"
+        android:id="@+id/btnForceStart"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_above="@+id/btnMainStart"
+        android:layout_marginBottom="10dp"
+        android:background="#e1f47239"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/button_text_size"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

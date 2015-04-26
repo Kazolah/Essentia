@@ -29,11 +29,8 @@ public class ActivityFragment extends Fragment{
         NavigationListItems listItems[] = new NavigationListItems[]{
                 new NavigationListItems(R.drawable.cycling, getString(R.string.cycling)),
                 new NavigationListItems(R.drawable.running, getString(R.string.running)),
-                new NavigationListItems(R.drawable.running_treadmill, getString(R.string.running_treadmill)),
                 new NavigationListItems(R.drawable.walking, getString(R.string.walking)),
-                new NavigationListItems(R.drawable.walking_treadmill, getString(R.string.walking_treadmill)),
                 new NavigationListItems(R.drawable.other, getString(R.string.other_activities)),
-                new NavigationListItems(R.drawable.other_indoor, getString(R.string.other_activities_indoor)),
         };
         mListItems = listItems;
         adapter = new ListCustomAdapter(getActivity(), R.layout.custom_drawer_row_layout,listItems);

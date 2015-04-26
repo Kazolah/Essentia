@@ -278,19 +278,32 @@
                     android:textColor="@color/red"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="10dp"/>
-                <EditText android:id="@+id/ap_edRestingHR"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:hint="@string/bpm"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:layout_marginTop="5dp"
-                    android:singleLine="true"
-                    android:background="@drawable/rounded_edittext"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText android:id="@+id/ap_edRestingHR"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="50"
+                        android:layout_marginLeft="5dp"
+                        android:hint="@string/bpm"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:layout_marginTop="5dp"
+                        android:singleLine="true"
+                        android:background="@drawable/rounded_edittext"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"/>
+                    <ImageView
+                        android:id="@+id/ap_ivMeasureRHR"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/measure_rhr"
+                        android:onClick="openNotice"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
         <Button android:id="@+id/btnUpdate"

@@ -48,4 +48,9 @@
 
     <string name="test_audio_cue">Test Audio Feedback</string>
     <string name="push">Test Run</string>
+
+
+    <string name="pref_tutorial_main">pref_tutorial_main</string>
+    <string name="pref_tutorial_pie_chart">pref_tutorial_pie_chart</string>
+    <string name="pref_tutorial_metrics">pref_tutorial_metrics</string>
 </resources>

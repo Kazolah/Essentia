@@ -109,7 +109,9 @@ public class ActivityDBHelper extends BaseDBHelper{
                 ZONE5_INFO};
         String[] where = new String[]{};
         String[] whereArgs = new String[]{};
-        HashMap<String, Object> result = this.search(this,from,where,whereArgs,null,null,null,null);
+        String orderBy = DATE;
+        String orderType = "DESC";
+        HashMap<String, Object> result = this.search(this,from,where,whereArgs,null,null, orderBy, orderType);
         try{
             for(HashMap<String, Object> row : (List<HashMap<String, Object>>) result.get("records")){
                 WorkoutActivity workoutActivity = new WorkoutActivity();
@@ -170,7 +172,7 @@ public class ActivityDBHelper extends BaseDBHelper{
         ArrayList<StatisticListItem> list = new ArrayList<>();
         String sql = "SELECT SUM(calorie) as calorie, SUM(duration) as duration, SUM(distance) as distance, " +
                 "AVG(avg_hr) as avg_hr, COUNT(*) as session, strftime('%m', date) as stat_month, " +
-                "strftime('%Y', date) as stat_year FROM `activity` GROUP BY stat_month, stat_year";
+                "strftime('%Y', date) as stat_year FROM `activity` GROUP BY stat_month, stat_year ORDER BY stat_month DESC";
         List<HashMap<String, Object>> resultList = this.executeSQL(sql, null);
         try{
             for (HashMap<String, Object> row : resultList) {

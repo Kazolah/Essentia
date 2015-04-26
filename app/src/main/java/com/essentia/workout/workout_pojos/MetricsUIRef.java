@@ -74,4 +74,8 @@ public class MetricsUIRef {
     public int getLayoutId(){
         return ll.getId();
     }
+
+    public int getValueId(){
+        return tvDesc.getId();
+    }
 }

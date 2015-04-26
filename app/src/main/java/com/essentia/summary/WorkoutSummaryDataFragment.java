@@ -19,6 +19,7 @@ public class WorkoutSummaryDataFragment extends Fragment{
     private TextView tvDate;
     private TextView tvTime;
     private TextView tvSportType;
+    private TextView tvDistance;
     private TextView tvDuration;
     private TextView tvCalorie;
     private TextView tvAvgPace;
@@ -47,6 +48,7 @@ public class WorkoutSummaryDataFragment extends Fragment{
         tvAvgSpeed = (TextView) rootView.findViewById(R.id.fwsd_tvAvgSpeed);
         tvAvgHR = (TextView) rootView.findViewById(R.id.fwsd_tvAvgHR);
         tvMaxHR = (TextView) rootView.findViewById(R.id.fwsd_tvMaxHR);
+        tvDistance = (TextView) rootView.findViewById(R.id.fwsd_tvDistance);
 
         tvSportType.setText(workoutActivity.getSport());
         tvDate.setText(Formatter.parseDate(workoutActivity.getDate()));
@@ -57,6 +59,7 @@ public class WorkoutSummaryDataFragment extends Fragment{
         tvAvgSpeed.setText(workoutActivity.getAvgSpeed());
         tvAvgHR.setText(workoutActivity.getAvgHR());
         tvMaxHR.setText(workoutActivity.getMaxHR());
+        tvDistance.setText(workoutActivity.getDistance());
         return rootView;
     }
     @Override

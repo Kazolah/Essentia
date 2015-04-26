@@ -1,7 +1,10 @@
 package com.essentia.workout;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +16,9 @@ import com.essentia.metrics.Metrics;
 import com.essentia.workout.workout_pojos.MetricsUIRef;
 import com.essentia.workout.workout_pojos.Workout;
 import com.example.kyawzinlatt94.essentia.R;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +38,8 @@ public class WorkoutMetricsFragment extends Fragment{
     private int selectedLayoutIndex = 0;
     private String txtPreviousSelectedMetrics;
     public HashMap<String, MetricsUIRef> mBundle;
-
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
     //UI Component References
     private MetricsUIRef mRef1, mRef2, mRef3, mRef4, mRef5;
@@ -50,6 +57,8 @@ public class WorkoutMetricsFragment extends Fragment{
 
         listSelectedItem = "";
         metricsRefls = new ArrayList<MetricsUIRef>();
+        sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
     }
 
     @Override
@@ -62,6 +71,28 @@ public class WorkoutMetricsFragment extends Fragment{
         populateMetrics();
         return rootView;
     }
+    public void displayTutorial(){
+        boolean mainTutorial = sharedPrefs.getBoolean(getString(R.string.pref_tutorial_metrics),true);
+        if(mainTutorial) {
+            new ShowcaseView.Builder(getActivity())
+                    .setStyle(R.style.ThemeOverlay_AppCompat_Dark_ActionBar)
+                    .setTarget(viewTarget)
+                    .setContentTitle("Metrics Replacement")
+                    .setContentText("Select to replace with another metrics")
+                    .hideOnTouchOutside()
+                    .build();
+
+        }
+        editor.putBoolean(getString(R.string.pref_tutorial_metrics), false);
+        editor.commit();
+    }
+    final Target viewTarget = new Target() {
+        @Override
+        public Point getPoint() {
+            return new ViewTarget(getActivity().findViewById(mRef1.getValueId())).getPoint();
+        }
+    };
+
     private void populateMetricsRefList(){
         metricsRefls.clear();
         metricsRefls.add(mRef1);

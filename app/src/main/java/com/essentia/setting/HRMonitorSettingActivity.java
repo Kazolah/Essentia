@@ -39,7 +39,6 @@ import java.util.TimerTask;
  */
 public class HRMonitorSettingActivity extends Activity implements HRClient{
     private final Handler handler = new Handler();
-    private final StringBuffer logBuffer = new StringBuffer();
 
     private List<HRProvider> providers;
     private String btDeviceName;
@@ -57,6 +56,8 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
 
     private DeviceAdapter deviceAdapter;
     boolean isScanning = false;
+
+    private static SettingActivity.Callback callback;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -532,6 +533,19 @@ public class HRMonitorSettingActivity extends Activity implements HRClient{
 
             return tv;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(callback!=null) {
+            callback.updateHRMIcon();
+        }
+        this.finish();
+    }
+
+    public static void setCallbackActivity(SettingActivity.Callback callbackActivity){
+        callback = callbackActivity;
     }
 
 }

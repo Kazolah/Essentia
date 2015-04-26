@@ -45,7 +45,6 @@ public class WorkoutHRPercentageFragment extends Fragment{
     public void updateView(HRZones hrZones){
         this.hrZones = hrZones;
         populateBarChart(hrZones);
-//        updateBarChart(hrZones);
     }
     public void populateBarChart(HRZones hrZones){
         mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
@@ -56,19 +55,19 @@ public class WorkoutHRPercentageFragment extends Fragment{
         ArrayList<BarEntry> zone4 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> zone5 = new ArrayList<BarEntry>();
 
-        e1 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE1, workoutActivity.getTotalDurationLong()), 0);
+        e1 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE1, workoutActivity.getTotalHRDuration()), 0);
         zone1.add(e1);
 
-        e2 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE2, workoutActivity.getTotalDurationLong()), 0);
+        e2 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE2, workoutActivity.getTotalHRDuration()), 0);
         zone2.add(e2);
 
-        e3 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE3, workoutActivity.getTotalDurationLong()), 0);
+        e3 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE3, workoutActivity.getTotalHRDuration()), 0);
         zone3.add(e3);
 
-        e4 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE4, workoutActivity.getTotalDurationLong()), 0);
+        e4 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE4, workoutActivity.getTotalHRDuration()), 0);
         zone4.add(e4);
 
-        e5 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE5, workoutActivity.getTotalDurationLong()), 0);
+        e5 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE5, workoutActivity.getTotalHRDuration()), 0);
         zone5.add(e5);
 
         setZone1 = new BarDataSet(zone1, "Zone 1");
@@ -102,17 +101,7 @@ public class WorkoutHRPercentageFragment extends Fragment{
         hrBarChart.setMarkerView(mv);
 
     }
-    public void updateBarChart(HRZones hrZones){
-        ArrayList<BarEntry> zone1 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> zone2 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> zone3 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> zone4 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> zone5 = new ArrayList<BarEntry>();
 
-        setZone1.removeEntry(e1);
-        e1 = new BarEntry((float)hrZones.getZonePercentage(HRZones.ZONE1, workoutActivity.getTotalDurationLong()), 0);
-        setZone1.addEntry(e1);
-    }
     public static WorkoutHRPercentageFragment newInstance(){
         return new WorkoutHRPercentageFragment();
     }
