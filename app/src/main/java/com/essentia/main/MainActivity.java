@@ -43,6 +43,11 @@ import com.example.kyawzinlatt94.essentia.R;
 
 import java.util.HashMap;
 
+/**
+ * This activity presents the Main Screen and default inflate MainFragment.
+ * This class establishes GPS connection  and pushes notification when connected.
+ * See More @MainFragment for UI elements
+ */
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.ActivitySetUp,
         TickListener, GpsInformation, SettingActivity.Callback {
@@ -61,9 +66,9 @@ public class MainActivity extends ActionBarActivity
     private GpsBoundState gpsBoundState;
     private NotificationStateManager notificationStateManager;
     boolean skipStopGps = false;
-//    private GpsSearchingState pgsSearchingState;
 
     boolean doubleBackToExitPressedOnce = false;
+
     //Reference for activity setup list
     private static final int ACTIVITY = 0;
     private static final int TYPE = 2;
@@ -103,7 +108,7 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.main_drawer_layout));
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
-        displayTutorial();
+
     }
     @Override
     public void onStart(){
@@ -129,6 +134,11 @@ public class MainActivity extends ActionBarActivity
         mGpsStatus = null;
         super.onDestroy();
     }
+
+    /**
+     * Call back funciton for navigation selection
+     * @param position
+     */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -230,6 +240,7 @@ public class MainActivity extends ActionBarActivity
         if (doubleBackToExitPressedOnce) {
             this.finish();
             notificationStateManager.cancelNotification();
+            System.exit(0);
             return;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -264,6 +275,10 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Callback function for selected metrics
+     * @param metrics Selected Metrics List
+     */
     public void metricsCallback(HashMap<String, Metrics> metrics){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(metrics!=null) {
@@ -273,6 +288,11 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, mainFragment)
                 .commit();
     }
+
+    /**
+     * Callback function for selected workout
+     * @param workout Selected Workout
+     */
     public void workoutCallback(NavigationListItems workout){
          FragmentManager fragmentManager = getSupportFragmentManager();
         if(workout!=null){
@@ -283,6 +303,10 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
+    /**
+     * Call back function for type
+     * @param type Selected Type
+     */
     public void typeCallBack(NavigationListItems type){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (type!=null){
@@ -292,12 +316,21 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, mainFragment)
                 .commit();
     }
+
+    /**
+     * Inflate the target fragment in the frame
+     */
     public void inflateTargetFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, new TargetZoneFragment())
                 .commit();
     }
+
+    /**
+     * Inflate the target fragment for selected target type
+     * @param targetType
+     */
     public void targetFragmentCallBack(TargetZoneFragment.TargetZoneListItems targetType){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(targetType!=null){
@@ -306,12 +339,23 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, mainFragment).commit();
     }
+
+    /**
+     * Get the selected target zone list item
+     * @param targetType Selected Target Type
+     * @return Selected Target Zone
+     */
     private NavigationListItems TargetZoneListItemAdapter(TargetZoneFragment.TargetZoneListItems targetType){
         NavigationListItems item = new NavigationListItems();
         item.icon = targetType.icon;
         item.title = targetType.title;
         return item;
     }
+
+    /**
+     * Set title to the action bar
+     * @param title
+     */
     public void setActionBarTitle(String title){
        getSupportActionBar().setTitle(title);
     }
@@ -417,6 +461,9 @@ public class MainActivity extends ActionBarActivity
         mainFragment.updateHRMIcon();
     }
 
+    /**
+     * Display Tutorial Pop up
+     */
     private void displayTutorial() {
         boolean mainTutorial = sharedPrefs.getBoolean(getString(R.string.pref_tutorial_main), true);
         if (mainTutorial) {
@@ -425,7 +472,6 @@ public class MainActivity extends ActionBarActivity
         }
         editor.putBoolean(getString(R.string.pref_tutorial_main), false);
         editor.commit();
-
     }
 
     public static class Tab1Activity extends Activity {

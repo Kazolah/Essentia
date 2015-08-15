@@ -1,21 +1,20 @@
 package com.essentia.main;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.essentia.left_drawer.NavigationListItems;
 import com.example.kyawzinlatt94.essentia.R;
 
 /**
  * Created by kyawzinlatt94 on 2/10/15.
+ *
+ * This class is for "List" UI to be presented in the MainFragment
  */
 public class MainFragmentCustomAdapter  extends ArrayAdapter<MainFragmentListItems> {
 

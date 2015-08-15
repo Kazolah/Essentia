@@ -2,6 +2,8 @@ package com.essentia.main;
 
 /**
  * Created by kyawzinlatt94 on 2/9/15.
+ *
+ * This class stores list items
  */
 public class MainFragmentListItems {
     public int icon1, icon2, icon3, icon4, icon5;

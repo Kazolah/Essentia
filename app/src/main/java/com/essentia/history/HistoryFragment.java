@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 /**
  * Created by kyawzinlatt94 on 2/3/15.
+ *
+ * History Fragment to be inflated in MainActivity
  */
 public class HistoryFragment extends Fragment{
     private ListView lsHistory;

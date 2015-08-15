@@ -1,6 +1,8 @@
 package com.essentia.welcome;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -15,16 +17,33 @@ import com.essentia.support.ApplicationContext;
 import com.essentia.support.UserObject;
 import com.example.kyawzinlatt94.essentia.R;
 
-
+/**
+ * This class presents Welcome Screen
+ */
 public class WelcomeActivity extends ActionBarActivity {
     private UserDBHelper userDBHelper;
     private UserObject userObject;
+
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+
         DBBuilder dbBuilder = new DBBuilder(this);
         dbBuilder.buildDBs();
+
+        //Check data is already filled
+        boolean fillData = sharedPrefs.getBoolean(getString(R.string.pref_fill_data), true);
+        if (fillData) {
+            dbBuilder.fillData();
+        }
+        editor.putBoolean(getString(R.string.pref_fill_data), false);
+        editor.commit();
 
         userDBHelper = new UserDBHelper(this);
         int count = userDBHelper.getCount();

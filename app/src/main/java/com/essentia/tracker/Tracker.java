@@ -47,28 +47,34 @@ import java.util.Date;
 public class Tracker extends android.app.Service implements
         LocationListener, Constants {
     public static HRZones hrZones;
+
+    //Handler to control threads
     private final Handler handler = new Handler();
     private final Handler hrHandler = new Handler();
+
     private final boolean HRZ_UP = true;
     private final boolean HRZ_DOWN = false;
+
     TrackerGPS trackerGPS = new TrackerGPS();
     TrackerHRM trackerHRM = new TrackerHRM();
+    TrackerState trackerState;
+    final ValueModel<TrackerState> state = new ValueModel<TrackerState>(TrackerState.INIT);
+
+    //Heart rate related variable references
     long mActivityId = 0;
     double mElapsedTimeMillis = 0;
     double mElapsedDistance = 0;
     double mHeartbeats = 0;
     double mHeartbeatMillis = 0; // since we might loose HRM connectivity...
     int mMaxHR = 0;
-    int hrCount = 0;
-    int burnedCalorie = 0;
-    long previousTimeMillis = 0;
-    final boolean mWithoutGps = false;
     int targetHRZone = 0;
-    TrackerState trackerState;
-    final ValueModel<TrackerState> state = new ValueModel<TrackerState>(TrackerState.INIT);
-    int mLocationType = LocationDBHelper.TYPE_START;
+    int hrCount = 0;
     int totalHRDuration = 0;
     long hrZoneTimer = 0;
+    int burnedCalorie = 0;
+
+    int mLocationType = LocationDBHelper.TYPE_START;
+
     /**
      * Last location given by LocationManager
      */
@@ -78,6 +84,8 @@ public class Tracker extends android.app.Service implements
      * Last location given by LocationManager when in state STARTED
      */
     Location mActivityLastLocation = null;
+    private boolean onDistanceTrigger;
+    private int distanceMileStone;
 
     private PersistentGpsLoggerListener mDBWriter = null;
     PowerManager.WakeLock mWakeLock = null;
@@ -91,8 +99,6 @@ public class Tracker extends android.app.Service implements
     private LocationDBHelper locationDBHelper;
     private ActivityHRDetailDBHelper hrDetailDBHelper;
     private TrackerTTS textToSpeech;
-    private boolean onDistanceTrigger;
-    private int distanceMileStone;
 
     @Override
     public void onCreate() {
@@ -176,6 +182,11 @@ public class Tracker extends android.app.Service implements
     public void setTargetMode(int targetHRZone){
         this.targetHRZone = targetHRZone;
     }
+
+    /**
+     * Start the Tracker service for workout
+     * @param workout_ Workout data
+     */
     public void start(Workout workout_) {
         textToSpeech.emitActivityState(TrackerTTS.STARTED);
         // connect workout and tracker
@@ -262,7 +273,6 @@ public class Tracker extends android.app.Service implements
         }
     }
 
-
     public void completeActivity() {
         textToSpeech.emitActivityState(TrackerTTS.END);
         setNextLocationType(LocationDBHelper.TYPE_END);
@@ -295,6 +305,7 @@ public class Tracker extends android.app.Service implements
         };
         mDB.update(ActivityDBHelper.TABLE, tmp, "id = ?", key);
     }
+
     private String getAvgSpeed(){
         double mElapsedSecs = mElapsedTimeMillis / 1000;
         double mElapsedDistanceKM = mElapsedDistance/1000;
@@ -302,10 +313,12 @@ public class Tracker extends android.app.Service implements
         double speed = speedInSec * 3600;
         return String.format("%.2f",speed);
     }
+
     private String getDistanceInKM(){
         double km = mElapsedDistance/1000;
         return String.format("%.2f", km);
     }
+
     private String getAvgPace(){
         if(mElapsedDistance==0){
             return "0";
@@ -549,6 +562,13 @@ public class Tracker extends android.app.Service implements
             handler.postDelayed(this, 0);
         }
     };
+
+
+    /* Here onwards Heart Rate Related  Methods */
+
+    /**
+     * Thread to compute Heart rate related operations
+     */
     private Runnable updateHRThread = new Runnable() {
 
         @Override
@@ -560,6 +580,7 @@ public class Tracker extends android.app.Service implements
     };
 
     int previousSecs = 0;
+
     /**
      * Compute HR operations
      * 1. Add duration to each zone
@@ -593,6 +614,7 @@ public class Tracker extends android.app.Service implements
          calculateCalorie();
          return String.valueOf((int) burnedCalorie);
     }
+
     public void calculateCalorie(){
         int HR = Integer.valueOf(getAvgHR());
         UserObject userObject = ApplicationContext.userObject;
@@ -719,6 +741,12 @@ public class Tracker extends android.app.Service implements
             previousHRZone = currentHRZone;
         }
     }
+
+    /**
+     * Check if current zone is out of zone
+     * @param currentZone
+     * @return
+     */
     private boolean isOutZone(int currentZone){
       if(targetHRZone == 0) {
           return false;
@@ -728,6 +756,7 @@ public class Tracker extends android.app.Service implements
       }else
           return false;
     }
+
     /**
      * Set Duration Detail Text for each heart rate zone
      * @param currentHRZone Heart Rate Zone to append the text

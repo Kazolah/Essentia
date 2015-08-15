@@ -14,6 +14,8 @@ import com.example.kyawzinlatt94.essentia.R;
 
 /**
  * Created by kyawzinlatt94 on 2/3/15.
+ *
+ * This class contains UI elements for presenting activity fragment
  */
 public class ActivityFragment extends Fragment{
 

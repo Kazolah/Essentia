@@ -15,6 +15,8 @@ import com.example.kyawzinlatt94.essentia.R;
 
 /**
  * Created by kyawzinlatt94 on 4/4/15.
+ *
+ * This class is customized list for TargetZoneFragment
  */
 public class TargetListCustomAdapter extends ArrayAdapter<TargetZoneListItems> {
 

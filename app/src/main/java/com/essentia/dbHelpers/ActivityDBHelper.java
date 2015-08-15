@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by kyawzinlatt94 on 3/2/15.
+ * This class is database for activity. 
  */
 public class ActivityDBHelper extends BaseDBHelper{
     public static final String TABLE = "activity";
@@ -168,6 +169,11 @@ public class ActivityDBHelper extends BaseDBHelper{
         }
         return total;
     }
+
+    /**
+     * Get statistics items in the database
+     * @return StatisticListItem ArrayList
+     */
     public ArrayList<StatisticListItem> getStatisticsItems(){
         ArrayList<StatisticListItem> list = new ArrayList<>();
         String sql = "SELECT SUM(calorie) as calorie, SUM(duration) as duration, SUM(distance) as distance, " +

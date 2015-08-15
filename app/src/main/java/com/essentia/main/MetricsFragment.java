@@ -27,6 +27,8 @@ import java.util.HashMap;
 
 /**
  * Created by kyawzinlatt94 on 2/3/15.
+ *
+ * This class contains UI elements for presenting Metrics List
  */
 public class MetricsFragment extends Fragment {
     public static final int CAPACITY_METRICS = 5;

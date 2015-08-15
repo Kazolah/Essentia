@@ -8,6 +8,7 @@ import java.util.UUID;
 /**
  * Created by kyawzinlatt94 on 2/15/15.
  * This property is referred from Runner Up OpenSource application.
+ * This class contains UUID for services in heart rate monitor device
  */
 public abstract class BtHRBase implements HRProvider{
     static final UUID HRP_SERVICE = UUID

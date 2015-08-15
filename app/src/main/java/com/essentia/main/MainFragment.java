@@ -34,25 +34,35 @@ import java.util.HashMap;
 
 /**
  * Created by kyawzinlatt94 on 2/3/15.
+ *
+ * This class is fragment to be inflated by MainActivity, contains UI elements
  */
 public class MainFragment extends Fragment{
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private TrackerHRM trackerHRM;
+    private HRProvider hrProvider;
+    private String[] metricsList;
     public HashMap<String, Metrics> metrics;
+
+    //UI references
     private ActivitySetUp mainActivity;
     private ListView setupListView;
     private MainFragmentCustomAdapter adapter;
-    private String[] metricsList;
+
     private NavigationListItems selectedActivity;
     private NavigationListItems selectedType;
+
     private Button btnStart;
     private Button btnForceStart;
+
     private ImageView ivHRM;
     private ImageView ivGPS;
+
     private TextView tvHRMConStatus;
     private TextView tvGPSConStatus;
-    private TrackerHRM trackerHRM;
-    private HRProvider hrProvider;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +118,7 @@ public class MainFragment extends Fragment{
         tvGPSConStatus = (TextView) rootView.findViewById(R.id.txtGPSConnection);
         tvHRMConStatus = (TextView) rootView.findViewById(R.id.txtHRMConnection);
         ((MainActivity)mainActivity).onGpsTrackerBound();
+
         //Check HRM is connected
         trackerHRM = new TrackerHRM();
         hrProvider = trackerHRM.getHrProvider();

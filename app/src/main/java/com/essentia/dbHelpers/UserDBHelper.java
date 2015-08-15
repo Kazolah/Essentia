@@ -51,6 +51,11 @@ public class UserDBHelper extends BaseDBHelper{
         dataVals.put(AVG_HR, avgHR);
         this.updateRecord(this,dataVals, where, whereArgs);
     }
+
+    /**
+     * Get the first user record in the database
+     * @return UserObject
+     */
     public UserObject getUserObject(){
         UserObject user = new UserObject();
         String[] from = new String[]{"id",NAME, AGE, HEIGHT, WEIGHT, MAX_HR, AVG_HR, RESTING_HR, GENDER};

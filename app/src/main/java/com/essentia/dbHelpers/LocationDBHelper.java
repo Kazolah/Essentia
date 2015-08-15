@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by kyawzinlatt94 on 3/5/15.
+ * This class is for location database.
  */
 public class LocationDBHelper extends BaseDBHelper{
     public static final String TABLE = "location";

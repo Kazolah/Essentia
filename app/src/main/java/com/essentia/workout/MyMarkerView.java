@@ -10,6 +10,8 @@ import com.github.mikephil.charting.utils.MarkerView;
 
 /**
  * Created by kyawzinlatt94 on 3/7/15.
+ *
+ * This class is for annotation pop up for pie chart in heart rate percentage fragment
  */
 public class MyMarkerView extends MarkerView {
 
@@ -30,12 +32,9 @@ public class MyMarkerView extends MarkerView {
     public void refreshContent(Entry e, int dataSetIndex) {
 
         if (e instanceof CandleEntry) {
-
             CandleEntry ce = (CandleEntry) e;
-//            "" + Utils.formatNumber(ce.getHigh(), 0, true)
             tvContent.setText(txtMarker);
         } else {
-//            "" + Utils.formatNumber(e.getVal(), 0, true)
             tvContent.setText(txtMarker);
         }
     }

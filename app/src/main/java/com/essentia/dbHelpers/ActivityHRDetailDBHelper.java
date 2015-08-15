@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by kyawzinlatt94 on 3/3/15.
+ * This class is to store Heart Rate Detail per second
  */
 public class ActivityHRDetailDBHelper extends BaseDBHelper{
     public static final String TABLE = "activity.hr.detail";
@@ -50,6 +51,12 @@ public class ActivityHRDetailDBHelper extends BaseDBHelper{
         return queryList;
     }
 
+    /**
+     * Query Each Zone Percentage from database
+     * @param activityId Activity to be queried
+     * @param zone Zone to be queried
+     * @return Percentage for the zone
+     */
     public int queryZonePercentage(String activityId, int zone){
         String hrZone = String.valueOf(zone);
         if(hrZone.equals(null) || activityId.equals(null)){
@@ -73,6 +80,12 @@ public class ActivityHRDetailDBHelper extends BaseDBHelper{
         totalHRDuration = (totalHRDuration.equals(""))?"0":totalHRDuration;
         return Integer.valueOf(totalHRDuration);
     }
+
+    /**
+     * Get the total row counts for HR
+     * @param activityId Activity to be queried
+     * @return
+     */
     public int queryHRRowCounts(String activityId){
         if(activityId.equals(null)){
             return 0;

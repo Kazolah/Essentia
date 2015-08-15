@@ -15,6 +15,8 @@ import com.example.kyawzinlatt94.essentia.R;
 
 /**
  * Created by kyawzinlatt94 on 2/12/15.
+ *
+ * This class is customize list UI element for Navigation List Items
  */
 public class ListCustomAdapter extends ArrayAdapter<NavigationListItems> {
 

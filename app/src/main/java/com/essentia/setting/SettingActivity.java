@@ -33,9 +33,6 @@ public class SettingActivity extends ActionBarActivity{
                         getString(R.string.description_heart_rate_monitor)),
                 new ListItems(getString(R.string.title_audio_preferences),
                         getString(R.string.description_audio_preferences)),
-
-                new ListItems(getString(R.string.title_about),
-                        getString(R.string.description_about))
         };
         list = populateList(listItems);
         adapter = new SimpleAdapter(this, list,

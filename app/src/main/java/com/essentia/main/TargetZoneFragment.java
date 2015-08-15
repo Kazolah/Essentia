@@ -17,6 +17,8 @@ import java.io.Serializable;
 
 /**
  * Created by kyawzinlatt94 on 4/4/15.
+ *
+ * This class contains UI elements for TargetZone, to be inflated in MainActivity
  */
 public class TargetZoneFragment extends Fragment{
     private TargetListCustomAdapter adapter;

@@ -17,6 +17,9 @@ import com.essentia.statistics.StatisticsActivity;
 import com.essentia.summary.WorkoutSummaryActivity;
 import com.example.kyawzinlatt94.essentia.R;
 
+/**
+ * This class is Activity for history, see HistoryFragment for details
+ */
 public class HistoryActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 

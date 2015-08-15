@@ -4,18 +4,22 @@ import android.content.Context;
 
 /**
  * Created by kyawzinlatt94 on 3/5/15.
+ *
+ * This class builds database table and populate data.
  */
 public class DBBuilder {
     Context context;
+
     public DBBuilder(Context context){
         this.context = context;
     }
+
+
     public void buildDBs(){
         createUserTable();
         createLocationTable();
         createActivityTable();
         createActivityHRDetailTable();
-        fillData();
     }
     private void createUserTable(){
         UserDBHelper dbHelper = new UserDBHelper(context);
@@ -34,7 +38,11 @@ public class DBBuilder {
         ActivityHRDetailDBHelper dbHelper = new ActivityHRDetailDBHelper(context);
         dbHelper.createTable(dbHelper.createStatement(dbHelper));
     }
-    private void fillData(){
+
+    /**
+     * Default data to be filled
+     */
+    public void fillData(){
         LocationDBHelper locationDBHelper = new LocationDBHelper(context);
         ActivityDBHelper activityDBHelper = new ActivityDBHelper(context);
         ActivityHRDetailDBHelper dbHelper = new ActivityHRDetailDBHelper(context);
@@ -43,7 +51,7 @@ public class DBBuilder {
                 " `calorie`, `duration`,`distance`, `avg_pace`, `avg_speed`, `max_hr`," +
                 " `avg_hr`, `sport`, `zone1_info`,`zone2_info`,`zone3_info`,`zone4_info`,`zone5_info`)" +
                 " VALUES ('05:20:00 PM', '2015-04-21', '121', " +
-                "'440000','952', '0', '0', '180', '166', 'Running','00:00:00-00:02:20','00:02:20-00:06:07','00:06:07-00:07:20','','');",null);
+                "'440000','0.95', '12:25', '8.5', '180', '166', 'Running','00:00:00-00:02:20','00:02:20-00:06:07','00:06:07-00:07:20','','');",null);
 
         locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
                 "VALUES ('1', '1', '1000', '2.944130', '101.875095'),"+
@@ -92,17 +100,8 @@ public class DBBuilder {
                 "('1', '3', '1000', '2.944527', '101.874789'),"+
                 "('1', '3', '1000', '2.944178', '101.875054'),"+
                 "('1', '2', '1000', '2.943644', '101.875317')",null);
-//        locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
-//                "VALUES ('1', '1', '1000', '3.139019', '101.686748'),",null);
-//        locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
-//                "VALUES ('1', '3', '1000', '3.139024', '101.686708')",null);
-//        locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
-//                "VALUES ('1', '3', '1000', '3.139030', '101.686662')",null);
-//        locationDBHelper.executeSQL("INSERT INTO `location` (`activity_id`, `type`, `time`, `latitude`, `longitude`) " +
-//                "VALUES ('1', '2', '1000', '3.139032', '101.686614')",null);
 
         for (int i=1;i<=440;i++){
-            int j=1;
             if(i<140) {
                 dbHelper.executeSQL("INSERT INTO `activity_hr_detail` (`time_stamp`, `hr_value`, `hr_zone`, `activity_id`) " +
                         "VALUES ('" + 1000 * i + "', '" + (150 + i%2) + "', '" + 1 + "', '1')", null);
@@ -111,7 +110,7 @@ public class DBBuilder {
                         "VALUES ('" + 1000 * i + "', '" + (160 + i%2) + "', '" + 2 + "', '1')", null);
             }else{
                 dbHelper.executeSQL("INSERT INTO `activity_hr_detail` (`time_stamp`, `hr_value`, `hr_zone`, `activity_id`) " +
-                        "VALUES ('" + 1000 * i + "', '" + (181 + i%2) + "', '" + 3 + "', '1')", null);
+                        "VALUES ('" + 1000 * i + "', '" + (181 - i%2) + "', '" + 3 + "', '1')", null);
             }
         }
 
